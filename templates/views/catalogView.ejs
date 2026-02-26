@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Catalog View</title>
+    <link rel="stylesheet" href="https://openlayers.org/en/v6.15.1/css/ol.css">
+      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ol@v9.2.4/ol.css">
+
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css"
+      rel="stylesheet">
+    <link rel="stylesheet" href="/css/bootstrap.css">
+            <link rel="stylesheet" href="/css/hero.css">
+                        <link rel="stylesheet" href="/css/catalogView.css">
+
+            <!-- icon -->
+ <link rel="stylesheet"
+            href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0">
+
+
+
+
+  </head>
+  <body>
+
+    <%- include('../partials/arrownav') %>
+
+    <div class="container py-4">
+      <!-- Header -->
+      <% catalogItems.forEach(function(item){%>
+      <header class="mb-4">
+        <div class="p-4 rounded shadow-sm text-center themed-box request-fields"
+         data-file_name="<%= item.file_name %>"
+         data-theme="<%= item.theme %>">
+          <h1 class="h4 mb-2">Title: <span class="text-primary">
+              <%=item.title%>
+            </span></h1>
+          <p class="mb-0 fs-6">Theme: <span class="text-secondary">
+              <%=item.theme%>
+            </span></p>
+        </div>
+      </header>
+      <%})%>
+
+      <!-- Content -->
+      <div class="row g-4 justify-content-center">
+        <!-- Map Area -->
+        <div class="col-lg-8">
+          <div class="card shadow-sm h-100">
+            <div class="card-body p-0">
+              <div id="map" class="w-100 rounded-bottom"
+                style="height: 500px;"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Query Panel -->
+        <div class="col-lg-4">
+          <div class="card shadow-sm h-100 ">
+            <div class="card-body themed-box">
+              <h2 class="card-title h5 mb-4">Query Options</h2>
+
+              <!-- Query Type Toggle -->
+              <div class="mb-3">
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="radio" name="queryType"
+                    id="allRadio" value="all" checked>
+                  <label class="form-check-label" for="allRadio">All</label>
+                </div>
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="radio" name="queryType"
+                    id="queryRadio" value="query">
+                  <label class="form-check-label" for="queryRadio">Query</label>
+                </div>
+                <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="queryType"
+                  id="districtwiseRadio" value="districtwise">
+                 <label class="form-check-label" for="districtwiseRadio">Select By District</label>
+                </div>
+              </div>
+
+              <!-- All Section -->
+              <div id="all-section" class="query-section active mb-4">
+                <button id="request-all" class="btn btn-primary w-100">Request
+                  All</button>
+              </div>
+
+              <!-- Query Section -->
+              <div id="query-section" class="query-section">
+                <!-- First Query Row -->
+                <div class="mb-3 query-row">
+                  <label class="form-label">Field 1</label>
+                  <select class="field-select form-select mb-2"
+                    aria-label="Field select 1">
+                    <option value>Select Field</option>
+                  </select>
+                  <div class="error-message text-danger small"
+                    id="field-error-1"></div>
+                  <div class="value-checkboxes mb-2"
+                    id="value-checkboxes-1"></div>
+                  <div class="error-message text-danger small"
+                    id="value-error-1"></div>
+                </div>
+
+                <!-- Operator -->
+                <div class="mb-3">
+                  <label for="operator" class="form-label">Operator:</label>
+                  <select class="operator form-select" id="operator">
+                    <option value="AND">AND</option>
+                  </select>
+                </div>
+
+                <!-- Second Query Row -->
+                <div class="mb-3 query-row">
+                  <label class="form-label">Field 2</label>
+                  <select class="field-select form-select mb-2"
+                    aria-label="Field select 2">
+                    <option value>Select Field</option>
+                  </select>
+                  <div class="error-message text-danger small"
+                    id="field-error-2"></div>
+                  <div class="value-checkboxes mb-2"
+                    id="value-checkboxes-2"></div>
+                  <div class="error-message text-danger small"
+                    id="value-error-2"></div>
+                </div>
+
+                <!-- Submit Button -->
+                <button id="request-query"
+                  class="btn btn-primary w-100">Request</button>
+              </div>
+               <!-- Select by  district -->
+
+              <!-- Districtwise Section -->
+              <div id="districtwise-section" class="query-section">
+                <div class="mb-3 districtwise-row">
+                  <label class="form-label">District</label>
+                  <div class="value-checkboxes mb-2" id="district-checkboxes"></div>
+                  <div class="error-message" id="district-error"></div>
+                </div>
+                <button id="request-districtwise" class="btn btn-primary w-100">Request</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <%- include('../partials/homeFooter') %>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="https://cdn.jsdelivr.net/npm/ol@v9.2.4/dist/ol.js"></script>
+
+    <!-- Contact End -->
+
+    <script src="/js/toogleAndHandleTheme.js"></script>
+        <script src="/js/backNhome.js"></script>
+
+
+
+    <script src="/js/dataRequestForm.js"></script>
+
+  </body>
+</html>

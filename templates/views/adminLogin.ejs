@@ -1,0 +1,45 @@
+
+<%- include('../partials/adminhead') %>
+
+<%- include('../partials/loader') %>
+
+<body class="">
+    <%- include('../partials/arrownav') %>
+
+<div class="container d-flex justify-content-center align-items-center vh-100">
+    <div class="card shadow-sm p-4 themed-box" style="max-width: 500px; width: 100%; ">
+        <h3 class="text-center mb-4 text-primary fw-bold">Admin Login</h3>
+        <form id="adminLoginForm" action="/admin" method="post">
+            <div class="mb-3">
+                <label for="email" class="form-label">Username</label>
+                <input type="text" class="form-control" id="email" name="email" placeholder="Enter username" required>
+            </div>
+            <div class="mb-3">
+                <label for="password" class="form-label">Password</label>
+                <input type="password" class="form-control" id="password" name="password" placeholder="Enter password" required>
+            </div>
+            <div class="mb-3">
+                <label for="otp" class="form-label">OTP</label>
+                <input type="text" class="form-control" id="otp" name="otp" placeholder="Enter otp">
+                <input type="submit" name="submit" value="GetOTP" class="btn px-4 btn-primary mt-4">
+            </div>
+
+              <!-- Cloudflare Turnstile Widget -->
+  <div class="mb-3">
+    <div class="cf-turnstile" data-sitekey="0x4AAAAAABhe4h4NsCnhXnMk"></div>
+  </div>
+<input type="submit" name="submit" value="login" class="btn px-5 btn-primary mt-2">
+</form>
+
+<!-- reCAPTCHA JS -->
+
+</form>
+</div>
+</div>
+<script src="/js/script.js"></script>
+    <%- include('../partials/homeFooter') %>
+<script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+
+  <script src="/js/backNhome.js"></script>
+
+  <%- include('../partials/footer') %>

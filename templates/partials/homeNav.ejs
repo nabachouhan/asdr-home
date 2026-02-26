@@ -1,0 +1,68 @@
+<nav class="navbar navbar-expand-lg  sticky-top themed-box">
+
+  <a href="index.html"
+    class="navbar-brand d-flex align-items-center px-1 px-lg-1">
+    <a href="#" class="navbar-brand">
+      <img src="./image/fav.png" alt="Icon" width="60" height="60"
+        class="d-inline-block align-top">
+    </a>
+  </a>
+  <h5 class="m-0 ls-13 rubik fw-800"> ASSAM SPATIAL DATA REPOSITORY</h5>
+  <button class="navbar-toggler" type="button" data-toggle="collapse"
+    data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+    aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <div class="navbar-nav ms-auto p-4 p-lg-0">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item">
+          <a href="/" class="nav-item nav-link rounded active">Home</a>
+        </li>
+        <li class="nav-item">
+          <a href="/#service" class="nav-item nav-link rounded">Service</a>
+        </li>
+        <li class="nav-item">
+          <a href="/#catalog" class="nav-item nav-link rounded">Catalogue</a>
+        </li>
+        <li class="nav-item">
+          <a href="/#contact" class="nav-item nav-link rounded">Contact</a>
+        </li>
+        <li class="nav-item">
+          <a href="/admin/home" class="nav-item nav-link rounded">Admin</a>
+        </li>
+        <li class="nav-item">
+          <a href="/user" class="nav-item nav-link rounded">Register/Login</a>
+        </li>
+        <% if (userItems.logemail.length> 0) { %>
+
+        <li class="nav-item mr-1">
+          <a type="button" class="nav-item nav-link rounded"
+            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <span class="material-symbols-outlined">person</span> <span
+              class="material-symbols-outlined">arrow_drop_down</span></a>
+          <div class="dropdown-menu dropdown-menu-right " id="profile-dropdown">
+            <a href="/profile" class="dropdown-item nav-item nav-link"
+              type="button">Profile</a>
+            <a href="/requests" class="dropdown-item nav-item nav-link"
+              type="button">Request History</a>
+            <a id="userLogout" class="dropdown-item nav-item nav-link"
+              type="button">logout</a>
+
+          </div>
+        </li>
+
+        <div class="hr"></div>
+        <% } %>
+
+        <li class="nav-item">
+          <button id="toggleTheme" class="btn ">
+            <span id="theme-icon"
+              class="material-symbols-outlined nav-item nav-link rounded">dark_mode</span>
+          </button>
+        </li>
+      </ul>
+    </div>
+
+  </div>
+</nav>

@@ -1,0 +1,234 @@
+<%- include('../partials/adminhead') %>
+
+  <body>
+    <!-- admin-Sidebar -->
+    <div class="admin-sidebar" id="admin-sidebar">
+      <h4 class="text-white mb-4">ASSAM-SDR</h4>
+      <div class="mb-4">
+        <i class="bi bi-person-circle me-2"></i><%= userItems.full_name %>
+      </div>
+      <a href="/admin/home" class="active"><i class="bi bi-grid"></i> Home</a>
+      <a href="/admin/requests"><i class="bi bi-ui-checks"></i> Requests</a>
+        <a href="/admin/roles"><i class="bi bi-table"></i> Manage Roles</a>
+      <a href="/admin/logs"><i class="bi bi-person"></i> Logs</a>
+
+      <a href="/admin/upload"><i class="bi bi-gem"></i> Upload</a>
+      <a href="/admin/publish"><i class="bi bi-gem"></i> Publish</a>
+      <a href="/admin/manage"><i class="bi bi-person"></i> Manage</a>
+      <a href="/admin/Queries"><i class="bi bi-journal-text"></i> Queries</a>
+      <a href="" id="adminLogout"><i class="bi bi-journal-text"></i> Logout</a>
+      
+
+    </div>
+
+    <!-- Main Content -->
+    <div class="content" id="mainContent">
+      <div class="themed-box topbar d-flex flex-wrap justify-content-between align-items-center gap-2 themed-box">
+        <div class="d-flex align-items-center gap-3">
+        <i class="bi bi-list fs-3 cursor-pointer"  id="toggleSidebarBtn" style="cursor: pointer;"></i>
+          <h4 class="mb-0">Dashboard</h4>
+        </div>
+        <div class="d-flex align-items-center gap-2">
+
+          <i class="bi bi-bell me-2"></i>
+          <i class="bi bi-gear"></i>
+        </div>
+      </div>
+
+      <main class="main">
+        <div class="container">
+          <!-- Small Cards -->
+          <div class="row mb-4 mt-4">
+            <div class="col-md-3 col-sm-6 mb-3">
+              <div class="card shadow-sm">
+                <div class="card-body text-center themed-box rounded">
+                  <h5 class="card-title">Total Registered</h5>
+                  <p class="card-text"><%= userItems.allregistered %></p>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-3 col-sm-6 mb-3">
+              <div class="card shadow-sm">
+                <div class="card-body text-center themed-box rounded">
+                  <h5 class="card-title">Viewer</h5>
+                  <p class="card-text"><%= userItems.viewer %></p>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-2 col-sm-6 mb-3">
+              <div class="card shadow-sm">
+                <div class="card-body text-center themed-box rounded">
+                  <h5 class="card-title">Data Reader</h5>
+                  <p class="card-text"><%= userItems.datareader %></p>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-2 col-sm-6 mb-3">
+              <div class="card shadow-sm">
+                <div class="card-body text-center themed-box rounded">
+                  <h5 class="card-title">Admin</h5>
+                  <p class="card-text"><%= userItems.admin %></p>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-2 col-sm-6 mb-3">
+              <div class="card shadow-sm">
+                <div class="card-body text-center themed-box rounded">
+                  <h5 class="card-title">Root User</h5>
+                  <p class="card-text"><%= userItems.root %></p>
+                </div>
+              </div>
+            </div>
+            
+          </div>
+           <div class="row mb-4 mt-4">
+            <div class="col-md-3 col-sm-6 mb-3">
+              <div class="card shadow-sm">
+                <div class="card-body text-center themed-box rounded">
+                  <h5 class="card-title">Total Requests</h5>
+                  <p class="card-text"><%= userItems.allrequests %></p>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-3 col-sm-6 mb-3">
+              <div class="card shadow-sm">
+                <div class="card-body text-center themed-box rounded">
+                  <h5 class="card-title">Pending</h5>
+                  <p class="card-text"><%= userItems.panding %></p>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-2 col-sm-6 mb-3">
+              <div class="card shadow-sm">
+                <div class="card-body text-center themed-box rounded">
+                  <h5 class="card-title">Approved</h5>
+                  <p class="card-text"><%= userItems.approved %></p>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-2 col-sm-6 mb-3">
+              <div class="card shadow-sm">
+                <div class="card-body text-center themed-box rounded">
+                  <h5 class="card-title">Rejected</h5>
+                  <p class="card-text"><%= userItems.rejected %></p>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-2 col-sm-6 mb-3">
+              <div class="card shadow-sm">
+                <div class="card-body text-center themed-box rounded">
+                  <h5 class="card-title">Isolated</h5>
+                  <p class="card-text"><%= userItems.isolated %></p>
+                </div>
+              </div>
+            </div>
+          </div>
+           <div class="row mb-4 mt-4">
+            <div class="col-md-3 col-sm-6 mb-3">
+              <div class="card shadow-sm">
+                <div class="card-body text-center themed-box rounded">
+                  <h5 class="card-title">Total Queries</h5>
+                  <p class="card-text"><%= userItems.allqueries %></p>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-3 col-sm-6 mb-3">
+              <div class="card shadow-sm">
+                <div class="card-body text-center themed-box rounded">
+                  <h5 class="card-title">Pending</h5>
+                  <p class="card-text"><%= userItems.queriesnew %></p>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-3 col-sm-6 mb-3">
+              <div class="card shadow-sm">
+                <div class="card-body text-center themed-box rounded">
+                  <h5 class="card-title">Resolved</h5>
+                  <p class="card-text"><%= userItems.queriesreloved %></p>
+                </div>
+              </div>
+            </div>
+            
+          </div>
+           <div class="row mb-4 mt-4">
+            <div class="col-md-3 col-sm-6 mb-3">
+              <div class="card shadow-sm">
+                <div class="card-body text-center themed-box rounded">
+                  <h5 class="card-title">Total Datesets</h5>
+                  <p class="card-text"><%= userItems.catalogall %></p>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-3 col-sm-6 mb-3">
+              <div class="card shadow-sm">
+                <div class="card-body text-center themed-box rounded">
+                  <h5 class="card-title">Administrative Layers</h5>
+                  <p class="card-text"><%= userItems.administrative %></p>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-3 col-sm-6 mb-3">
+              <div class="card shadow-sm">
+                <div class="card-body text-center themed-box rounded">
+                  <h5 class="card-title">Weather And Climate</h5>
+                  <p class="card-text"><%= userItems.weatherclimate %></p>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-3 col-sm-6 mb-3">
+              <div class="card shadow-sm">
+                <div class="card-body text-center themed-box rounded">
+                  <h5 class="card-title">Land Resource</h5>
+                  <p class="card-text"><%= userItems.landresource %></p>
+                </div>
+              </div>
+            </div>
+          </div>
+           <div class="row mb-4 mt-4">
+            <div class="col-md-3 col-sm-6 mb-3">
+              <div class="card shadow-sm">
+                <div class="card-body text-center themed-box rounded">
+                  <h5 class="card-title">Water Resource</h5>
+                  <p class="card-text"><%= userItems.waterresource %></p>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-3 col-sm-6 mb-3">
+              <div class="card shadow-sm">
+                <div class="card-body text-center themed-box rounded">
+                  <h5 class="card-title">Disaster Management</h5>
+                  <p class="card-text"><%= userItems.disastermanagement %></p>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-3 col-sm-6 mb-3">
+              <div class="card shadow-sm">
+                <div class="card-body text-center themed-box rounded">
+                  <h5 class="card-title">Infrastructure</h5>
+                  <p class="card-text"><%= userItems.infrastructure %></p>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-3 col-sm-6 mb-3">
+              <div class="card shadow-sm">
+                <div class="card-body text-center themed-box rounded">
+                  <h5 class="card-title">Utility</h5>
+                  <p class="card-text"><%= userItems.utility %></p>
+                </div>
+              </div>
+            </div>
+          </div>
+      
+        </div>>
+      </main>
+
+    </div>
+
+  <script src="/admin-assets/js/handlesubmits.js"></script>
+      <script src="/js/toogleAndHandleTheme.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+
+  </body>
+
+  </html>

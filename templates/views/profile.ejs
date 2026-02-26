@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="auto">
+<head>
+    <%- include('../partials/head') %>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            min-height: 100vh;
+            background-color: var(--bs-body-bg);
+        }
+        .profile-card {
+            border-radius: 1rem;
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            max-width: 1100px;
+            margin: 2rem auto;
+        }
+        .profile-card:hover {
+            transform: translateY(-0.25rem);
+            box-shadow: 0 0.75rem 1.5rem rgba(0, 0, 0, 0.2);
+        }
+        .profile-header {
+            padding: 2rem;
+            border-radius: 1rem 1rem 0 0;
+        }
+        .profile-img {
+            border-radius: 0.75rem;
+            max-width: 100%;
+            height: 280px;
+            object-fit: cover;
+            border: 3px solid var(--bs-border-color);
+            transition: opacity 0.3s ease;
+        }
+        .profile-img-loading {
+            opacity: 0;
+        }
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+        .info-item {
+            display: flex;
+            align-items: center;
+            padding: 0.5rem 0;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .info-label {
+            font-weight: 600;
+            min-width: 130px;
+            font-size: 0.95rem;
+        }
+        .info-value {
+            font-size: 0.95rem;
+        }
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -0.5rem;
+            left: 0;
+            width: 50px;
+            height: 3px;
+            background: var(--bs-primary);
+            border-radius: 2px;
+        }
+        @media (max-width: 992px) {
+            .profile-card {
+                max-width: 90%;
+            }
+            .profile-img {
+                height: 220px;
+            }
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+            .info-label {
+                min-width: 120px;
+            }
+        }
+        @media (max-width: 576px) {
+            .profile-img {
+                height: 180px;
+            }
+            .info-item {
+                flex-direction: column;
+                align-items: flex-start;
+                white-space: normal;
+            }
+            .info-label {
+                min-width: auto;
+                margin-bottom: 0.25rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <%- include('../partials/arrownav') %>
+
+    <!-- Profile Section Start -->
+    <div class="container my-2" style="min-height: 70vh;">
+        <div class="text-center mb-2">
+            <h2 class="fw-bold display-6">User Profile</h2>
+            <p class="text-muted mt-2">Explore your personal details</p>
+        </div>
+
+        <% userItems.forEach(function(item) { %>
+        <div class="profile-card themed-box">
+            <div class="profile-header bg-primary text-white">
+                <h3 class="fw-bold mb-0"><%= item.first_name %> <%= item.last_name %></h3>
+                <p class="text-white-50 mt-1 small"><%= item.designation %> at <%= item.organization %></p>
+            </div>
+            <div class="row g-0 p-4">
+                <div class="col-lg-4 d-flex align-items-center justify-content-center">
+                    <div class="p-3">
+                        <img src="data:image/png;base64,<%= item.id_proof %>" alt="ID Proof"  style="width: 100%;">
+                    </div>
+                </div>
+                <div class="col-lg-8 p-3">
+                    <h4 class="section-title ">About Me</h4>
+                    <p class="text-muted mb-4"><%= item.about %></p>
+                    <h4 class="section-title ">Personal Details</h4>
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <span class="info-label ">User ID:</span>
+                            <span class="info-value text-muted"><%= item.user_id %></span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label ">Email:</span>
+                            <span class="info-value text-muted"><%= item.email %></span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label ">Organization:</span>
+                            <span class="info-value text-muted"><%= item.organization %></span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label ">Designation:</span>
+                            <span class="info-value text-muted"><%= item.designation %></span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label ">Name:</span>
+                            <span class="info-value text-muted"><%= item.first_name %> <%= item.last_name %></span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label ">Phone:</span>
+                            <span class="info-value text-muted"><%= item.mobile %></span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label ">Department:</span>
+                            <span class="info-value text-muted"><%= item.department %></span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label ">User Type:</span>
+                            <span class="info-value text-muted"><%= item.user_type %></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <% }) %>
+    </div>
+
+          <%- include('../partials/homeFooter') %>
+
+    <!-- Profile Section End -->
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/js/script.js"></script>
+    <script src="/js/toogleAndHandleTheme.js"></script>
+        <script src="/js/backNhome.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/ol@v9.2.4/dist/ol.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <%- include('../partials/footer') %>
+</body>
+</html>

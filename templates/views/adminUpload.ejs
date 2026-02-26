@@ -1,0 +1,361 @@
+<%- include('../partials/adminhead') %>
+
+<body>
+  <%- include('../partials/loader') %>
+  <!-- admin-Sidebar -->
+  <div class="admin-sidebar" id="admin-sidebar">
+    <h4 class="text-white mb-4">ASSAM-SDR</h4>
+    <div class="mb-4">
+      <i class="bi bi-person-circle me-2"></i><%= full_name %>
+    </div>
+    <a href="/admin/home"><i class="bi bi-grid"></i> Home</a>
+    <a href="/admin/requests"><i class="bi bi-ui-checks"></i> Requests</a>
+    <a href="/admin/roles"><i class="bi bi-table"></i> Manage Roles</a>
+    <a href="/admin/logs"><i class="bi bi-person"></i> Logs</a>
+
+    <a href="/admin/upload" class="active"><i class="bi bi-gem"></i> Upload</a>
+    <a href="/admin/publish"><i class="bi bi-gem"></i> Publish</a>
+    <a href="/admin/manage"><i class="bi bi-person"></i> Manage</a>
+    <a href="/admin/Queries"><i class="bi bi-journal-text"></i> Queries</a>
+    <a href="" id="adminLogout"><i class="bi bi-journal-text"></i> Logout</a>
+  </div>
+
+  <!-- Main Content -->
+  <div class="content" id="mainContent">
+    <div class="themed-box topbar d-flex flex-wrap justify-content-between align-items-center gap-2 themed-box">
+      <div class="d-flex align-items-center gap-3">
+        <i class="bi bi-list fs-3 cursor-pointer"  id="toggleSidebarBtn" style="cursor: pointer;"></i>
+        <h4 class="mb-0">Dashboard</h4>
+      </div>
+      <div class="d-flex align-items-center gap-2">
+
+        <i class="bi bi-bell me-2"></i>
+        <i class="bi bi-gear"></i>
+      </div>
+    </div>
+
+    <!-- <main class="main"> -->
+
+
+    <main class="main p-4">
+
+      <div class="row g-3 align-items-end mb-3">
+
+        <div class="col-lg-4 col-md-6 d-flex align-items-center">
+          <label class="form-label d-block me-2">Status</label>
+          <div class="btn-group" role="group" aria-label="Status selection">
+            <input type="radio" class="btn-check" name="formOption" id="uploadOption" value="false" checked>
+            <label class="btn btn-outline-secondary" for="uploadOption">Upload</label>
+            <input type="radio" class="btn-check" name="formOption" id="metadataOption" value="true">
+            <label class="btn btn-outline-secondary" for="metadataOption">Append Meta Data</label>
+            <!-- <input type="radio" class="btn-check" name="formOption" id="metadataOption" value="all">
+                          <label class="btn btn-outline-primary" for="metadataOption">All</label> -->
+          </div>
+        </div>
+      </div>
+
+      <!-- Upload Form -->
+      <form id="adminUploadForm" action="/admin/shpuploads" method="POST" class="form-active themed-box p-4 rounded">
+        <div class="row">
+          <div class="col-6 mb-3">
+            <label for="uploaded_file" class="form-label">Select File [only zipped shapefile or
+              tiff]</label>
+            <input type="file" class="form-control" id="uploaded_file" name="uploaded_file" accept=".zip ,.tiff" required>
+          </div>
+          <div class="col-6 mb-3">
+            <label for="filet_ype" class="form-label">Select Type</label>
+            <select class="form-control" id="file_type" name="file_type" required>
+              <option value="">Select</option>
+              <option value="vector" selected>vector</option>
+
+            </select>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-6 mb-3">
+            <label for="theme" class="form-label">Select Theme</label>
+            <select class="form-control" id="theme" name="theme" required>
+              <option value="">Select</option>
+              <option value="administrative">Administrative</option>
+              <option value="weatherclimate">Weather & Climate</option>
+              <option value="waterresource">Water Resource</option>
+              <option value="landresource">Land Resource</option>
+              <option value="disastermanagement">Disaster Management</option>
+              <option value="utility">Utility</option>
+              <option value="infrastructure">Infrastructure</option>
+              <option value="terrain">Terrain</option>
+            </select>
+          </div>
+          <div class="col-md-6 mb-3">
+            <label for="file_name" class="form-label">File Name</label>
+            <input type="text" class="form-control" id="file_name" name="file_name" pattern="[a-z0-9_]+" placeholder="e.g., lulc_assam_2025" required>
+            <div class="invalid-feedback">
+              Filename can only contain lowercase letters, numbers, and underscores.
+            </div>
+          </div>
+
+        </div>
+        <div class="row">
+
+          <div class="col-md-6 mb-3">
+            <label for="srid" class="form-label">SRID (Spatial Reference ID)</label>
+            <input type="text" class="form-control" id="srid" name="srid" value="4326" placeholder="e.g., 4326" required>
+          </div>
+        </div>
+
+        <div class="button-group">
+          <button type="submit" class="btn btn-success">Upload</button>
+        </div>
+      </form>
+
+      <!-- Metadata Form -->
+      <form id="metadataForm" action="/admin/metadata" method="POST" class="form-hidden themed-box p-4 rounded">
+        <div class="progress">
+          <div class="progress-bar" role="progressbar" style="width: 33.33%" aria-valuenow="33.33" aria-valuemin="0" aria-valuemax="100">Step 1 of 3</div>
+        </div>
+
+        <!-- Step 1: Identification -->
+        <div class="form-step active">
+          <h4>Identification</h4>
+          <div class="row">
+            <div class="col-6 mb-3">
+
+              <label for="meta_file_name">File Name</label>
+              <select id="meta_file_name" class="form-control" name="meta_file_name">
+                <option value="">Select File Name</option>
+                <% catalogItems.forEach(function(item) { %>
+                <option value="<%=item.file_name%>">
+                  <%=item.file_name%>
+                </option>
+                <% }) %>
+              </select>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label for="title" class="form-label">Title*</label>
+              <input type="text" class="form-control" id="title" name="title" required>
+            </div>
+
+
+          </div>
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label for="spatial_coverage" class="form-label">Spatial / Geographical Coverage
+                Area*</label>
+              <input type="text" class="form-control" id="spatial_coverage" name="spatial_coverage">
+            </div>
+            <div class="col-md-6 mb-3">
+              <label for="publisher" class="form-label">Publisher</label>
+              <input type="text" class="form-control" id="publisher" name="publisher">
+            </div>
+
+          </div>
+
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label for="public_access_level" class="form-label">Public Access Level</label>
+              <input type="text" class="form-control" id="public_access_level" name="public_access_level" value="Public">
+            </div>
+            <div class="col-md-6 mb-3">
+              <label for="meta-theme" class="form-label">Theme/Topic Category</label>
+              <input type="text" class="form-control" id="meta-theme" name="meta-theme" readonly>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label for="citation" class="form-label">Citation</label>
+              <input type="text" class="form-control" id="citation" name="citation">
+            </div>
+            <div class="col-md-6 mb-3">
+              <label for="source_date" class="form-label">Source date*</label>
+              <input type="date" class="form-control" id="source_date" name="source_date" required>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label for="meta-filetype" class="form-label">File Type</label>
+              <input type="text" class="form-control" id="meta-filetype" name="meta-filetype" readonly>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label for="group_visibility" class="form-label">Group Content Visibility</label>
+              <select class="form-select" id="group_visibility" name="group_visibility">
+                <option value="Public" selected>Public</option>
+                <option value="Private">Private</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="button-group">
+            <button type="button" class="btn btn-primary next-btn">Next</button>
+          </div>
+        </div>
+
+        <!-- Step 2: Contact & Quality -->
+        <div class="form-step">
+          <h4>Descriptive and Quality Information</h4>
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label for="data_abstract" class="form-label">Data Identification Abstract</label>
+              <input type="text" class="form-control" id="data_abstract" name="data_abstract">
+            </div>
+            <div class="col-md-6 mb-3">
+              <label for="area_of_interest" class="form-label">Area of Interest</label>
+              <input type="text" class="form-control" id="area_of_interest" name="area_of_interest">
+            </div>
+          </div>
+
+
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label for="metadata_date" class="form-label">Metadata Date Stamp*</label>
+              <input type="date" class="form-control" id="metadata_date" name="metadata_date">
+            </div>
+            <div class="col-md-6 mb-3">
+              <label for="data_quality" class="form-label">Data Quality</label>
+              <input type="text" class="form-control" id="data_quality" name="data_quality" value="High resolution data with minimal errors">
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label for="language" class="form-label">Dataset Language</label>
+              <input type="text" class="form-control" id="language" name="language" value="English">
+            </div>
+          </div>
+
+          <div class="button-group">
+            <button type="button" class="btn btn-secondary prev-btn">Previous</button>
+            <button type="button" class="btn btn-primary next-btn">Next</button>
+          </div>
+        </div>
+
+        <!-- Step 3: Metadata Information -->
+        <div class="form-step">
+          <h4>Spatial Reference Information</h4>
+          <div class="row">
+
+            <div class="col-md-6 mb-3">
+              <label for="projection" class="form-label">Projection Information</label>
+              <input type="text" class="form-control" id="projection" name="projection" value="GCS, WGS 1984">
+            </div>
+            <div class="col-md-6 mb-3">
+              <label for="scale" class="form-label">Scale</label>
+              <input type="text" class="form-control" id="scale" name="scale" value="" placeholder="eg. 1:50000">
+            </div>
+          </div>
+          <h4>Some Other Information</h4>
+
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label for="district" class="form-label">Select District [Only if District Data]</label>
+              <select class="form-control" id="district" name="district">
+                <option value="any">any</option>
+                <option value="Cachar">Cachar</option>
+                <option value="Karimganj">Karimganj</option>
+                <option value="Hailakandi">Hailakandi</option>
+                <option value="Jorhat">Jorhat</option>
+                <option value="Golaghat">Golaghat</option>
+                <option value="Nagaon">Nagaon</option>
+                <option value="East Karbi Anglong">East Karbi Anglong</option>
+                <option value="Morigaon">Morigaon</option>
+                <option value="Dhuburi">Dhuburi</option>
+                <option value="West Karbi Anglong">West Karbi Anglong</option>
+                <option value="NC Hills">NC Hills</option>
+                <option value="Kamrup metro">Kamrup metro</option>
+                <option value="Sibsagar">Sibsagar</option>
+                <option value="Barpeta">Barpeta</option>
+                <option value="Kamrrup Rural">Kamrrup Rural</option>
+                <option value="Goalpara">Goalpara</option>
+                <option value="Lakhimpur">Lakhimpur</option>
+                <option value="Darrang">Darrang</option>
+                <option value="Chirang">Chirang</option>
+                <option value="Baksa">Baksa</option>
+                <option value="Nalbari">Nalbari</option>
+                <option value="Bongaigaon">Bongaigaon</option>
+                <option value="Dibrugarh">Dibrugarh</option>
+                <option value="Tinsukia">Tinsukia</option>
+                <option value="Dhemaji">Dhemaji</option>
+                <option value="Kokrajhar">Kokrajhar</option>
+                <option value="Udalguri">Udalguri</option>
+                <option value="Hojai">Hojai</option>
+                <option value="Saraideo">Saraideo</option>
+                <option value="Majuli">Majuli</option>
+                <option value="Mancachar">Mancachar</option>
+                <option value="Biswanath">Biswanath</option>
+                <option value="Sonitpur">Sonitpur</option>
+              </select>
+
+              <label for="department" class="form-label">Select department [Only if department Data]</label>
+
+              <select class="form-select mb-3" id="department" name="department">
+                <option value="all" selected>All</option>
+                <option value="Agriculture Department">Agriculture Department</option>
+                <option value="Animal Husbandry & Veterinary Department">Animal Husbandry & Veterinary Department</option>
+                <option value="Assam Police Department">Assam Police Department</option>
+                <option value="Border Protection & Development Department">Border Protection & Development Department</option>
+                <option value="Cultural Affairs Department">Cultural Affairs Department</option>
+                <option value="Department of Industries & Commerce">Department of Industries & Commerce</option>
+                <option value="Department of Information Technology">Department of Information Technology</option>
+                <option value="Department of Labour Welfare">Department of Labour Welfare</option>
+                <option value="Disaster Management Department">Disaster Management Department</option>
+                <option value="Education Department">Education Department</option>
+                <option value="Environment & Forest Department">Environment & Forest Department</option>
+                <option value="Excise Department">Excise Department</option>
+                <option value="Finance Department">Finance Department</option>
+                <option value="Fisheries Department">Fisheries Department</option>
+                <option value="Food, Civil Supplies & Consumer Affairs Department">Food, Civil Supplies & Consumer Affairs Department</option>
+                <option value="General Administration Department">General Administration Department</option>
+                <option value="Handloom, Textiles & Sericulture Department">Handloom, Textiles & Sericulture Department</option>
+                <option value="Health & Family Welfare Department">Health & Family Welfare Department</option>
+                <option value="Higher Education Department">Higher Education Department</option>
+                <option value="Home and Political Department">Home and Political Department</option>
+                <option value="Housing & Urban Affairs Department">Housing & Urban Affairs Department</option>
+                <option value="Irrigation Department">Irrigation Department</option>
+                <option value="Judicial Department">Judicial Department</option>
+                <option value="Mines & Minerals Department">Mines & Minerals Department</option>
+                <option value="Panchayat & Rural Development Department">Panchayat & Rural Development Department</option>
+                <option value="Planning & Development Department">Planning & Development Department</option>
+                <option value="Power Department">Power Department</option>
+                <option value="Public Health Engineering Department">Public Health Engineering Department</option>
+                <option value="Public Works Department (PWD)">Public Works Department (PWD)</option>
+                <option value="Revenue & Disaster Management Department">Revenue & Disaster Management Department</option>
+                <option value="Science & Technology Department">Science & Technology Department</option>
+                <option value="Skill, Employment & Entrepreneurship Department">Skill, Employment & Entrepreneurship Department</option>
+                <option value="Social Welfare Department">Social Welfare Department</option>
+                <option value="Soil Conservation Department">Soil Conservation Department</option>
+                <option value="Sports & Youth Welfare Department">Sports & Youth Welfare Department</option>
+                <option value="Tourism Department">Tourism Department</option>
+                <option value="Transport Department">Transport Department</option>
+                <option value="Water Resources Department">Water Resources Department</option>
+                <option value="Women and Child Development Department">Women and Child Development Department</option>
+                <option value="Welfare of Minorities & Development Department">Welfare of Minorities & Development Department</option>
+                <option value="Welfare of Plain Tribes & Backward Classes Department">Welfare of Plain Tribes & Backward Classes Department</option>
+
+              </select>
+            </div>
+
+
+            <div class="col-md-6 mb-3">
+
+              <label for="tag">Select Tag [If Some specific Tag]</label>
+              <input list="tagOptions" id="tag" name="tag" placeholder="Type or select..." class="dropdown-input" required>
+              <datalist id="tagOptions">
+              </datalist>
+
+            </div>
+
+          </div>
+
+          <div class="button-group">
+            <button type="button" class="btn btn-secondary prev-btn">Previous</button>
+            <button type="submit" class="btn btn-success">Submit</button>
+          </div>
+        </div>
+      </form>
+    </main>
+  </div>
+
+  <script src="/admin-assets/js/handlesubmits.js"></script>
+  <script src="/admin-assets/js/adminUpload.js"></script>
+  <%- include('../partials/footer') %>

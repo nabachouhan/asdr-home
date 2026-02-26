@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <%- include('../partials/head') %>
+</head>
+
+<body onload="loaderFunc()">
+    <div id="loader">
+        <div id="loaderelement">
+            <div class="spinner-grow text-primary" role="status">
+                <span class="sr-only">...</span>
+            </div>
+            <div class="spinner-grow text-secondary" role="status">
+                <span class="sr-only">...</span>
+            </div>
+            <div class="spinner-grow text-success" role="status">
+                <span class="sr-only">...</span>
+            </div>
+            <div class="spinner-grow text-danger" role="status">
+                <span class="sr-only">...</span>
+            </div>
+            <div class="spinner-grow text-warning" role="status">
+                <span class="sr-only">...</span>
+            </div>
+            <div class="spinner-grow text-info" role="status">
+                <span class="sr-only">...</span>
+            </div>
+            <div class="spinner-grow text-primary" role="status">
+                <span class="sr-only">...</span>
+            </div>
+            <div class="spinner-grow " role="status">
+                <span class="sr-only">x</span>
+            </div>
+        </div>
+    </div>
+
+    <%- include('../partials/homeNav') %>
+    <%- include('../partials/loader') %>
+
+
+
+
+    <!-- Hero section Starts -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1 class="text-white">Empowering You with Assam SDR</h1>
+            <p>Discover, analyze, and visualize spatial data effortlessly.</p>
+            <a href="/gisportal" class="btn btn-primary rounded-pill py-3 px-5 mt-3">Explore</a>
+        </div>
+        <video autoplay muted loop poster="video-placeholder.jpg" id="bg-video">
+            <source src="./image/hero.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+
+    </section>
+    <!-- Hero section ends -->
+
+
+    <!-- stats section Starts -->
+
+    <div class="col-lg-12 p-5 wow fadeIn" data-wow-delay="0.1s">
+        <div class="row g-4">
+            <div class="col-sm-3">
+                <div class="border-start ps-4">
+                    <h2 class=" mb-1" data-toggle="counter-up">123</h2>
+                    <p class=" mb-0">Total Visits</p>
+                </div>
+            </div>
+            <div class="col-sm-3">
+                <div class="border-start ps-4">
+                     <h2 class=" mb-1" data-toggle="counter-up"><%= userItems.count %></h2> 
+                    <p class=" mb-0">Registered Users</p>
+                </div>
+            </div>
+         
+            <div class="col-sm-3">
+                <div class="border-start ps-4">
+                     <h2 class=" mb-1" data-toggle="counter-up"><%= userItems.regcount %></h2> 
+                    <p class=" mb-0">Shapefile Available</p>
+                </div>
+            </div>
+            <div class="col-sm-3">
+                <div class="border-start ps-4">
+                     <h2 class=" mb-1" data-toggle="counter-up"><%= userItems.reqcount %></h2> 
+                    <p class=" mb-0">Total Requests</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- stats section Starts -->
+
+
+
+
+    <!-- About Start -->
+    <div class="container-xxl py-5" id="about">
+        <div class="container">
+            <div class="row g-5">
+                <div class="col-lg-6 wow fadeIn" data-wow-delay="0.1s">
+                    <div class="d-flex flex-column">
+                        <img class="img-fluid rounded w-75 align-self-end" src="./image/ind.png" alt="">
+                      
+                            <iframe class="img-fluid rounded w-50 bg-white  " width="560" height="315" src="https://www.youtube.com/embed/sqxVhA-l3Qg?si=OSYfk5nTv9kX6J0M" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen style="margin-top: -25%;"></iframe>
+                    </div>
+                </div>
+                <div class="col-lg-6 wow fadeIn" data-wow-delay="0.5s">
+                    <p class="d-inline-block border rounded-pill py-1 px-4">About Portal</p>
+                    <h1 class="mb-4">Assam-SDR? Get Know About It!</h1>
+                    <p>The Assam GIS Explorer project is a comprehensive web-based application designed to visualize and
+                        interact with geospatial data related to the Assam region. </p>
+                    <p class="mb-4">This project aims to provide a user-friendly interface for exploring various layers
+                        of geographical information, enabling users to perform tasks such as visualization, measurement,
+                        geocoding, and data manipulation.
+                    </p>
+                    <p><i class="far fa-check-circle text-primary me-3"></i>Interactive Mapping</p>
+                    <p><i class="far fa-check-circle text-primary me-3"></i>Data Visualization</p>
+                    <p><i class="far fa-check-circle text-primary me-3"></i>Data Sharing </p>
+                    <a class="btn btn-primary rounded-pill py-3 px-5 mt-3" href="http://localhost:5173/">Explore</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+<!-- Service Start -->
+<div class="container-xxl py-5" id="service">
+  <div class="container">
+    <div class="text-center mx-auto mb-5 wow fadeInUp" data-wow-delay="0.1s" style="max-width: 600px;">
+      <p class="d-inline-block border rounded-pill py-1 px-4">Services</p>
+      <h1>Services</h1>
+    </div>
+
+    <div class="row justify-content-center g-4 text-center">
+      <!-- Service Item 1 -->
+      <div class="col-6 col-md-4 col-lg" style="flex: 0 0 20%; max-width: 20%;">
+        <div class="themed-box p-4 rounded h-100 shadow-sm">
+          <div class="bg-white rounded-circle d-flex justify-content-center align-items-center mx-auto mb-3" style="width: 60px; height: 60px;">
+            <span class="material-symbols-outlined text-primary">database</span>
+          </div>
+          <h6 class="fw-bold">Spatial Data Repository</h6>
+          <p class="small mb-0">Access layer files from catalog with secure download via admin approval.</p>
+        </div>
+      </div>
+
+      <!-- Service Item 2 -->
+      <div class="col-6 col-md-4 col-lg" style="flex: 0 0 20%; max-width: 20%;">
+        <div class="themed-box p-4 rounded h-100 shadow-sm">
+          <div class="bg-white rounded-circle d-flex justify-content-center align-items-center mx-auto mb-3" style="width: 60px; height: 60px;">
+            <span class="material-symbols-outlined text-primary">blur_circular</span>
+          </div>
+          <h6 class="fw-bold">Buffer Analysis</h6>
+          <p class="small mb-0">Draw shapes and generate buffer zones with custom distances.</p>
+        </div>
+      </div>
+
+      <!-- Service Item 3 -->
+      <div class="col-6 col-md-4 col-lg" style="flex: 0 0 20%; max-width: 20%;">
+        <div class="themed-box p-4 rounded h-100 shadow-sm">
+          <div class="bg-white rounded-circle d-flex justify-content-center align-items-center mx-auto mb-3" style="width: 60px; height: 60px;">
+            <i class="bi bi-eye text-primary fs-5"></i>
+          </div>
+          <h6 class="fw-bold">Layer Visualization</h6>
+          <p class="small mb-0">Explore and filter geospatial layers to extract meaningful insights.</p>
+        </div>
+      </div>
+
+      <!-- Service Item 4 -->
+      <div class="col-6 col-md-4 col-lg" style="flex: 0 0 20%; max-width: 20%;">
+        <div class="themed-box p-4 rounded h-100 shadow-sm">
+          <div class="bg-white rounded-circle d-flex justify-content-center align-items-center mx-auto mb-3" style="width: 60px; height: 60px;">
+            <i class="bi bi-rulers text-primary fs-5"></i>
+          </div>
+          <h6 class="fw-bold">Measurement & Analysis</h6>
+          <p class="small mb-0">Measure distances and areas for planning and spatial analysis.</p>
+        </div>
+      </div>
+
+      <!-- Service Item 5 -->
+      <div class="col-6 col-md-4 col-lg" style="flex: 0 0 20%; max-width: 20%;">
+        <div class="themed-box p-4 rounded h-100 shadow-sm">
+          <div class="bg-white rounded-circle d-flex justify-content-center align-items-center mx-auto mb-3" style="width: 60px; height: 60px;">
+            <span class="material-symbols-outlined text-primary">thread_unread</span>
+          </div>
+          <h6 class="fw-bold">Draw & Export</h6>
+          <p class="small mb-0">Create shapes and export them as GeoJSON files for sharing.</p>
+        </div>
+      </div>
+
+      <!-- Service Item 6 -->
+      <div class="col-6 col-md-4 col-lg" style="flex: 0 0 20%; max-width: 20%;">
+        <div class="themed-box p-4 rounded h-100 shadow-sm">
+          <div class="bg-white rounded-circle d-flex justify-content-center align-items-center mx-auto mb-3" style="width: 60px; height: 60px;">
+            <span class="material-symbols-outlined text-primary">upload_file</span>
+          </div>
+          <h6 class="fw-bold">Upload & Visualize</h6>
+          <p class="small mb-0">Upload and view GeoJSON, CSV, or shapefiles on the map easily.</p>
+        </div>
+      </div>
+
+      <!-- Service Item 7 -->
+      <div class="col-6 col-md-4 col-lg" style="flex: 0 0 20%; max-width: 20%;">
+        <div class="themed-box p-4 rounded h-100 shadow-sm">
+          <div class="bg-white rounded-circle d-flex justify-content-center align-items-center mx-auto mb-3" style="width: 60px; height: 60px;">
+            <span class="material-symbols-outlined text-primary">pin_drop</span>
+          </div>
+          <h6 class="fw-bold">Search Location</h6>
+          <p class="small mb-0">Search and mark locations using geocoding or lat/lon inputs.</p>
+        </div>
+      </div>
+
+      <!-- Service Item 8 -->
+      <div class="col-6 col-md-4 col-lg" style="flex: 0 0 20%; max-width: 20%;">
+        <div class="themed-box p-4 rounded h-100 shadow-sm">
+          <div class="bg-white rounded-circle d-flex justify-content-center align-items-center mx-auto mb-3" style="width: 60px; height: 60px;">
+            <i class="bi bi-search text-primary fs-5"></i>
+          </div>
+          <h6 class="fw-bold">Search by Lat/Lon</h6>
+          <p class="small mb-0">Pinpoint any location by entering latitude and longitude values.</p>
+        </div>
+      </div>
+
+      <!-- Service Item 9 -->
+      <div class="col-6 col-md-4 col-lg" style="flex: 0 0 20%; max-width: 20%;">
+        <div class="themed-box p-4 rounded h-100 shadow-sm">
+          <div class="bg-white rounded-circle d-flex justify-content-center align-items-center mx-auto mb-3" style="width: 60px; height: 60px;">
+            <i class="bi bi-stack text-primary fs-5"></i>
+          </div>
+          <h6 class="fw-bold">Layer Management</h6>
+          <p class="small mb-0">Toggle base maps and crop layers for better clarity and focus.</p>
+        </div>
+      </div>
+
+      <!-- Service Item 10 -->
+      <div class="col-6 col-md-4 col-lg" style="flex: 0 0 20%; max-width: 20%;">
+        <div class="themed-box p-4 rounded h-100 shadow-sm">
+          <div class="bg-white rounded-circle d-flex justify-content-center align-items-center mx-auto mb-3" style="width: 60px; height: 60px;">
+            <span class="material-symbols-outlined text-primary">map</span>
+          </div>
+          <h6 class="fw-bold">Interactive Map Tools</h6>
+          <p class="small mb-0">Use measurement, drawing, and layer tools on the interactive map.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Service End -->
+
+
+
+    <!-- Cataloge Start -->
+    <div class="container-fluid themed-box overflow-hidden my-5 px-lg-0 p-2" id="catalog">
+        <div class="container feature px-lg-0">
+            <div class="row g-0 mx-lg-0">
+                <div class="col-lg-6 feature-text p-5 wow fadeIn" data-wow-delay="0.1s">
+                    <div class="p-lg-5 ps-lg-0">
+                        <p class="d-inline-block border rounded-pill  py-1 px-4">Catalog</p>
+                        <h1 class=" mb-4">Spatial Data Repository</h1>
+                        <p class=" mb-4 pb-2">Welcome to our geospatial catalogue page, where you can browse
+                            through a rich collection of geospatial data covering various themes and regions. Whether
+                            you're a researcher, planner, or developer, our catalogue offers a diverse range of datasets
+                            to support your projects and analyses.
+
+                            Browse through our comprehensive selection of geospatial data, including village data,
+                            school data, and much more. Each dataset is carefully
+                            curated and organized to ensure easy navigation and discovery.</p>
+                        <div class="row g-4">
+                            <div class="col-6">
+                                <div class="d-flex align-items-center">
+                                    <div class="d-flex flex-shrink-0 align-items-center justify-content-center rounded-circle themed-box"
+                                        style="width: 55px; height: 55px;">
+                                        <i class="bi bi-cart4 text-primary"></i>
+                                    </div>
+                                    <div class="ms-4">
+                                        <p class=" mb-2">Data</p>
+                                        <h5 class=" mb-0">Request</h5>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="d-flex align-items-center">
+                                    <div class="d-flex flex-shrink-0 align-items-center justify-content-center rounded-circle themed-box"
+                                        style="width: 55px; height: 55px;">
+                                        <i class="bi bi-cloud-arrow-down-fill text-primary fs-5"></i>
+                                    </div>
+                                    <div class="ms-4">
+                                        <p class=" mb-2">Data</p>
+                                        <h5 class=" mb-0">Download</h5>
+                                    </div>
+                                </div>
+                            </div>
+                           
+                            <div class="ms-4 ">
+                                <h5>
+                                    <a class="btn btn-primary rounded-pill py-3 px-5 mt-3 " href="/catalog"> View
+                                        Catalog</a>
+                                </h5>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 pe-lg-0 wow fadeIn  p-6" data-wow-delay="0.5s" style="min-height: 400px;">
+                    <div class="position-relative h-100 m-6">
+                        <img class="position-absolute img-fluid w-100 h-100" src="./image/repoimg2.png"
+                            style="object-fit: contain;" alt="">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Cataloge End -->
+
+    <!-- Contact Start -->
+    <div class="container-xxl py-5" id="contact">
+        <div class="container">
+            <div class="row g-5">
+                <div class="col-lg-6 wow fadeInUp" data-wow-delay="0.1s">
+                    <p class="d-inline-block border rounded-pill py-1 px-4">Contact</p>
+                    <h1 class="mb-4">We’re Here to Help You</h1>
+                    <p class="mb-4">Have questions or need assistance with a mapping project? Reach out to us, and let’s
+                        work together to bring your geospatial ideas to life.
+                    </p>
+                    <div class="themed-box rounded d-flex align-items-center p-5 mb-4">
+                        <div class="d-flex flex-shrink-0 align-items-center justify-content-center rounded-circle bg-white"
+                            style="width: 55px; height: 55px;">
+                            <i class="fa fa-phone-alt text-primary"></i>
+                        </div>
+                        <div class="ms-4">
+                            <p class="mb-2">Call Us Now</p>
+                            <h5 class="mb-0">069138 48401</h5>
+                        </div>
+                    </div>
+                    <div class="themed-box rounded d-flex align-items-center p-5">
+                        <div class="d-flex flex-shrink-0 align-items-center justify-content-center rounded-circle bg-white"
+                            style="width: 55px; height: 55px;">
+                            <i class="fa fa-envelope-open text-primary"></i>
+                        </div>
+                        <div class="ms-4">
+                            <p class="mb-2">Mail Us Now</p>
+                            <h5 class="mb-0">dirassac2021@gmail.com</h5>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 wow fadeInUp" data-wow-delay="0.5s">
+                    <div class="themed-box rounded h-100 d-flex align-items-center p-5">
+                        <form id="queryForm" action="/query" method="POST" enctype="multipart/form-data">
+                            <div class="row g-3">
+                                <div class="col-12 col-sm-6">
+                                    <input type="text" class="form-control border-0" placeholder="Your Name"
+                                        name="full_name" style="height: 55px;">
+                                </div>
+                                <div class="col-12 col-sm-6">
+                                    <input type="email" class="form-control border-0" placeholder="Your Email"
+                                        name="email" style="height: 55px;">
+                                </div>
+                                <div class="col-12 col-sm-6">
+                                    <input type="text" class="form-control border-0" placeholder="Your Mobile"
+                                        name="mobile" style="height: 55px;">
+                                </div>
+                                <div class="col-12 col-sm-6">
+                                    <select class="form-select border-0" style="height: 55px;" name="occupation">
+                                        <option selected>Choose Occupation</option>
+                                        <option value="Researcher">Researcher</option>
+                                        <option value="Student">Student</option>
+                                        <option value="Goverment Employee">Goverment Employee</option>
+                                        <option value="Private Employee">Private Employee</option>
+                                    </select>
+                                </div>
+
+                                <div class="col-12 ">
+
+                                    <textarea class="form-control border-0" placeholder="Reason For Contact"
+                                        name="reason" maxlength="210"></textarea>
+
+                                </div>
+                                <div class="col-12">
+                                    <textarea class="form-control border-0" rows="5" placeholder="Describe your Message"
+                                        name="message" maxlength="300"></textarea>
+                                </div>
+                                <div class="col-12">
+                                    <button class="btn btn-primary w-100 py-3" type="submit" value="send">Drop
+                                        Message</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Contact End -->
+    <%- include('../partials/homeFooter') %>
+
+
+    <script src="/js/script.js"></script>
+    <script src="/js/toogleAndHandleTheme.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+</body>
+
+</html>

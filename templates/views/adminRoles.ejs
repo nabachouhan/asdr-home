@@ -1,0 +1,234 @@
+<%- include('../partials/adminhead') %>
+
+<body>
+  <!-- admin-Sidebar -->
+  <div class="admin-sidebar" id="admin-sidebar">
+    <h4 class="text-white mb-4">ASSAM-SDR</h4>
+    <div class="mb-4">
+      <i class="bi bi-person-circle me-2"></i><%= full_name %>
+    </div>
+    <a href="/admin/home"><i class="bi bi-grid"></i> Home</a>
+    <a href="/admin/requests"><i class="bi bi-ui-checks"></i> Requests</a>
+        <a href="/admin/roles" class="active"><i class="bi bi-table"></i> Manage Roles</a>
+    <a href="/admin/logs"><i class="bi bi-person"></i> Logs</a>
+    <a href="/admin/upload"><i class="bi bi-gem"></i> Upload</a>
+    <a href="/admin/publish"><i class="bi bi-gem"></i> Publish</a>
+    <a href="/admin/manage"><i class="bi bi-person"></i> Manage</a>
+    <a href="/admin/Queries"><i class="bi bi-journal-text"></i> Queries</a>
+    <a href=""  id="adminLogout"><i class="bi bi-journal-text"></i> Logout</a>
+  </div>
+
+  <!-- Main Content -->
+  <div class="content" id="mainContent">
+    <div class="themed-box topbar d-flex flex-wrap justify-content-between align-items-center gap-2 themed-box sticky-top">
+      <div class="d-flex align-items-center gap-3">
+        <i class="bi bi-list fs-3 cursor-pointer"  id="toggleSidebarBtn" style="cursor: pointer;"></i>
+            <h4 class="mb-0">Dashboard</h4>
+      </div>
+      <div class="d-flex align-items-center gap-2">
+        <select class="form-select form-select-sm" id="searchField" style="max-width: 150px;">
+          <option value="first_name" <%= searchField === 'first_name' ? 'selected' : '' %>>First Name</option>
+          <option value="last_name" <%= searchField === 'last_name' ? 'selected' : '' %>>Last Name</option>
+          <option value="email" <%= searchField === 'email' ? 'selected' : '' %>>Email</option>
+          <option value="organization" <%= searchField === 'organization' ? 'selected' : '' %>>Organization</option>
+          <option value="designation" <%= searchField === 'designation' ? 'selected' : '' %>>Designation</option>
+        </select>
+        <input type="text" class="form-control form-control-sm" id="searchValue" placeholder="Search..." style="max-width: 200px;" value="<%= searchValue %>">
+        <button class="btn btn-sm btn-primary" id="applySearchBtn">Apply</button>
+        <i class="bi bi-bell me-2"></i>
+        <i class="bi bi-gear"></i>
+      </div>
+    </div>
+
+    <main class="main">
+  <div class="container-fluid p-4">
+    <div class="col-lg-4 col-md-6 d-flex align-items-center mb-3">
+      <label class="form-label d-block me-2">Role</label>
+      <div class="btn-group" role="group" aria-label="Role selection">
+        <input type="radio" class="btn-check" name="role" id="all" value="all" <%= role === 'all' || !role ? 'checked' : '' %>>
+        <label class="btn btn-outline-secondary" for="all">All</label>
+        <input type="radio" class="btn-check" name="role" id="admin" value="admin" <%= role === 'admin' ? 'checked' : '' %>>
+        <label class="btn btn-outline-secondary" for="admin">Admin</label>
+        <input type="radio" class="btn-check" name="role" id="viewer" value="viewer" <%= role === 'viewer' ? 'checked' : '' %>>
+        <label class="btn btn-outline-secondary" for="viewer">Viewer</label>
+        <input type="radio" class="btn-check" name="role" id="datareader" value="datareader" <%= role === 'datareader' ? 'checked' : '' %>>
+        <label class="btn btn-outline-secondary" for="datareader">Data Reader</label>
+        <input type="radio" class="btn-check" name="role" id="blocked" value="blocked" <%= role === 'blocked' ? 'checked' : '' %>>
+        <label class="btn btn-outline-secondary" for="blocked">blocked</label>
+        <input type="radio" class="btn-check" name="role" id="root" value="root" <%= role === 'root' ? 'checked' : '' %>>
+        <label class="btn btn-outline-secondary" for="root">Root</label>
+      </div>
+    </div>
+    <div class="card border-0 rounded themed-box">
+      <div class="card-header">
+        <h6 class="card-subtitle text-muted p-3 text-center">
+          Edit Roles !
+        </h6>
+      </div>
+      <div class="card-body">
+        <table class="table">
+          <thead>
+            <tr>
+              <th scope="col">
+                <a href="#" class="sort-link" data-field="user_id">ID 
+                  <% if (sortField === 'user_id') { %>
+                    <%= sortOrder === 'ASC' ? '↑' : '↓' %>
+                  <% } %>
+                </a>
+              </th>
+              <th scope="col">
+                <a href="#" class="sort-link" data-field="first_name">Name 
+                  <% if (sortField === 'first_name') { %>
+                    <%= sortOrder === 'ASC' ? '↑' : '↓' %>
+                  <% } %>
+                </a>
+              </th>
+              <th scope="col">
+                <a href="#" class="sort-link" data-field="email">Email 
+                  <% if (sortField === 'email') { %>
+                    <%= sortOrder === 'ASC' ? '↑' : '↓' %>
+                  <% } %>
+                </a>
+              </th>
+              <th scope="col">
+                <a href="#" class="sort-link" data-field="organization">Organization 
+                  <% if (sortField === 'organization') { %>
+                    <%= sortOrder === 'ASC' ? '↑' : '↓' %>
+                  <% } %>
+                </a>
+              </th>
+              <th scope="col">
+                <a href="#" class="sort-link" data-field="designation">Designation 
+                  <% if (sortField === 'designation') { %>
+                    <%= sortOrder === 'ASC' ? '↑' : '↓' %>
+                  <% } %>
+                </a>
+              </th>
+              <th scope="col">Role</th>
+              <th scope="col">Profile</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% userItems.forEach(function(item) { %>
+              <tr>
+                <th scope="row"><%= item.user_id %></th>
+                <td><%= item.first_name %> <%= item.last_name %></td>
+                <td><%= item.email %></td>
+                <td><%= item.organization %></td>
+                <td><%= item.designation %></td>
+                <td>
+                  <div class="form-group">
+                    <select class="form-select role-select" data-email="<%= item.email %>">
+                      <option value="root" <%= item.role === 'root' ? 'selected' : '' %>>Root</option>
+                      <option value="viewer" <%= item.role === 'viewer' ? 'selected' : '' %>>Viewer</option>
+                      <option value="datareader" <%= item.role === 'datareader' ? 'selected' : '' %>>Data Reader</option>
+                      <option value="admin" <%= item.role === 'admin' ? 'selected' : '' %>>Admin</option>
+                      <option value="blocked" <%= item.role === 'blocked' ? 'selected' : '' %>>Blocked</option>
+                    </select>
+                  </div>
+                </td>
+                <td>
+                  <button type="button" class="btn btm-primary profile-btn" 
+                          data-bs-toggle="modal" 
+                          data-bs-target="#profileModal-<%= item.user_id %>"
+                          data-user-id="<%= item.user_id %>"
+                          data-first-name="<%= item.first_name %>"
+                          data-last-name="<%= item.last_name %>"
+                          data-email="<%= item.email %>"
+                          data-organization="<%= item.organization %>"
+                          data-designation="<%= item.designation %>"
+                          data-privilege="<%= item.role %>"
+                          data-profile-image="<%= item.profile_image || '/images/default-profile.png' %>"
+                          data-id-proof="<%= item.id_proof || '' %>">
+                    <span class="material-symbols-outlined">visibility</span>
+                  </button>
+                </td>
+              </tr>
+            <% }); %>
+          </tbody>
+        </table>
+        <nav aria-label="Page navigation example">
+          <ul class="pagination justify-content-center">
+            <% if (currentPage > 1) { %>
+              <li class="page-item">
+                <a class="page-link" href="/admin/roles?page=<%= currentPage - 1 %>&sortField=<%= sortField %>&sortOrder=<%= sortOrder %>&searchField=<%= encodeURIComponent(searchField) %>&searchValue=<%= encodeURIComponent(searchValue) %>">Previous</a>
+              </li>
+            <% } else { %>
+              <li class="page-item disabled">
+                <a class="page-link" href="#">Previous</a>
+              </li>
+            <% } %>
+
+            <% for (let i = 1; i <= totalPages; i++) { %>
+              <li class="page-item <%= currentPage === i ? 'active' : '' %>">
+                <a class="page-link" href="/admin/roles?page=<%= i %>&sortField=<%= sortField %>&sortOrder=<%= sortOrder %>&searchField=<%= encodeURIComponent(searchField) %>&searchValue=<%= encodeURIComponent(searchValue) %>"><%= i %></a>
+              </li>
+            <% } %>
+
+            <% if (currentPage < totalPages) { %>
+              <li class="page-item">
+                <a class="page-link" href="/admin/roles?page=<%= currentPage + 1 %>&sortField=<%= sortField %>&sortOrder=<%= sortOrder %>&searchField=<%= encodeURIComponent(searchField) %>&searchValue=<%= encodeURIComponent(searchValue) %>">Next</a>
+              </li>
+            <% } else { %>
+              <li class="page-item disabled">
+                <a class="page-link" href="#">Next</a>
+              </li>
+            <% } %>
+          </ul>
+        </nav>
+      </div>
+    </div>
+  </div>
+</main>
+
+<!-- Profile Modals - One for each user -->
+<% userItems.forEach(function(item) { %>
+<div class="modal fade" id="profileModal-<%= item.user_id %>" tabindex="-1" aria-labelledby="profileModalLabel-<%= item.user_id %>" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="profileModalLabel-<%= item.user_id %>">User Profile</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <!-- Profile Image -->
+        
+        <!-- ID Proof Image from Database -->
+        <% if (item.id_proof) { %>
+          <div class="text-center mb-3">
+            <h6>ID Proof</h6>
+            <img src="data:image/png;base64,<%= item.id_proof %>" alt="ID Proof" style="max-width: 100%; max-height: 300px; object-fit: contain;">
+          </div>
+        <% } else { %>
+          <div class="text-center mb-3">
+            <h6>ID Proof</h6>
+            <p class="text-muted">No ID proof uploaded</p>
+          </div>
+        <% } %>
+        
+        <!-- User Details -->
+        <div class="mb-2"><strong>ID:</strong> <span id="profileId-<%= item.user_id %>"><%= item.user_id %></span></div>
+        <div class="mb-2"><strong>Name:</strong> <span id="profileName-<%= item.user_id %>"><%= item.first_name %> <%= item.last_name %></span></div>
+        <div class="mb-2"><strong>Email:</strong> <span id="profileEmail-<%= item.user_id %>"><%= item.email %></span></div>
+        <div class="mb-2"><strong>Organization:</strong> <span id="profileOrganization-<%= item.user_id %>"><%= item.organization %></span></div>
+        <div class="mb-2"><strong>Designation:</strong> <span id="profileDesignation-<%= item.user_id %>"><%= item.designation %></span></div>
+        <div class="mb-2"><strong>Role:</strong> <span id="profilePrivilege-<%= item.user_id %>"><%= item.role %></span></div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+<% }); %>
+  </div>
+
+  <div id="searchData"
+     data-sort-field="<%= sortField %>"
+     data-sort-order="<%= sortOrder %>"></div>
+
+
+    <script src="/admin-assets/js/adminUsers.js"></script>
+  <script src="/admin-assets/js/handlesubmits.js"></script>
+  
+  <%- include('../partials/footer') %>

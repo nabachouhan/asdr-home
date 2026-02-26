@@ -1,0 +1,164 @@
+<%- include('../partials/adminhead') %>
+<%- include('../partials/loader') %>
+
+<body>
+  <div class="admin-sidebar" id="admin-sidebar">
+    <h4 class="text-white mb-4">ASSAM-SDR</h4>
+    <div class="mb-4">
+      <i class="bi bi-person-circle me-2"></i><%= full_name %>
+    </div>
+    <a href="/admin/home"><i class="bi bi-grid"></i> Home</a>
+    <a href="/admin/requests"><i class="bi bi-ui-checks"></i> Requests</a>
+        <a href="/admin/roles"><i class="bi bi-table"></i> Manage Roles</a>
+    <a href="/admin/logs"><i class="bi bi-person"></i> Logs</a>
+    <a href="/admin/upload"><i class="bi bi-gem"></i> Upload</a>
+    <a href="/admin/publish"><i class="bi bi-gem"></i> Publish</a>
+    <a href="/admin/manage"><i class="bi bi-person"></i> Manage</a>
+    <a href="/admin/Queries" class="active"><i class="bi bi-journal-text"></i> Queries</a>
+    <a href=""  id="adminLogout"><i class="bi bi-journal-text"></i> Logout</a>
+  </div>
+
+  <div class="content" id="mainContent">
+    <div class="themed-box topbar d-flex flex-wrap justify-content-between align-items-center gap-2 themed-box sticky-top">
+      <div class="d-flex align-items-center gap-3">
+        <i class="bi bi-list fs-3 cursor-pointer"  id="toggleSidebarBtn" style="cursor: pointer;"></i>
+        <h4 class="mb-0">Dashboard</h4>
+      </div>
+      <div class="d-flex align-items-center gap-2">
+        <select class="form-select form-select-sm" id="searchField" style="max-width: 150px;">
+          <option value="full_name" <%= searchField === 'full_name' ? 'selected' : '' %>>Name</option>
+          <option value="email" <%= searchField === 'email' ? 'selected' : '' %>>Email</option>
+          <option value="mobile" <%= searchField === 'mobile' ? 'selected' : '' %>>Mobile</option>
+          <option value="reason" <%= searchField === 'reason' ? 'selected' : '' %>>Subject</option>
+          <option value="occupation" <%= searchField === 'occupation' ? 'selected' : '' %>>Occupation</option>
+          <option value="message" <%= searchField === 'message' ? 'selected' : '' %>>Message</option>
+        </select>
+        <input type="text" class="form-control form-control-sm" id="searchValue" placeholder="Search..." style="max-width: 200px;" value="<%= searchValue %>">
+        <button class="btn btn-sm btn-primary" id="applySearchBtn">Apply</button>
+        <i class="bi bi-bell me-2"></i>
+        <i class="bi bi-gear"></i>
+      </div>
+    </div>
+
+    <main class="main">
+      <div class="container-fluid p-4">
+        
+        <!-- <div class="card shadow-sm themed-box"> -->
+          <div class="container-fluid ">
+            <form class="p-2 mb-3" id="queryFilterForm" >
+              <div class="row g-3 align-items-end">
+                <!-- Resolved Status -->
+                <div class="col-lg-4 col-md-6 d-flex align-items-center" id="queries-type-tabs" >
+                  <label class="form-label d-block me-2">Status</label>
+                  <div class="btn-group" role="group" aria-label="Status selection">
+                    <input type="radio" class="btn-check" name="isresolved" id="unresolvedOption" value="false" <%= isresolved === 'false' ? 'checked' : '' %> >
+                    <label class="btn btn-outline-secondary" for="unresolvedOption">Unresolved</label>
+                    <input type="radio" class="btn-check" name="isresolved" id="resolvedOption" value="true" <%= isresolved === 'true' ? 'checked' : '' %> >
+                    <label class="btn btn-outline-secondary" for="resolvedOption">Resolved</label>
+                    <input type="radio" class="btn-check" name="isresolved" id="allOption" value="all" <%= isresolved === 'all' ? 'checked' : '' %> >
+                    <label class="btn btn-outline-secondary" for="allOption">All</label>
+                  </div>
+                </div>
+                <!-- From Date -->
+                <div class="col-lg-3 col-md-6 d-flex">
+                  <label for="dateFrom" class="form-label me-2">From</label>
+                  <input type="date" class="form-control" id="dateFrom" name="dateFrom" value="<%= dateFrom %>">
+                </div>
+                <!-- To Date -->
+                <div class="col-lg-3 col-md-6 d-flex">
+                  <label for="dateTo" class="form-label me-2">To</label>
+                  <input type="date" class="form-control" id="dateTo" name="dateTo" value="<%= dateTo %>">
+                </div>
+                <!-- Apply Button -->
+                <div class="col-lg-2 col-md-6 d-grid">
+                  <button type="submit" class="btn btn-primary" id="applySearch">Apply</button>
+                </div>
+              </div>
+            </form>
+            <div class="card border-0 rounded bg-tablebg themed-box">
+              
+              <div class="card-header">
+            <h6 class="card-subtitle text-muted p-3 text-center">
+              Handle Queries Make Reply Or Ignore Unnecessary!
+            </h6>
+          </div>
+          <div class="card-body">
+            <table class="table">
+              <thead class="thead">
+                <tr>
+                  <th scope="col"><a href="#" class="sort-link" data-field="queryid">ID&nbsp;<%= sortField === 'queryid' ? (sortOrder === 'ASC' ? '↑' : '↓') : '' %></a></th>
+                  <th scope="col"><a href="#" class="sort-link" data-field="full_name">Name <%= sortField === 'full_name' ? (sortOrder === 'ASC' ? '↑' : '↓') : '' %></a></th>
+                  <th scope="col"><a href="#" class="sort-link" data-field="email">Email <%= sortField === 'email' ? (sortOrder === 'ASC' ? '↑' : '↓') : '' %></a></th>
+                  <th scope="col"><a href="#" class="sort-link" data-field="mobile">Mobile <%= sortField === 'mobile' ? (sortOrder === 'ASC' ? '↑' : '↓') : '' %></a></th>
+                  <th scope="col"><a href="#" class="sort-link" data-field="occupation">Occupation <%= sortField === 'occupation' ? (sortOrder === 'ASC' ? '↑' : '↓') : '' %></a></th>
+                  <th scope="col"><a href="#" class="sort-link" data-field="querydate">Date <%= sortField === 'querydate' ? (sortOrder === 'ASC' ? '↑' : '↓') : '' %></a></th>
+                  <th scope="col"><a href="#" class="sort-link" data-field="reason">Subject <%= sortField === 'reason' ? (sortOrder === 'ASC' ? '↑' : '↓') : '' %></a></th>
+                  <th scope="col"><a href="#" class="sort-link" data-field="message">Message <%= sortField === 'message' ? (sortOrder === 'ASC' ? '↑' : '↓') : '' %></a></th>
+                  <th scope="col">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% queries.forEach(function(item, index) { %>
+                  <tr>
+                    <th scope="row"><%= item.queryid %></th>
+                    <td><%= item.full_name %></td>
+                    <td><%= item.email %></td>
+                    <td><%= item.mobile %></td>
+                    <td><%= item.occupation %></td>
+                    <td><%= new Date(item.querydate).toLocaleString()%></td>
+                    <td style="max-width: 200px"><%= item.reason %></td>
+                    <td style="max-width: 200px"><%= item.message %></td>
+                    <td>
+                      <textarea class="form-control mb-2" id="replyMessage-<%= item.queryid %>" rows="3" placeholder="Type your reply here..."></textarea>
+                      <div class="d-flex gap-2">
+                        <button class="btn btn-success btn-sm" data-action="reply" data-email="<%= item.email %>" data-id="<%= item.queryid %>" data-reply= "replyMessage-<%= item.queryid %>"  data-reason= "<%= item.reason %> " data-message= "<%= item.message %> " data-fname= "<%= item.full_name %> ">Email</button>
+                        <button class="btn btn-secondary btn-sm" data-action="ignore" data-email="<%= item.email %>" data-id="<%= item.queryid %>" data-reply= "replyMessage-<%= item.queryid %>">Ignore</button>
+                      </div>
+                    </td>
+                  </tr>
+                <% }); %>
+              </tbody>
+            </table>
+            <nav aria-label="Page navigation example">
+              <ul class="pagination justify-content-center">
+                <% if (currentPage > 1) { %>
+                  <li class="page-item">
+                    <a class="page-link" href="/admin/queries?page=<%= currentPage - 1 %>&sortField=<%= sortField %>&sortOrder=<%= sortOrder %>&searchField=<%= encodeURIComponent(searchField) %>&searchValue=<%= encodeURIComponent(searchValue) %>&isresolved=<%= isresolved %>&dateFrom=<%= dateFrom %>&dateTo=<%= dateTo %>">Previous</a>
+                  </li>
+                <% } else { %>
+                  <li class="page-item disabled">
+                    <a class="page-link" href="#">Previous</a>
+                  </li>
+                <% } %>
+                <% for (let i = 1; i <= totalPages; i++) { %>
+                  <li class="page-item <%= currentPage === i ? 'active' : '' %>">
+                    <a class="page-link" href="/admin/queries?page=<%= i %>&sortField=<%= sortField %>&sortOrder=<%= sortOrder %>&searchField=<%= encodeURIComponent(searchField) %>&searchValue=<%= encodeURIComponent(searchValue) %>&isresolved=<%= isresolved %>&dateFrom=<%= dateFrom %>&dateTo=<%= dateTo %>"><%= i %></a>
+                  </li>
+                <% } %>
+                <% if (currentPage < totalPages) { %>
+                  <li class="page-item">
+                    <a class="page-link" href="/admin/queries?page=<%= currentPage + 1 %>&sortField=<%= sortField %>&sortOrder=<%= sortOrder %>&searchField=<%= encodeURIComponent(searchField) %>&searchValue=<%= encodeURIComponent(searchValue) %>&isresolved=<%= isresolved %>&dateFrom=<%= dateFrom %>&dateTo=<%= dateTo %>">Next</a>
+                  </li>
+                <% } else { %>
+                  <li class="page-item disabled">
+                    <a class="page-link" href="#">Next</a>
+                  </li>
+                <% } %>
+              </ul>
+            </nav>
+          </div>
+        </div>
+      </div>
+      </div>
+    </main>
+  </div>
+
+  <div id="searchData"
+     data-sort-field="<%= sortField %>"
+     data-sort-order="<%= sortOrder %>"></div>
+
+  <script src="/admin-assets/js/handlesubmits.js"></script>
+  <script src="/admin-assets/js/adminquery.js"></script>
+
+  <%- include('../partials/footer') %>
+</body>

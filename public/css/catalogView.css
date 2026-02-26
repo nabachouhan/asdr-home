@@ -1,0 +1,29 @@
+    #map {
+      width: 70%;
+      height: 100vh;
+      float: left;
+    }
+    #query-panel {
+      width: 30%;
+      height: 100vh;
+      float: right;
+      overflow-y: auto;
+    }
+    .query-section {
+      display: none;
+    }
+    .query-section.active {
+      display: block;
+    }
+    .error-message {
+      display: none;
+      color: #dc3545;
+      font-size: 0.875rem;
+    }
+    .value-checkboxes {
+      max-height: 150px;
+      overflow-y: auto;
+      border: 1px solid #ced4da;
+      border-radius: 0.25rem;
+      padding: 10px;
+    }

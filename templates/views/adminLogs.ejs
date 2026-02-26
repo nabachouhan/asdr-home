@@ -1,0 +1,275 @@
+<%- include('../partials/adminhead') %>
+
+<body>
+  <%- include('../partials/loader') %>
+  <!-- admin-Sidebar -->
+  <div class="admin-sidebar" id="admin-sidebar">
+    <h4 class="text-white mb-4">ASSAM-SDR</h4>
+    <div class="mb-4">
+      <i class="bi bi-person-circle me-2"></i><%= full_name %>
+    </div>
+    <a href="/admin/home"><i class="bi bi-grid"></i> Home</a>
+    <a href="/admin/requests"><i class="bi bi-ui-checks"></i> Requests</a>
+    <a href="/admin/roles"><i class="bi bi-table"></i> Manage Roles</a>
+    <a href="/admin/logs" class="active"><i class="bi bi-person"></i> Logs</a>
+
+    <a href="/admin/upload"><i class="bi bi-gem"></i> Upload</a>
+    <a href="/admin/publish"><i class="bi bi-gem"></i> Publish</a>
+    <a href="/admin/manage"><i class="bi bi-person"></i> Manage</a>
+    <a href="/admin/Queries"><i class="bi bi-journal-text"></i> Queries</a>
+    <a href="" id="adminLogout"><i class="bi bi-journal-text"></i> Logout</a>
+  </div>
+
+  <!-- Main Content -->
+  <div class="content" id="mainContent">
+    <div class="themed-box topbar d-flex flex-wrap justify-content-between align-items-center gap-2 themed-box sticky-top">
+      <div class="d-flex align-items-center gap-3">
+        <i class="bi bi-list fs-3 cursor-pointer"  id="toggleSidebarBtn" style="cursor: pointer;"></i>
+        <h4 class="mb-0">Dashboard</h4>
+      </div>
+      <div class="d-flex align-items-center gap-2">
+        <select class="form-select form-select-sm" id="searchField" style="max-width: 150px;">
+          <option value="full_name" <%= searchField === 'full_name' ? 'selected' : '' %>>Name</option>
+          <option value="email" <%= searchField === 'email' ? 'selected' : '' %>>Email</option>
+          <option value="action_type" <%= searchField === 'action_type' ? 'selected' : '' %>>Action Type</option>
+          <option value="target" <%= searchField === 'target' ? 'selected' : '' %>>Target</option>
+          <option value="details" <%= searchField === 'details' ? 'selected' : '' %>>Details</option>
+        </select>
+        <input type="text" class="form-control form-control-sm" id="searchValue" placeholder="Search..." style="max-width: 300px;" value="<%= searchValue %>">
+        <button class="btn btn-sm btn-primary" id="applySearchBtn">Apply</button>
+        <i class="bi bi-bell me-2"></i>
+        <i class="bi bi-gear"></i>
+      </div>
+    </div>
+
+    <main class="main">
+      <form class="mb-2 mt-5" id="logFilterForm">
+        <div class="row g-3 align-items-end">
+          <!-- Role Selection -->
+          <div class="col-lg-4 col-md-6 d-flex align-items-center" id="role-tabs">
+            <label class="form-label d-block me-2">Role</label>
+            <div class="btn-group" role="group" aria-label="Role selection">
+              <input type="radio" class="btn-check" name="role" id="viewerLogOption" value="viewer" <%= role === 'viewer' ? 'checked' : '' %> >
+              <label class="btn btn-outline-secondary" for="viewerLogOption">Viewer</label>
+              <input type="radio" class="btn-check" name="role" id="datareaderLogOption" value="datareader" <%= role === 'datareader' ? 'checked' : '' %> >
+              <label class="btn btn-outline-secondary" for="datareaderLogOption">datareader</label>
+              <input type="radio" class="btn-check" name="role" id="adminLogOption" value="admin" <%= role === 'admin' ? 'checked' : '' %> >
+              <label class="btn btn-outline-secondary" for="adminLogOption">Admin</label>
+            </div>
+          </div>
+          <!-- From Date -->
+          <div class="col-lg-3 col-md-6 d-flex">
+            <label for="dateFrom" class="form-label me-2">From</label>
+            <input type="date" class="form-control" id="dateFrom" name="dateFrom" value="<%= dateFrom %>">
+          </div>
+          <!-- To Date -->
+          <div class="col-lg-3 col-md-6 d-flex">
+            <label for="dateTo" class="form-label me-2">Before</label>
+            <input type="date" class="form-control" id="dateTo" name="dateTo" value="<%= dateTo %>">
+          </div>
+          <!-- Apply and Download Buttons -->
+          <div class="col-lg-2 col-md-6 d-flex gap-2">
+            <button type="submit" class="btn btn-primary" id="applyFilter">Apply</button>
+            <a href="/admin/logs/download?page=<%= currentPage %>&sortField=<%= sortField %>&sortOrder=<%= sortOrder %>&searchField=<%= encodeURIComponent(searchField) %>&searchValue=<%= encodeURIComponent(searchValue) %>&role=<%= role %>&dateFrom=<%= dateFrom %>&dateTo=<%= dateTo %>" class="btn btn-success">Download</a>
+          </div>
+        </div>
+      </form>
+      <div class="container-fluid p-4">
+        <div class="card border-0 rounded themed-box">
+
+          <div class="viewer-logs <%= role !== 'viewer' ? 'hidden' : '' %>">
+            <div class="card-header">
+              <h6 class="card-subtitle text-muted p-3 text-center">Viewer Log</h6>
+            </div>
+            <div class="card-body">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th scope="col"><a href="#" class="sort-link" data-field="sn">ID <%= sortField === 'sn' ? (sortOrder === 'ASC' ? '↑' : '↓') : '' %></a></th>
+                    <th scope="col"><a href="#" class="sort-link" data-field="full_name">Name <%= sortField === 'full_name' ? (sortOrder === 'ASC' ? '↑' : '↓') : '' %></a></th>
+                    <th scope="col"><a href="#" class="sort-link" data-field="email">Email <%= sortField === 'email' ? (sortOrder === 'ASC' ? '↑' : '↓') : '' %></a></th>
+                    <th scope="col"><a href="#" class="sort-link" data-field="action_type">Action Type <%= sortField === 'action_type' ? (sortOrder === 'ASC' ? '↑' : '↓') : '' %></a></th>
+                    <th scope="col"><a href="#" class="sort-link" data-field="target">Target <%= sortField === 'target' ? (sortOrder === 'ASC' ? '↑' : '↓') : '' %></a></th>
+                    <th scope="col"><a href="#" class="sort-link" data-field="created_at">created_atstamp <%= sortField === 'created_at' ? (sortOrder === 'ASC' ? '↑' : '↓') : '' %></a></th>
+                    <th scope="col"><a href="#" class="sort-link" data-field="details">Details <%= sortField === 'details' ? (sortOrder === 'ASC' ? '↑' : '↓') : '' %></a></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <% viewerLogs.forEach(function(log) { %>
+                  <tr>
+                    <th scope="row"><%= log.sn %></th>
+                    <td><%= log.full_name %></td>
+                    <td><%= log.email %></td>
+                    <td><%= log.action_type %></td>
+                    <td><%= log.target %></td>
+                    <td><%= log.created_at.toString().replace(/\sGMT.*$/, '') %></td>
+
+                    <td><%= log.details %></td>
+                  </tr>
+                  <% }); %>
+                </tbody>
+              </table>
+              <nav aria-label="Page navigation example">
+                <ul class="pagination justify-content-center">
+                  <% if (currentPage > 1) { %>
+                  <li class="page-item">
+                    <a class="page-link" href="/admin/logs?page=<%= currentPage - 1 %>&sortField=<%= sortField %>&sortOrder=<%= sortOrder %>&searchField=<%= encodeURIComponent(searchField) %>&searchValue=<%= encodeURIComponent(searchValue) %>&role=<%= role %>&dateFrom=<%= dateFrom %>&dateTo=<%= dateTo %>">Previous</a>
+                  </li>
+                  <% } else { %>
+                  <li class="page-item disabled">
+                    <a class="page-link" href="#">Previous</a>
+                  </li>
+                  <% } %>
+                  <% for (let i = 1; i <= totalPages; i++) { %>
+                  <li class="page-item <%= currentPage === i ? 'active' : '' %>">
+                    <a class="page-link" href="/admin/logs?page=<%= i %>&sortField=<%= sortField %>&sortOrder=<%= sortOrder %>&searchField=<%= encodeURIComponent(searchField) %>&searchValue=<%= encodeURIComponent(searchValue) %>&role=<%= role %>&dateFrom=<%= dateFrom %>&dateTo=<%= dateTo %>"><%= i %></a>
+                  </li>
+                  <% } %>
+                  <% if (currentPage < totalPages) { %>
+                  <li class="page-item">
+                    <a class="page-link" href="/admin/logs?page=<%= currentPage + 1 %>&sortField=<%= sortField %>&sortOrder=<%= sortOrder %>&searchField=<%= encodeURIComponent(searchField) %>&searchValue=<%= encodeURIComponent(searchValue) %>&role=<%= role %>&dateFrom=<%= dateFrom %>&dateTo=<%= dateTo %>">Next</a>
+                  </li>
+                  <% } else { %>
+                  <li class="page-item disabled">
+                    <a class="page-link" href="#">Next</a>
+                  </li>
+                  <% } %>
+                </ul>
+              </nav>
+            </div>
+          </div>
+
+          <div class="datareader-logs <%= role !== 'datareader' ? 'hidden' : '' %>">
+            <div class="card-header">
+              <h6 class="card-subtitle text-muted p-4 text-center">datareader Log</h6>
+            </div>
+            <div class="card-body">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th scope="col"><a href="#" class="sort-link" data-field="sn">ID <%= sortField === 'sn' ? (sortOrder === 'ASC' ? '↑' : '↓') : '' %></a></th>
+                    <th scope="col"><a href="#" class="sort-link" data-field="full_name">Name <%= sortField === 'full_name' ? (sortOrder === 'ASC' ? '↑' : '↓') : '' %></a></th>
+                    <th scope="col"><a href="#" class="sort-link" data-field="email">Email <%= sortField === 'email' ? (sortOrder === 'ASC' ? '↑' : '↓') : '' %></a></th>
+                    <th scope="col"><a href="#" class="sort-link" data-field="action_type">Action Type <%= sortField === 'action_type' ? (sortOrder === 'ASC' ? '↑' : '↓') : '' %></a></th>
+                    <th scope="col"><a href="#" class="sort-link" data-field="target">Target <%= sortField === 'target' ? (sortOrder === 'ASC' ? '↑' : '↓') : '' %></a></th>
+                    <th scope="col"><a href="#" class="sort-link" data-field="created_at">created_atstamp <%= sortField === 'created_at' ? (sortOrder === 'ASC' ? '↑' : '↓') : '' %></a></th>
+                    <th scope="col"><a href="#" class="sort-link" data-field="details">Details <%= sortField === 'details' ? (sortOrder === 'ASC' ? '↑' : '↓') : '' %></a></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <% datareaderLogs.forEach(function(log) { %>
+                  <tr>
+                    <th scope="row"><%= log.sn %></th>
+                    <td><%= log.full_name %></td>
+                    <td><%= log.email %></td>
+                    <td><%= log.action_type %></td>
+                    <td><%= log.target %></td>
+                    <td><%= log.created_at %></td>
+                    <td><%= log.details %></td>
+                  </tr>
+                  <% }); %>
+                </tbody>
+              </table>
+              <nav aria-label="Page navigation example">
+                <ul class="pagination justify-content-center">
+                  <% if (currentPage > 1) { %>
+                  <li class="page-item">
+                    <a class="page-link" href="/admin/logs?page=<%= currentPage - 1 %>&sortField=<%= sortField %>&sortOrder=<%= sortOrder %>&searchField=<%= encodeURIComponent(searchField) %>&searchValue=<%= encodeURIComponent(searchValue) %>&role=<%= role %>&dateFrom=<%= dateFrom %>&dateTo=<%= dateTo %>">Previous</a>
+                  </li>
+                  <% } else { %>
+                  <li class="page-item disabled">
+                    <a class="page-link" href="#">Previous</a>
+                  </li>
+                  <% } %>
+                  <% for (let i = 1; i <= totalPages; i++) { %>
+                  <li class="page-item <%= currentPage === i ? 'active' : '' %>">
+                    <a class="page-link" href="/admin/logs?page=<%= i %>&sortField=<%= sortField %>&sortOrder=<%= sortOrder %>&searchField=<%= encodeURIComponent(searchField) %>&searchValue=<%= encodeURIComponent(searchValue) %>&role=<%= role %>&dateFrom=<%= dateFrom %>&dateTo=<%= dateTo %>"><%= i %></a>
+                  </li>
+                  <% } %>
+                  <% if (currentPage < totalPages) { %>
+                  <li class="page-item">
+                    <a class="page-link" href="/admin/logs?page=<%= currentPage + 1 %>&sortField=<%= sortField %>&sortOrder=<%= sortOrder %>&searchField=<%= encodeURIComponent(searchField) %>&searchValue=<%= encodeURIComponent(searchValue) %>&role=<%= role %>&dateFrom=<%= dateFrom %>&dateTo=<%= dateTo %>">Next</a>
+                  </li>
+                  <% } else { %>
+                  <li class="page-item disabled">
+                    <a class="page-link" href="#">Next</a>
+                  </li>
+                  <% } %>
+                </ul>
+              </nav>
+            </div>
+          </div>
+
+          <div class="admin-logs <%= role !== 'admin' ? 'hidden' : '' %>">
+            <div class="card-header">
+              <h6 class="card-subtitle text-muted p-4 text-center">Admin Log</h6>
+            </div>
+            <div class="card-body">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th scope="col"><a href="#" class="sort-link" data-field="sn">ID <%= sortField === 'sn' ? (sortOrder === 'ASC' ? '↑' : '↓') : '' %></a></th>
+                    <th scope="col"><a href="#" class="sort-link" data-field="full_name">Name <%= sortField === 'full_name' ? (sortOrder === 'ASC' ? '↑' : '↓') : '' %></a></th>
+                    <th scope="col"><a href="#" class="sort-link" data-field="email">Email <%= sortField === 'email' ? (sortOrder === 'ASC' ? '↑' : '↓') : '' %></a></th>
+                    <th scope="col"><a href="#" class="sort-link" data-field="action_type">Action Type <%= sortField === 'action_type' ? (sortOrder === 'ASC' ? '↑' : '↓') : '' %></a></th>
+                    <th scope="col"><a href="#" class="sort-link" data-field="target">Target <%= sortField === 'target' ? (sortOrder === 'ASC' ? '↑' : '↓') : '' %></a></th>
+                    <th scope="col"><a href="#" class="sort-link" data-field="created_at">created_atstamp <%= sortField === 'created_at' ? (sortOrder === 'ASC' ? '↑' : '↓') : '' %></a></th>
+                    <th scope="col"><a href="#" class="sort-link" data-field="details">Details <%= sortField === 'details' ? (sortOrder === 'ASC' ? '↑' : '↓') : '' %></a></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <% adminLogs.forEach(function(log) { %>
+                  <tr>
+                    <th scope="row"><%= log.sn %></th>
+                    <td><%= log.full_name %></td>
+                    <td><%= log.email %></td>
+                    <td><%= log.action_type %></td>
+                    <td><%= log.target %></td>
+                    <td><%= log.created_at.toString().replace(/\sGMT.*$/, '') %></td>
+                    <td><%= log.details %></td>
+                  </tr>
+                  <% }); %>
+                </tbody>
+              </table>
+              <nav aria-label="Page navigation example">
+                <ul class="pagination justify-content-center">
+                  <% if (currentPage > 1) { %>
+                  <li class="page-item">
+                    <a class="page-link" href="/admin/logs?page=<%= currentPage - 1 %>&sortField=<%= sortField %>&sortOrder=<%= sortOrder %>&searchField=<%= encodeURIComponent(searchField) %>&searchValue=<%= encodeURIComponent(searchValue) %>&role=<%= role %>&dateFrom=<%= dateFrom %>&dateTo=<%= dateTo %>">Previous</a>
+                  </li>
+                  <% } else { %>
+                  <li class="page-item disabled">
+                    <a class="page-link" href="#">Previous</a>
+                  </li>
+                  <% } %>
+                  <% for (let i = 1; i <= totalPages; i++) { %>
+                  <li class="page-item <%= currentPage === i ? 'active' : '' %>">
+                    <a class="page-link" href="/admin/logs?page=<%= i %>&sortField=<%= sortField %>&sortOrder=<%= sortOrder %>&searchField=<%= encodeURIComponent(searchField) %>&searchValue=<%= encodeURIComponent(searchValue) %>&role=<%= role %>&dateFrom=<%= dateFrom %>&dateTo=<%= dateTo %>"><%= i %></a>
+                  </li>
+                  <% } %>
+                  <% if (currentPage < totalPages) { %>
+                  <li class="page-item">
+                    <a class="page-link" href="/admin/logs?page=<%= currentPage + 1 %>&sortField=<%= sortField %>&sortOrder=<%= sortOrder %>&searchField=<%= encodeURIComponent(searchField) %>&searchValue=<%= encodeURIComponent(searchValue) %>&role=<%= role %>&dateFrom=<%= dateFrom %>&dateTo=<%= dateTo %>">Next</a>
+                  </li>
+                  <% } else { %>
+                  <li class="page-item disabled">
+                    <a class="page-link" href="#">Next</a>
+                  </li>
+                  <% } %>
+                </ul>
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <div id="searchData"
+     data-sort-field="<%= sortField %>"
+     data-sort-order="<%= sortOrder %>"></div>
+
+
+  <script src="/admin-assets/js/adminlogs.js"></script>
+  <script src="/admin-assets/js/handlesubmits.js"></script>
+  <%- include('../partials/footer') %>

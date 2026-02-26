@@ -1,0 +1,204 @@
+<%- include('../partials/userHeader') %>
+
+    <body>
+        <%- include('../partials/loader') %>
+            <%- include('../partials/arrownav') %>
+                <div class="main-wrapper  container-fluid bg-adminbg" style="min-height: 90vh;">
+                    <div class="contents order-3 order-md-2">
+                        <div class="container ">
+                            <div class="row mt-3 align-items-center justify-content-center">
+                                <div class="col-md-9  bg-cardbg p-4 pt-2 mt-4 rounded  mb-5 themed-box">
+
+                                    <div class="row mt bg-adminbg rounded d-flex justify-content-center">
+                                        <a href="/user"
+                                            class=" px-5 py-2 m-0 col-md-4 d-flex justify-content-center nav-item nav-link active">
+                                            REGISTER
+                                        </a>
+
+                                        <a href="/user/Login"
+                                            class=" px-5 py-2 m-0 col-md-4 d-flex justify-content-center nav-item nav-link">
+                                            LOGIN
+                                        </a>
+
+                                        <a href="/user/Forgot"
+                                            class=" px-5 py-2 m-0 col-md-4 d-flex justify-content-center nav-item nav-link">
+                                            UPDATE
+                                        </a>
+                                    </div>
+
+                                    <form id="registerForm" action="/user/" method="POST" enctype="multipart/form-data">
+                                        <div class="row mt-3">
+                                            <div class="col-md-6">
+                                                <div class="form-group first">
+                                                    <label for="fname">First Name <span
+                                                            class="text-danger">*</span></label>
+                                                    <input type="text" class="form-control" placeholder="First Name"
+                                                        id="fname" name="first_name">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group first">
+                                                    <label for="lname">Last Name *</label>
+                                                    <input type="text" class="form-control" placeholder="Last Name"
+                                                        id="lname" name="last_name">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row mt-3">
+                                            <div class="col-md-6">
+                                                <div class="form-group first">
+                                                    <label for="fname">Mobile No <span
+                                                            class="text-danger">*</span></label>
+                                                    <input type="text" class="form-control" placeholder="8486xxx644"
+                                                        id="phone" name="mobile">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group first">
+                                                    <label for="lname">Organization Name <span
+                                                            class="text-danger">*</span> </label>
+                                                    <input type="text" class="form-control"
+                                                        placeholder="Your Organization" id="organization"
+                                                        name="organization">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row mt-3">
+                                            <div class="col-md-6">
+                                                <div class="form-group first">
+                                                    <label for="fname">Department <span
+                                                            class="text-danger">*</span></label>
+                                                    <input type="text" class="form-control"
+                                                        placeholder="Your department" id="department" name="department">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group first">
+                                                    <label for="lname">Designation <span
+                                                            class="text-danger">*</span></label>
+                                                    <input type="text" class="form-control"
+                                                        placeholder="Your designation" id="designation"
+                                                        name="designation">
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                       
+
+                                        <div class="row mt-3">
+                                            <div class="col-md-6">
+
+                                                <div class="form-group first">
+                                                    <label for="id-proof">Upload Your ID Proof <span
+                                                            class="text-danger">* [.png, .jpg, .jpeg]
+                                                            only</span></label>
+                                                    <input type="file" class="form-control" id="id-proof"
+                                                        name="id_proof" accept="image/*">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+
+                                                <div class="form-group first">
+                                                    <label for="user-type">User Type <span
+                                                            class="text-danger">*</span><span
+                                                            class="text-danger"></span></label>
+                                                    <select class="form-control" id="user-type" name="user_type">
+                                                        <option value="">Select User Type</option>
+                                                        <option value="researcher">Researcher</option>
+                                                        <option value="govt-employee">Government Employee</option>
+                                                        <option value="private-employee">Private Employee</option>
+                                                        <option value="college-institute">College/Institute</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row mt-3">
+                                            <div class="col-md-12">
+
+                                                <div class="form-group last mb-3">
+                                                    <label for="password">About You <span
+                                                            class="text-danger">*</span></label>
+                                                    <textarea type="text" class="form-control"
+                                                        placeholder="About You..." id="about" name="about"></textarea>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                        <div class="row mt-3">
+                                            <p style="color: red;">'Minimum length 8 || Must have uppercase letters ||
+                                                Must have lowercase letters || Must
+                                                have at least 2 digits || Should not have spaces || Must have at least
+                                                one special character'</p>
+                                            <div class="col-md-6">
+
+                                                <div class="form-group last mb-3">
+                                                    <label for="password">Password <span
+                                                            class="text-danger">*</span></label>
+                                                    <input type="password" class="form-control"
+                                                        placeholder="Your Password" id="password" name="password">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+
+                                                <div class="form-group last mb-3">
+                                                    <label for="re-password">Re-type Password <span
+                                                            class="text-danger">*</span></label>
+                                                    <input type="password" class="form-control"
+                                                        placeholder="re-Password" id="re_password" name="re_password">
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                         <div class="row mt-3">
+                                            <div class="col-md-4">
+                                                <div class="form-group first">
+                                                    <label for="lname">E-mail address <span
+                                                            class="text-danger">*</span></label>
+                                                    <input type="text" class="form-control"
+                                                        placeholder="example@xyz.com" id="email" name="email">
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-2">
+                                                <div class="form-group first">
+                                                    <input type="submit" name="submit" value="GetOTP"
+                                                        class="  btn px-4 btn-primary mt-4">
+
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-3">
+                                                <div class="form-group first">
+                                                    <label for="lname">Enter OTP <span
+                                                            class="text-danger">*</span></label>
+                                                    <input type="text" class="form-control" placeholder="Enter otp"
+                                                        id="otp" name="otp">
+                                                    <!-- btn px-5 btn-primary  m-2 -->
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="form-group first">
+                                                    <input type="submit" name="submit" value="validate"
+                                                        class="btn px-4 btn-primary  mt-4">
+                                                </div>
+                                            </div>
+                                        </div>
+
+  <div class="mb-3 mt-3">
+    <div class="cf-turnstile" data-sitekey="0x4AAAAAABhe4h4NsCnhXnMk"></div>
+  </div>
+                                        <input type="submit" id="submit" name="submit" value="Register"
+                                            class="btn px-5 btn-primary mt-2">
+
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                </div>
+
+                <%- include('../partials/userFooter') %>
+                    <%- include('../partials/homeFooter') %>
