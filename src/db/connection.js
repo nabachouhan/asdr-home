@@ -31,7 +31,7 @@ const poolMap = {};
 for (const [theme, dbName] of Object.entries(themeDatabases)) {
   poolMap[theme] = new Pool({
     user: process.env.db_user,
-    host: process.env.host,
+    host: process.env.db_host,
     database: dbName,
     password: process.env.db_pw,
     port: process.env.db_port

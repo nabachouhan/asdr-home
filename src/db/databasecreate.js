@@ -44,7 +44,7 @@ async function createDatabases() {
       // Connect to each DB and run CREATE EXTENSION postgis
       const dbClient = new Client({
         user: process.env.db_user,
-        host: process.env.host,
+        host: process.env.db_host,
         database: dbName,
         password:  process.env.db_pw,
         port: process.env.db_port

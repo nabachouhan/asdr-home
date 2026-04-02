@@ -1,5 +1,4 @@
 
-// ✅ ES6 Imports
 import express from "express";
 import dotenv from "dotenv";
 import bodyParser from "body-parser";
@@ -13,6 +12,7 @@ import { exec } from "child_process";
 import AdmZip from "adm-zip";
 import { rimraf } from "rimraf";
 import cookieParser from "cookie-parser";
+import { isValidIdentifier } from "../utils/sanitize.js";
 
 // ✅ For __dirname in ES6 modules
 import { fileURLToPath } from "url";
@@ -42,35 +42,36 @@ const upload = multer({
 
 // ✅ home route
 router.get("/", optionalAuth, async (req, res) => {
-  // Dashboard stats: registered users, catalog entries, and requests
-
-  const client = await poolUser.connect();
-  const result = await client.query("SELECT Count(email) from registered");
-  const result1 = await client.query("SELECT Count(file_name) from catalog");
-  const result2 = await client.query("SELECT Count(file_name) from requests");
-  client.release();
-
-  // Combine counts in one object
-  result.rows[0].regcount = result1.rows[0].count;
-  result.rows[0].reqcount = result2.rows[0].count;
-
-  const userItems = result.rows[0];
-
-  // Attach user session info if logged in
+  let client;
   try {
-    console.log(req.user.email);
-    userItems.logemail = req.user.email;
-    userItems.iat = req.user.iat;
-    userItems.exp = req.user.exp;
-  } catch (error) {
-    console.error(error);
-    userItems.logemail = "";
-    userItems.iat = "";
-    userItems.exp = "";
-  }
+    client = await poolUser.connect();
+    const result = await client.query("SELECT Count(email) from registered");
+    const result1 = await client.query("SELECT Count(file_name) from catalog");
+    const result2 = await client.query("SELECT Count(file_name) from requests");
+    client.release();
+    client = null;
 
-    // Render EJS template 'home'
-  res.render("home", { userItems });
+    result.rows[0].regcount = result1.rows[0].count;
+    result.rows[0].reqcount = result2.rows[0].count;
+
+    const userItems = result.rows[0];
+
+    try {
+      userItems.logemail = req.user.email;
+      userItems.iat = req.user.iat;
+      userItems.exp = req.user.exp;
+    } catch (error) {
+      userItems.logemail = "";
+      userItems.iat = "";
+      userItems.exp = "";
+    }
+
+    res.render("home", { userItems });
+  } catch (error) {
+    console.error("Home route error:", error.message);
+    if (client) client.release();
+    res.status(500).send("Internal Server Error");
+  }
 });
 
 // ✅ Requests Page (User-specific Requests List)
@@ -248,7 +249,7 @@ router.post("/query", upload.none(), async (req, res) => {
       icon: "success",
       redirect: "\\",
     };
-    return res.status(400).json(data);
+    return res.status(200).json(data);
   } catch (error) {
     const data = {
       message: "Something Went Wrong! try again",
@@ -325,8 +326,16 @@ router.get("/download/:id", userAuthMiddleware, async (req, res) => {
     let columnRes;
 
     if (type === 'query') {
+      // 🔐 Validate file_name is a safe identifier before using in SQL
+      if (!isValidIdentifier(file_name)) {
+        throw new Error('Invalid file name');
+      }
+      // Note: query_condition comes from DB (stored by the application), not directly from user
       query = `SELECT * FROM ${file_name} WHERE ${query_condition}`;
     } else if (type === 'all') {
+      if (!isValidIdentifier(file_name)) {
+        throw new Error('Invalid file name');
+      }
       query = `SELECT * FROM ${file_name}`;
     } else if (type === 'district') {
       let districts;
@@ -351,10 +360,10 @@ router.get("/download/:id", userAuthMiddleware, async (req, res) => {
         columnRes = await gcolumn.query(`
     SELECT column_name
     FROM information_schema.columns
-    WHERE table_name = '${file_name}'
+    WHERE table_name = $1
       AND column_name != 'geom'
       AND table_schema = 'public'
-  `);
+  `, [file_name]);
       } finally {
         gcolumn.release(); // Always release the connection
       }
@@ -400,8 +409,8 @@ const districtQuery = `
     );
 
     return new Promise((resolve, reject) => {
-      exec(
-        `pgsql2shp -f "${sqlFilePath}" -h localhost -u ${process.env.db_user} ${theme} "${query}"`,
+      const cmd = `pgsql2shp -f "${sqlFilePath}" -h localhost -u ${process.env.db_user} ${theme} "${query}"`;
+      exec(cmd,
         (err, stdout, stderr) => {
           if (err) {
             console.error("Query execution error:", err);

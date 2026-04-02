@@ -286,7 +286,7 @@ router.post('/', upload.single('id_proof'), async (req, res) => {
         return sendJson(400, { message: 'OTP Expired', title: "Alert", icon: "danger" });
       }
 
-      if (clientotp != storedOtp) {
+      if (clientotp !== storedOtp) {
         return sendJson(400, { message: 'Invalid OTP', title: "Alert", icon: "danger" });
       }
 
@@ -426,7 +426,7 @@ router.post('/', upload.single('id_proof'), async (req, res) => {
 
 // ✅ User Login Route
 // ✅ Refactored — User Login Route (reduced cognitive complexity, same flow)
-router.post('/login', upload.single('id_proof'), async (req, res) => {
+router.post('/login', upload.none(), async (req, res) => {
   const { email, otp, password } = req.body;
   const action = req.body.submit; // expected: "GetOTP" or "login"
 
@@ -477,7 +477,6 @@ router.post('/login', upload.single('id_proof'), async (req, res) => {
 
         const validPassword = await bcrypt.compare(password, user.rows[0].password);
         if (!validPassword) {
-          console.log('Invalid Credential 2');
           client.release();
           return sendJson(400, { message: 'Invalid Creadential', title: "Warning", icon: "danger" });
         }
@@ -553,8 +552,7 @@ router.post('/login', upload.single('id_proof'), async (req, res) => {
           `
         });
 
-        // NOTE: original code responded with 400 on success for OTP send — preserved for compatibility
-        return sendJson(400, { message: 'OTP sent successfully', title: "Sent", icon: "success" });
+        return sendJson(200, { message: 'OTP sent successfully', title: "Sent", icon: "success" });
       } catch (err) {
         console.error('Error in sending OTP via email:', err);
         if (client) client.release();
@@ -607,8 +605,7 @@ router.post('/login', upload.single('id_proof'), async (req, res) => {
         client.release();
 
         // expiration check
-        if (storedOtp != otp) {
-          console.log('Invalid Otp');
+        if (storedOtp !== otp) {
           return sendJson(400, { message: 'Invalid Otp', title: "Warning", icon: "danger" });
         }
 
@@ -621,10 +618,10 @@ router.post('/login', upload.single('id_proof'), async (req, res) => {
         const token = jwt.sign(
           { email: userRes.rows[0].email, role: userRes.rows[0].role },
           process.env.secretKey,
-          { expiresIn: '240h' }
+          { expiresIn: '24h' }
         );
 
-        res.cookie('token', token, { httpOnly: true, secure: process.env.NODE_ENV === 'production' });
+        res.cookie('token', token, { httpOnly: true, secure: process.env.NODE_ENV === 'production', sameSite: 'Strict' });
         return sendJson(200, { message: 'Login successful', title: "Sent", icon: "success", redirect: "/" });
       } catch (err) {
         if (client) client.release();
@@ -810,8 +807,7 @@ router.post('/forgot', upload.single('id_proof'), async (req, res) => {
           `
         });
 
-        // Preserved original success status (400) to avoid breaking frontend flow
-        return sendJson(400, { message: 'OTP sent successfully', title: "Sent", icon: "success" });
+        return sendJson(200, { message: 'OTP sent successfully', title: "Sent", icon: "success" });
       } catch (err) {
         console.error('Error in sending OTP via email:', err);
         if (client) client.release();
@@ -849,7 +845,7 @@ router.post('/forgot', upload.single('id_proof'), async (req, res) => {
         const clientotp = otp;
 
         // time check
-        if (clientotp != storedOtp) {
+        if (clientotp !== storedOtp) {
           client.release();
           return sendJson(400, { message: 'invalid otp', title: "Alert", icon: "danger" });
         }
@@ -895,8 +891,7 @@ router.post('/forgot', upload.single('id_proof'), async (req, res) => {
 
         client.release();
 
-        // Preserved original response status (400) to avoid breaking frontend flow
-        return sendJson(400, { message: 'Password Updated Successfully', title: "Updated", icon: "success", redirect: "/" });
+        return sendJson(200, { message: 'Password Updated Successfully', title: "Updated", icon: "success", redirect: "/" });
       } catch (err) {
         console.error('Error updating password:', err);
         if (client) client.release();

@@ -1,7 +1,6 @@
 import express from 'express';
 import path from 'path';
 import bodyParser from 'body-parser';
-import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 import { fileURLToPath } from 'url';
 import helmet from "helmet";
@@ -37,14 +36,17 @@ const cspOptions = {
   useDefaults: true,
   directives: {
     defaultSrc: ["'self'"],
-    
+
     scriptSrc: [
       "'self'",
       "https://cdn.jsdelivr.net",
       "https://cdnjs.cloudflare.com",
       "https://challenges.cloudflare.com",
       "https://www.youtube.com",
-      "https://s.ytimg.com"
+      "https://s.ytimg.com",
+      "https://code.jquery.com",
+      "https://stackpath.bootstrapcdn.com",
+      "https://maxcdn.bootstrapcdn.com"
     ],
 
     styleSrc: [
@@ -92,24 +94,11 @@ const cspOptions = {
 };
 
 
-app.use(helmet.contentSecurityPolicy(cspOptions));
-
-// JWT Middleware
-const jwtMiddleware = (req, res, next) => {
-  const token = req.headers['authorization']?.split(' ')[1];
-  if (token) {
-    jwt.verify(token, process.env.adminSecretKey, (err, decoded) => {
-      if (err) {
-        return res.status(401).send('Unauthorized');
-      }
-      req.user = decoded;
-      next();
-    });
-  } else {
-    next();
-  }
-};
-app.use(jwtMiddleware);
+// 🔐 Enable Helmet security headers (CSP, HSTS, X-Frame-Options, etc.)
+app.use(helmet({
+  contentSecurityPolicy: cspOptions,
+  crossOriginEmbedderPolicy: false, // allow loading cross-origin resources (CDNs)
+}));
 
 // ✅ View engine setup for EJS
 const viewpath = path.join(__dirname, 'templates/views');
@@ -121,6 +110,9 @@ app.use('/', router);
 
 // Start the server
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`127.0.0.1:${PORT} listening on port ${PORT}`);
+const HOST = process.env.HOST || 'localhost';
+
+app.listen(PORT, HOST, () => {
+  console.log(`${HOST}:${PORT} listening on port ${PORT}`);
 });
+

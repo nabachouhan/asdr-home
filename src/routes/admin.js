@@ -19,8 +19,9 @@ import * as XLSX from "xlsx";
 import crypto from "crypto";
 import { fileURLToPath } from "url";
 import rateLimit, { ipKeyGenerator } from "express-rate-limit";
-import { spawn } from "child_process"; 
+import { spawn } from "child_process";
 import bcrypt from 'bcryptjs';
+import { escapeHtml, isValidIdentifier, isValidSrid } from "../utils/sanitize.js";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
@@ -106,8 +107,9 @@ const login = multer({ storage: loginstorage });
 const storage = multer.diskStorage({
   destination: "shpuploads/",
   filename: (req, file, cb) => {
-    // Use the original filename (without any modifications)
-    cb(null, file.originalname);
+    // 🔐 Use random UUID + original extension to prevent path traversal
+    const safeExt = path.extname(file.originalname).toLowerCase();
+    cb(null, crypto.randomUUID() + safeExt);
   },
 });
 
@@ -156,55 +158,6 @@ router.get("/tags", async (req, res) => {
 // Helpers
 // -------------------------------
 
- //Verifies Cloudflare Turnstile token.
-
-async function verifyTurnstileToken(token, ip) {
-  if (!token) {
-    return { ok: false, error: {
-      status: 400,
-      body: {
-        message: "Turnstile verification missing",
-        title: "Security",
-        icon: "warning",
-      }
-    }};
-  }
-
-  try {
-    const verification = await axios.post(
-      "https://challenges.cloudflare.com/turnstile/v0/siteverify",
-      new URLSearchParams({
-        secret: process.env.TURNSTILE_SECRET_KEY,
-        response: token,
-        remoteip: ip,
-      }),
-      { headers: { "Content-Type": "application/x-www-form-urlencoded" } }
-    );
-
-    // if (!verification.data.success) {
-    //   return { ok: false, error: {
-    //     status: 400,
-    //     body: {
-    //       message: "Unusual Activity Detected",
-    //       title: "Try After Some Time",
-    //       icon: "danger",
-    //     }
-    //   }};
-    // }
-
-    return { ok: true };
-  } catch (err) {
-    console.error("Turnstile verification error:", err);
-    return { ok: false, error: {
-      status: 500,
-      body: {
-        message: "Something went wrong",
-        title: "Error",
-        icon: "danger",
-      }
-    }};
-  }
-}
 
 // Returns admin record from database using email
 
@@ -230,21 +183,25 @@ async function validateAdminCredentials(email, password) {
 
   if (!admin) {
     client.release();
-    return { ok: false, client, errorBody: {
-      message: "Invalid Creadential",
-      title: "Warning",
-      icon: "danger",
-    }};
+    return {
+      ok: false, client, errorBody: {
+        message: "Invalid Creadential",
+        title: "Warning",
+        icon: "danger",
+      }
+    };
   }
 
   const validPassword = await bcrypt.compare(password, admin.password);
   if (!validPassword) {
     client.release();
-    return { ok: false, client, errorBody: {
-      message: "Invalid Creadential",
-      title: "Warning",
-      icon: "danger",
-    }};
+    return {
+      ok: false, client, errorBody: {
+        message: "Invalid Creadential",
+        title: "Warning",
+        icon: "danger",
+      }
+    };
   }
 
   return { ok: true, client, admin };
@@ -442,12 +399,13 @@ async function handleLogin(req, res, { email, password, otp }) {
       admin_role: admin.admin_role,
     },
     process.env.adminSecretKey,
-    { expiresIn: "100h" }
+    { expiresIn: "8h" }
   );
 
   res.cookie("token", jwtToken, {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
+    sameSite: "Strict",
   });
 
   return res.status(201).json({
@@ -465,16 +423,9 @@ router.post("/", login.none(), async (req, res) => {
     password,
     otp,
     submit,
-    "cf-turnstile-response": token,
   } = req.body;
 
   try {
-    // // 1. Turnstile check (always)
-    // const turnstileResult = await verifyTurnstileToken(token, req.ip);
-    // if (!turnstileResult.ok) {
-    //   return res.status(turnstileResult.error.status).json(turnstileResult.error.body);
-    // }
-
     // 2. Branch by submit type
     switch (submit) {
       case "GetOTP":
@@ -917,6 +868,40 @@ router.post(
         return res.status(400).json(data);
       }
 
+      // 🔐 Validate SRID (must be numeric only — prevents command injection)
+      if (!isValidSrid(srid)) {
+        cleanupFiles();
+        return res.status(400).json({
+          message: "Invalid SRID value. Must be numeric.",
+          title: "Error",
+          icon: "error",
+          redirect: "\\admin\\upload",
+        });
+      }
+
+      // 🔐 Validate file_name (only letters, numbers, underscores — prevents command/SQL injection)
+      if (!isValidIdentifier(file_name)) {
+        cleanupFiles();
+        return res.status(400).json({
+          message: "Invalid file name. Only letters, numbers, and underscores are allowed.",
+          title: "Error",
+          icon: "error",
+          redirect: "\\admin\\upload",
+        });
+      }
+
+      // 🔐 Validate theme against whitelist
+      const validThemes = ['administrative', 'weatherclimate', 'landresource', 'waterresource', 'disastermanagement', 'infrastructure', 'utility', 'terrain'];
+      if (!validThemes.includes(theme)) {
+        cleanupFiles();
+        return res.status(400).json({
+          message: "Invalid theme selected.",
+          title: "Error",
+          icon: "error",
+          redirect: "\\admin\\upload",
+        });
+      }
+
       // Check if file_name already exists in the database
       const client = await poolUser.connect();
       const query = `
@@ -926,7 +911,6 @@ router.post(
         `;
       const result = await client.query(query, [file_name]);
       const checkTableExists = result.rows.length > 0;
-      console.log(checkTableExists);
       client.release();
 
       if (checkTableExists) {
@@ -957,7 +941,6 @@ router.post(
 
       // Extract the zip file
       const basedir = "shpuploads/";
-      console.log(req.file.path);
       const zip = new AdmZip(req.file.path);
       const fullDirectoryPath = path.join(basedir, file_name);
 
@@ -1001,7 +984,7 @@ router.post(
         return res.status(400).json(data);
       }
 
-      // Execute shp2pgsql | psql command using spawn
+      // 🔐 Execute shp2pgsql | psql command — srid, file_name, theme are validated above
       const cmd = `shp2pgsql -I -s ${srid} ${shapefilePath} ${file_name} | psql -U ${process.env.db_user} -d ${theme}`;
       console.log(cmd);
 
@@ -1163,7 +1146,7 @@ router.post(
 
 
 // ✅ Route: GET /catalog/:file_name to fetch item details based on file_name of Repository  (Dashboard, protected by adminAuth)
-router.get("/catalog/:file_name", async (req, res) => {
+router.get("/catalog/:file_name", adminAuthMiddleware, async (req, res) => {
   try {
     const { file_name } = req.params;
 
@@ -1200,9 +1183,13 @@ router.get("/catalog/:file_name", async (req, res) => {
     uclient.release();
     let client;
 
+    // 🔐 Validate file_name as safe SQL identifier
+    if (!isValidIdentifier(file_name)) {
+      return res.status(400).json({ error: "Invalid file name" });
+    }
+
     const pool = getPoolByTheme(theme);
     client = await pool.connect();
-    // const { rows } = await client.query('SELECT file_id, file_name FROM shapefiles WHERE file_name = $1', [file_name]);
     const { rows } = await client.query(
       `SELECT ST_AsText(ST_Envelope(ST_Extent(geom))) AS bbox_geom_wkt
             FROM "${file_name}";`
@@ -1217,7 +1204,7 @@ router.get("/catalog/:file_name", async (req, res) => {
     const roundedWKT = roundWKT(rows[0].bbox_geom_wkt, 3);
 
     client.release();
- 
+
     // console.log(roundedWKT);
 
     if (rows.length) {
@@ -1585,6 +1572,10 @@ router.post("/delete", adminAuthMiddleware, async (req, res) => {
       await axios.delete(`${geoserverUrl}/layers/${file_name}`, { auth });
 
       const theme = store;
+      // 🔐 Validate file_name before using in dynamic SQL
+      if (!isValidIdentifier(file_name)) {
+        return res.status(400).json({ message: "Invalid file name", icon: "danger" });
+      }
       const pool = getPoolByTheme(theme);
       const client2 = await pool.connect();
       await client2.query(`DROP TABLE IF EXISTS "${file_name}"`);
@@ -1884,8 +1875,7 @@ router.get("/logs/download", adminAuthMiddleware, async (req, res) => {
     // Set headers for download
     res.setHeader(
       "Content-Disposition",
-      `attachment; filename=${safeRole}_logs_${
-        new Date().toISOString().split("T")[0]
+      `attachment; filename=${safeRole}_logs_${new Date().toISOString().split("T")[0]
       }.xlsx`
     );
     res.setHeader(
@@ -2277,7 +2267,7 @@ router.post("/roles", adminAuthMiddleware, async (req, res) => {
         details,
       ];
       client.query(queryforlogs, valuesforlogs);
-    } else if (role === "viewer" || role === "datareader" || role === "block") {
+    } else if (role === "viewer" || role === "datareader" || role === "blocked") {
       // console.log(`role to ${role}`);
 
       const query = `
@@ -2452,9 +2442,10 @@ router.get("/queries", adminAuthMiddleware, async (req, res) => {
 // ✅ Route: POST /queries Reply and Toggle Query status  (Dashboard, protected by adminAuth)
 router.post("/queries", adminAuthMiddleware, async (req, res) => {
 
-    const { action, queryid, email, reply, subject, request, fullname } = req.body;
-  const client = await poolUser.connect();
+  const { action, queryid, email, reply, subject, request, fullname } = req.body;
+  let client;
   try {
+    client = await poolUser.connect();
     let query = "";
     let params = [];
 
@@ -2474,7 +2465,7 @@ router.post("/queries", adminAuthMiddleware, async (req, res) => {
         const data = { message: "Ignored", title: "Alert", icon: "alert" };
         return res.status(400).json(data);
       } catch (error) {
-            console.error("Error in sending reply via email:", error);
+        console.error("Error in sending reply via email:", error);
         const data = {
           message: "something went wrong, Try again!",
           title: "Error",
@@ -2498,7 +2489,7 @@ router.post("/queries", adminAuthMiddleware, async (req, res) => {
           from: process.env.email,
           to: req.body.email,
           subject: "📩 ASSAM-SDR | Response to Your Query",
-html: `
+          html: `
     <div style="
       font-family: Arial, sans-serif;
       background: #f9fbfd;
@@ -2513,7 +2504,7 @@ html: `
       </h2>
 
       <p style="font-size: 16px; color: #333;">
-        Dear <strong>${fullname || "User"}</strong>,
+        Dear <strong>${escapeHtml(fullname || "User")}</strong>,
       </p>
 
       <p style="font-size: 15px; color: #333;">
@@ -2582,7 +2573,7 @@ html: `
   `,
         });
 
-        const client = await poolUser.connect();
+        // 🔐 Reuse existing client instead of creating a new one (fixes double-connect bug)
         query = `
                 UPDATE queries
                 SET isresolved=$1
@@ -2590,7 +2581,6 @@ html: `
                 `;
         params = [true, queryid];
         await client.query(query, params);
-        client.release();
 
         const data = {
           message: "reply sent successfully",
@@ -2612,8 +2602,11 @@ html: `
       }
     }
   } catch (error) {
-    const data = { message: error, title: "Oops?", icon: "danger" };
+    console.error("Query handling error:", error.message);
+    const data = { message: "Something went wrong", title: "Oops?", icon: "danger" };
     return res.status(400).json(data);
+  } finally {
+    if (client) client.release();
   }
 });
 

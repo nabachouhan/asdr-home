@@ -1,5 +1,4 @@
 
-// ✅ ES6 Imports
 import express from "express";
 import dotenv from "dotenv";
 import bodyParser from "body-parser";
@@ -9,6 +8,7 @@ import cookieParser from "cookie-parser";
 import config from '../../config.js';
 import { poolUser, getPoolByTheme } from "../db/connection.js";
 import pg from 'pg';
+import { isValidIdentifier } from "../utils/sanitize.js";
 
 
 // ✅ Create Express router
@@ -129,10 +129,20 @@ router.get("/values/:theme/:fileName/:field", async (req, res) => {
     if (!(await isValidFile(theme, fileName))) {   
       return res.status(400).json({ error: "Invalid or unpublished file" });
     }
- 
-    const pool = getPoolByTheme(theme);
 
+    // 🔐 Validate field name against actual columns in the table
+    const pool = getPoolByTheme(theme);
     const client = await pool.connect();
+
+    const colCheck = await client.query(
+      `SELECT column_name FROM information_schema.columns WHERE table_name = $1 AND table_schema = 'public'`,
+      [fileName]
+    );
+    const validColumns = colCheck.rows.map(r => r.column_name.toLowerCase());
+    if (!validColumns.includes(field.toLowerCase())) {
+      client.release();
+      return res.status(400).json({ error: "Invalid field name" });
+    }
 
     const result = await client.query(
       `SELECT DISTINCT "${field}" FROM "${fileName}" ORDER BY "${field}"`
@@ -499,10 +509,14 @@ const imgFormat = "image/png"; // or "image/svg+xml"
         const pool = createPool(theme);
 
 
-     // 1. Get bbox from PostGIS
+    // 🔐 Validate layer as safe identifier
+    if (!isValidIdentifier(layer)) {
+      return res.status(400).json({ error: "Invalid layer name" });
+    }
+
     const bboxQuery = `
       SELECT ST_Extent(geom) AS bbox
-      FROM ${layer};
+      FROM "${layer}"
     `;
     const result = await pool.query(bboxQuery);    
 

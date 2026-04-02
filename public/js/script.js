@@ -125,9 +125,11 @@ document.addEventListener("DOMContentLoaded", function () {
 // handle submissions--ends------
 
 // home page loader start
-const loader = document.getElementById("loader");
 function loaderHideFunc() {
-  loader.style.display = "none";
+  const loader = document.getElementById("loader");
+  if (loader) {
+    loader.style.display = "none";
+  }
 }
 // home page loader stop
 
