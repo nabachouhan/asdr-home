@@ -2,401 +2,523 @@
 <html lang="en">
 
 <head>
-    <%- include('../partials/head') %>
+    <%- include("../partials/head") %>
 </head>
 
 <body onload="loaderFunc()">
+    <!-- Loading Screen -->
     <div id="loader">
         <div id="loaderelement">
-            <div class="spinner-grow text-primary" role="status">
-                <span class="sr-only">...</span>
-            </div>
-            <div class="spinner-grow text-secondary" role="status">
-                <span class="sr-only">...</span>
-            </div>
-            <div class="spinner-grow text-success" role="status">
-                <span class="sr-only">...</span>
-            </div>
-            <div class="spinner-grow text-danger" role="status">
-                <span class="sr-only">...</span>
-            </div>
-            <div class="spinner-grow text-warning" role="status">
-                <span class="sr-only">...</span>
-            </div>
-            <div class="spinner-grow text-info" role="status">
-                <span class="sr-only">...</span>
-            </div>
-            <div class="spinner-grow text-primary" role="status">
-                <span class="sr-only">...</span>
-            </div>
-            <div class="spinner-grow " role="status">
-                <span class="sr-only">x</span>
-            </div>
+            <div class="spinner-grow" role="status"><span class="sr-only">.</span></div>
+            <div class="spinner-grow" role="status"><span class="sr-only">.</span></div>
+            <div class="spinner-grow" role="status"><span class="sr-only">.</span></div>
+            <div class="spinner-grow" role="status"><span class="sr-only">.</span></div>
+            <div class="spinner-grow" role="status"><span class="sr-only">.</span></div>
+            <div class="spinner-grow" role="status"><span class="sr-only">.</span></div>
+            <div class="spinner-grow" role="status"><span class="sr-only">.</span></div>
+            <div class="spinner-grow" role="status"><span class="sr-only">.</span></div>
         </div>
     </div>
 
-    <%- include('../partials/homeNav') %>
-    <%- include('../partials/loader') %>
+    <%- include("../partials/homeNav") %>
+        <%- include("../partials/loader") %>
 
 
+            <!-- ============================================================
+         HERO SECTION — with video background
+         ============================================================ -->
+            <section class="sdr-hero" id="home">
+                <!-- Video Background -->
+                <video autoplay muted loop poster="video-placeholder.jpg" id="bg-video">
+                    <source src="./image/hero.mp4" type="video/mp4">
+                </video>
 
+                <div class="hero-content-wrapper">
 
-    <!-- Hero section Starts -->
-    <section class="hero">
-        <div class="hero-content">
-            <h1 class="text-white">Empowering You with Assam SDR</h1>
-            <p>Discover, analyze, and visualize spatial data effortlessly.</p>
-            <a href="/gisportal" class="btn btn-primary rounded-pill py-3 px-5 mt-3">Explore</a>
-        </div>
-        <video autoplay muted loop poster="video-placeholder.jpg" id="bg-video">
-            <source src="./image/hero.mp4" type="video/mp4">
-            Your browser does not support the video tag.
-        </video>
+                    <h1 class="hero-title">
+                        Empowering <span class="highlight">Spatial Data</span> Discovery for Assam
+                    </h1>
 
-    </section>
-    <!-- Hero section ends -->
-
-
-    <!-- stats section Starts -->
-
-    <div class="col-lg-12 p-5 wow fadeIn" data-wow-delay="0.1s">
-        <div class="row g-4">
-            <div class="col-sm-3">
-                <div class="border-start ps-4">
-                    <h2 class=" mb-1" data-toggle="counter-up">123</h2>
-                    <p class=" mb-0">Total Visits</p>
-                </div>
-            </div>
-            <div class="col-sm-3">
-                <div class="border-start ps-4">
-                     <h2 class=" mb-1" data-toggle="counter-up"><%= userItems.count %></h2> 
-                    <p class=" mb-0">Registered Users</p>
-                </div>
-            </div>
-         
-            <div class="col-sm-3">
-                <div class="border-start ps-4">
-                     <h2 class=" mb-1" data-toggle="counter-up"><%= userItems.regcount %></h2> 
-                    <p class=" mb-0">Shapefile Available</p>
-                </div>
-            </div>
-            <div class="col-sm-3">
-                <div class="border-start ps-4">
-                     <h2 class=" mb-1" data-toggle="counter-up"><%= userItems.reqcount %></h2> 
-                    <p class=" mb-0">Total Requests</p>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- stats section Starts -->
-
-
-
-
-    <!-- About Start -->
-    <div class="container-xxl py-5" id="about">
-        <div class="container">
-            <div class="row g-5">
-                <div class="col-lg-6 wow fadeIn" data-wow-delay="0.1s">
-                    <div class="d-flex flex-column">
-                        <img class="img-fluid rounded w-75 align-self-end" src="./image/ind.png" alt="">
-                      
-                            <iframe class="img-fluid rounded w-50 bg-white  " width="560" height="315" src="https://www.youtube.com/embed/sqxVhA-l3Qg?si=OSYfk5nTv9kX6J0M" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen style="margin-top: -25%;"></iframe>
-                    </div>
-                </div>
-                <div class="col-lg-6 wow fadeIn" data-wow-delay="0.5s">
-                    <p class="d-inline-block border rounded-pill py-1 px-4">About Portal</p>
-                    <h1 class="mb-4">Assam-SDR? Get Know About It!</h1>
-                    <p>The Assam GIS Explorer project is a comprehensive web-based application designed to visualize and
-                        interact with geospatial data related to the Assam region. </p>
-                    <p class="mb-4">This project aims to provide a user-friendly interface for exploring various layers
-                        of geographical information, enabling users to perform tasks such as visualization, measurement,
-                        geocoding, and data manipulation.
+                    <p class="hero-subtitle">
+                        Discover, analyze, and visualize geospatial datasets with powerful tools. Explore interactive
+                        maps, perform spatial analysis, and access Assam's comprehensive data repository.
                     </p>
-                    <p><i class="far fa-check-circle text-primary me-3"></i>Interactive Mapping</p>
-                    <p><i class="far fa-check-circle text-primary me-3"></i>Data Visualization</p>
-                    <p><i class="far fa-check-circle text-primary me-3"></i>Data Sharing </p>
-                    <a class="btn btn-primary rounded-pill py-3 px-5 mt-3" href="http://localhost:5173/">Explore</a>
-                </div>
-            </div>
-        </div>
-    </div>
 
-
-
-<!-- Service Start -->
-<div class="container-xxl py-5" id="service">
-  <div class="container">
-    <div class="text-center mx-auto mb-5 wow fadeInUp" data-wow-delay="0.1s" style="max-width: 600px;">
-      <p class="d-inline-block border rounded-pill py-1 px-4">Services</p>
-      <h1>Services</h1>
-    </div>
-
-    <div class="row justify-content-center g-4 text-center">
-      <!-- Service Item 1 -->
-      <div class="col-6 col-md-4 col-lg" style="flex: 0 0 20%; max-width: 20%;">
-        <div class="themed-box p-4 rounded h-100 shadow-sm">
-          <div class="bg-white rounded-circle d-flex justify-content-center align-items-center mx-auto mb-3" style="width: 60px; height: 60px;">
-            <span class="material-symbols-outlined text-primary">database</span>
-          </div>
-          <h6 class="fw-bold">Spatial Data Repository</h6>
-          <p class="small mb-0">Access layer files from catalog with secure download via admin approval.</p>
-        </div>
-      </div>
-
-      <!-- Service Item 2 -->
-      <div class="col-6 col-md-4 col-lg" style="flex: 0 0 20%; max-width: 20%;">
-        <div class="themed-box p-4 rounded h-100 shadow-sm">
-          <div class="bg-white rounded-circle d-flex justify-content-center align-items-center mx-auto mb-3" style="width: 60px; height: 60px;">
-            <span class="material-symbols-outlined text-primary">blur_circular</span>
-          </div>
-          <h6 class="fw-bold">Buffer Analysis</h6>
-          <p class="small mb-0">Draw shapes and generate buffer zones with custom distances.</p>
-        </div>
-      </div>
-
-      <!-- Service Item 3 -->
-      <div class="col-6 col-md-4 col-lg" style="flex: 0 0 20%; max-width: 20%;">
-        <div class="themed-box p-4 rounded h-100 shadow-sm">
-          <div class="bg-white rounded-circle d-flex justify-content-center align-items-center mx-auto mb-3" style="width: 60px; height: 60px;">
-            <i class="bi bi-eye text-primary fs-5"></i>
-          </div>
-          <h6 class="fw-bold">Layer Visualization</h6>
-          <p class="small mb-0">Explore and filter geospatial layers to extract meaningful insights.</p>
-        </div>
-      </div>
-
-      <!-- Service Item 4 -->
-      <div class="col-6 col-md-4 col-lg" style="flex: 0 0 20%; max-width: 20%;">
-        <div class="themed-box p-4 rounded h-100 shadow-sm">
-          <div class="bg-white rounded-circle d-flex justify-content-center align-items-center mx-auto mb-3" style="width: 60px; height: 60px;">
-            <i class="bi bi-rulers text-primary fs-5"></i>
-          </div>
-          <h6 class="fw-bold">Measurement & Analysis</h6>
-          <p class="small mb-0">Measure distances and areas for planning and spatial analysis.</p>
-        </div>
-      </div>
-
-      <!-- Service Item 5 -->
-      <div class="col-6 col-md-4 col-lg" style="flex: 0 0 20%; max-width: 20%;">
-        <div class="themed-box p-4 rounded h-100 shadow-sm">
-          <div class="bg-white rounded-circle d-flex justify-content-center align-items-center mx-auto mb-3" style="width: 60px; height: 60px;">
-            <span class="material-symbols-outlined text-primary">thread_unread</span>
-          </div>
-          <h6 class="fw-bold">Draw & Export</h6>
-          <p class="small mb-0">Create shapes and export them as GeoJSON files for sharing.</p>
-        </div>
-      </div>
-
-      <!-- Service Item 6 -->
-      <div class="col-6 col-md-4 col-lg" style="flex: 0 0 20%; max-width: 20%;">
-        <div class="themed-box p-4 rounded h-100 shadow-sm">
-          <div class="bg-white rounded-circle d-flex justify-content-center align-items-center mx-auto mb-3" style="width: 60px; height: 60px;">
-            <span class="material-symbols-outlined text-primary">upload_file</span>
-          </div>
-          <h6 class="fw-bold">Upload & Visualize</h6>
-          <p class="small mb-0">Upload and view GeoJSON, CSV, or shapefiles on the map easily.</p>
-        </div>
-      </div>
-
-      <!-- Service Item 7 -->
-      <div class="col-6 col-md-4 col-lg" style="flex: 0 0 20%; max-width: 20%;">
-        <div class="themed-box p-4 rounded h-100 shadow-sm">
-          <div class="bg-white rounded-circle d-flex justify-content-center align-items-center mx-auto mb-3" style="width: 60px; height: 60px;">
-            <span class="material-symbols-outlined text-primary">pin_drop</span>
-          </div>
-          <h6 class="fw-bold">Search Location</h6>
-          <p class="small mb-0">Search and mark locations using geocoding or lat/lon inputs.</p>
-        </div>
-      </div>
-
-      <!-- Service Item 8 -->
-      <div class="col-6 col-md-4 col-lg" style="flex: 0 0 20%; max-width: 20%;">
-        <div class="themed-box p-4 rounded h-100 shadow-sm">
-          <div class="bg-white rounded-circle d-flex justify-content-center align-items-center mx-auto mb-3" style="width: 60px; height: 60px;">
-            <i class="bi bi-search text-primary fs-5"></i>
-          </div>
-          <h6 class="fw-bold">Search by Lat/Lon</h6>
-          <p class="small mb-0">Pinpoint any location by entering latitude and longitude values.</p>
-        </div>
-      </div>
-
-      <!-- Service Item 9 -->
-      <div class="col-6 col-md-4 col-lg" style="flex: 0 0 20%; max-width: 20%;">
-        <div class="themed-box p-4 rounded h-100 shadow-sm">
-          <div class="bg-white rounded-circle d-flex justify-content-center align-items-center mx-auto mb-3" style="width: 60px; height: 60px;">
-            <i class="bi bi-stack text-primary fs-5"></i>
-          </div>
-          <h6 class="fw-bold">Layer Management</h6>
-          <p class="small mb-0">Toggle base maps and crop layers for better clarity and focus.</p>
-        </div>
-      </div>
-
-      <!-- Service Item 10 -->
-      <div class="col-6 col-md-4 col-lg" style="flex: 0 0 20%; max-width: 20%;">
-        <div class="themed-box p-4 rounded h-100 shadow-sm">
-          <div class="bg-white rounded-circle d-flex justify-content-center align-items-center mx-auto mb-3" style="width: 60px; height: 60px;">
-            <span class="material-symbols-outlined text-primary">map</span>
-          </div>
-          <h6 class="fw-bold">Interactive Map Tools</h6>
-          <p class="small mb-0">Use measurement, drawing, and layer tools on the interactive map.</p>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-<!-- Service End -->
-
-
-
-    <!-- Cataloge Start -->
-    <div class="container-fluid themed-box overflow-hidden my-5 px-lg-0 p-2" id="catalog">
-        <div class="container feature px-lg-0">
-            <div class="row g-0 mx-lg-0">
-                <div class="col-lg-6 feature-text p-5 wow fadeIn" data-wow-delay="0.1s">
-                    <div class="p-lg-5 ps-lg-0">
-                        <p class="d-inline-block border rounded-pill  py-1 px-4">Catalog</p>
-                        <h1 class=" mb-4">Spatial Data Repository</h1>
-                        <p class=" mb-4 pb-2">Welcome to our geospatial catalogue page, where you can browse
-                            through a rich collection of geospatial data covering various themes and regions. Whether
-                            you're a researcher, planner, or developer, our catalogue offers a diverse range of datasets
-                            to support your projects and analyses.
-
-                            Browse through our comprehensive selection of geospatial data, including village data,
-                            school data, and much more. Each dataset is carefully
-                            curated and organized to ensure easy navigation and discovery.</p>
-                        <div class="row g-4">
-                            <div class="col-6">
-                                <div class="d-flex align-items-center">
-                                    <div class="d-flex flex-shrink-0 align-items-center justify-content-center rounded-circle themed-box"
-                                        style="width: 55px; height: 55px;">
-                                        <i class="bi bi-cart4 text-primary"></i>
-                                    </div>
-                                    <div class="ms-4">
-                                        <p class=" mb-2">Data</p>
-                                        <h5 class=" mb-0">Request</h5>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-6">
-                                <div class="d-flex align-items-center">
-                                    <div class="d-flex flex-shrink-0 align-items-center justify-content-center rounded-circle themed-box"
-                                        style="width: 55px; height: 55px;">
-                                        <i class="bi bi-cloud-arrow-down-fill text-primary fs-5"></i>
-                                    </div>
-                                    <div class="ms-4">
-                                        <p class=" mb-2">Data</p>
-                                        <h5 class=" mb-0">Download</h5>
-                                    </div>
-                                </div>
-                            </div>
-                           
-                            <div class="ms-4 ">
-                                <h5>
-                                    <a class="btn btn-primary rounded-pill py-3 px-5 mt-3 " href="/catalog"> View
-                                        Catalog</a>
-                                </h5>
-                            </div>
-                        </div>
+                    <div class="hero-cta-group">
+                        <a href="/gisportal" class="btn-sdr-primary" id="hero-explore-btn">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
+                            </svg>
+                            Explore Portal
+                        </a>
+                        <a href="/catalog" class="btn-sdr-secondary" id="hero-catalog-btn">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+                                <circle cx="12" cy="10" r="3" />
+                            </svg>
+                            View Catalog
+                        </a>
                     </div>
                 </div>
-                <div class="col-lg-6 pe-lg-0 wow fadeIn  p-6" data-wow-delay="0.5s" style="min-height: 400px;">
-                    <div class="position-relative h-100 m-6">
-                        <img class="position-absolute img-fluid w-100 h-100" src="./image/repoimg2.png"
-                            style="object-fit: contain;" alt="">
+            </section>
+
+
+            <!-- ============================================================
+         STATS SECTION — Platform at a Glance
+         ============================================================ -->
+            <!-- stats section Starts -->
+
+            <div class="sdr-section" data-wow-delay="0.1s">
+                <div class="row g-4 sdr-container">
+                    <div class="col-sm-3">
+                        <div class="border-start ps-4">
+                            <h2 class=" mb-1 counter-up" data-toggle="counter-up" data-target="123">123</h2>
+                            <p class=" mb-0">Total Visits</p>
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+                        <div class="border-start ps-4">
+                            <h2 class=" mb-1 counter-up" data-toggle="counter-up" data-target="<%= userItems.count %>">
+                                <%= userItems.count %>
+                            </h2>
+                            <p class=" mb-0">Registered Users</p>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-3">
+                        <div class="border-start ps-4">
+                            <h2 class=" mb-1 counter-up" data-toggle="counter-up"
+                                data-target="<%= userItems.regcount %>">
+                                <%= userItems.regcount %>
+                            </h2>
+                            <p class=" mb-0">Shapefile Available</p>
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+                        <div class="border-start ps-4">
+                            <h2 class=" mb-1 counter-up" data-toggle="counter-up"
+                                data-target="<%= userItems.reqcount %>">
+                                <%= userItems.reqcount %>
+                            </h2>
+                            <p class=" mb-0">Total Requests</p>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
-    <!-- Cataloge End -->
+            <!-- stats section Starts -->
 
-    <!-- Contact Start -->
-    <div class="container-xxl py-5" id="contact">
-        <div class="container">
-            <div class="row g-5">
-                <div class="col-lg-6 wow fadeInUp" data-wow-delay="0.1s">
-                    <p class="d-inline-block border rounded-pill py-1 px-4">Contact</p>
-                    <h1 class="mb-4">We’re Here to Help You</h1>
-                    <p class="mb-4">Have questions or need assistance with a mapping project? Reach out to us, and let’s
-                        work together to bring your geospatial ideas to life.
-                    </p>
-                    <div class="themed-box rounded d-flex align-items-center p-5 mb-4">
-                        <div class="d-flex flex-shrink-0 align-items-center justify-content-center rounded-circle bg-white"
-                            style="width: 55px; height: 55px;">
-                            <i class="fa fa-phone-alt text-primary"></i>
-                        </div>
-                        <div class="ms-4">
-                            <p class="mb-2">Call Us Now</p>
-                            <h5 class="mb-0">069138 48401</h5>
-                        </div>
-                    </div>
-                    <div class="themed-box rounded d-flex align-items-center p-5">
-                        <div class="d-flex flex-shrink-0 align-items-center justify-content-center rounded-circle bg-white"
-                            style="width: 55px; height: 55px;">
-                            <i class="fa fa-envelope-open text-primary"></i>
-                        </div>
-                        <div class="ms-4">
-                            <p class="mb-2">Mail Us Now</p>
-                            <h5 class="mb-0">dirassac2021@gmail.com</h5>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-6 wow fadeInUp" data-wow-delay="0.5s">
-                    <div class="themed-box rounded h-100 d-flex align-items-center p-5">
-                        <form id="queryForm" action="/query" method="POST" enctype="multipart/form-data">
-                            <div class="row g-3">
-                                <div class="col-12 col-sm-6">
-                                    <input type="text" class="form-control border-0" placeholder="Your Name"
-                                        name="full_name" style="height: 55px;">
-                                </div>
-                                <div class="col-12 col-sm-6">
-                                    <input type="email" class="form-control border-0" placeholder="Your Email"
-                                        name="email" style="height: 55px;">
-                                </div>
-                                <div class="col-12 col-sm-6">
-                                    <input type="text" class="form-control border-0" placeholder="Your Mobile"
-                                        name="mobile" style="height: 55px;">
-                                </div>
-                                <div class="col-12 col-sm-6">
-                                    <select class="form-select border-0" style="height: 55px;" name="occupation">
-                                        <option selected>Choose Occupation</option>
-                                        <option value="Researcher">Researcher</option>
-                                        <option value="Student">Student</option>
-                                        <option value="Goverment Employee">Goverment Employee</option>
-                                        <option value="Private Employee">Private Employee</option>
-                                    </select>
-                                </div>
 
-                                <div class="col-12 ">
 
-                                    <textarea class="form-control border-0" placeholder="Reason For Contact"
-                                        name="reason" maxlength="210"></textarea>
+            <!-- ============================================================
+         ABOUT SECTION — with image + YouTube iframe
+         ============================================================ -->
+            <section class="sdr-section" id="about">
+                <div class="sdr-container">
+                    <div class="sdr-about-grid">
+                        <!-- Left: Content -->
+                        <div>
+                            <div class="section-label reveal">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round">
+                                    <circle cx="12" cy="12" r="10" />
+                                    <line x1="12" y1="16" x2="12" y2="12" />
+                                    <line x1="12" y1="8" x2="12.01" y2="8" />
+                                </svg>
+                                About the Platform
+                            </div>
+                            <h2 class="section-title reveal">What is <span class="gradient-text">Assam SDR</span>?</h2>
+                            <p class="reveal" style="margin-bottom: 12px;">
+                                The Assam Spatial Data Repository is a comprehensive web-based geospatial platform
+                                designed to visualize and interact with spatial data related to the Assam region.
+                            </p>
+                            <p class="reveal" style="margin-bottom: 32px;">
+                                Our platform provides a user-friendly interface for exploring geographical information
+                                layers, enabling users to perform spatial visualization, measurement, geocoding, and
+                                advanced data analysis.
+                            </p>
 
+                            <!-- Feature Cards -->
+                            <div class="sdr-about-features">
+                                <div class="sdr-feature-mini reveal reveal-delay-1">
+                                    <div class="feature-icon">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                            stroke-linecap="round" stroke-linejoin="round">
+                                            <polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6" />
+                                            <line x1="8" y1="2" x2="8" y2="18" />
+                                            <line x1="16" y1="6" x2="16" y2="22" />
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <h6>Interactive Mapping</h6>
+                                        <p>OpenLayers-powered maps with rich layer controls</p>
+                                    </div>
                                 </div>
-                                <div class="col-12">
-                                    <textarea class="form-control border-0" rows="5" placeholder="Describe your Message"
-                                        name="message" maxlength="300"></textarea>
+                                <div class="sdr-feature-mini reveal reveal-delay-2">
+                                    <div class="feature-icon">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                            stroke-linecap="round" stroke-linejoin="round">
+                                            <line x1="18" y1="20" x2="18" y2="10" />
+                                            <line x1="12" y1="20" x2="12" y2="4" />
+                                            <line x1="6" y1="20" x2="6" y2="14" />
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <h6>Spatial Analysis</h6>
+                                        <p>Buffer, measurement, and clipping tools</p>
+                                    </div>
                                 </div>
-                                <div class="col-12">
-                                    <button class="btn btn-primary w-100 py-3" type="submit" value="send">Drop
-                                        Message</button>
+                                <div class="sdr-feature-mini reveal reveal-delay-3">
+                                    <div class="feature-icon">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                            stroke-linecap="round" stroke-linejoin="round">
+                                            <circle cx="18" cy="18" r="3" />
+                                            <circle cx="6" cy="6" r="3" />
+                                            <path d="M13 6h3a2 2 0 0 1 2 2v7" />
+                                            <path d="M11 18H8a2 2 0 0 1-2-2V9" />
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <h6>Data Sharing</h6>
+                                        <p>Upload, export, and share geospatial data</p>
+                                    </div>
+                                </div>
+                                <div class="sdr-feature-mini reveal reveal-delay-4">
+                                    <div class="feature-icon">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                            stroke-linecap="round" stroke-linejoin="round">
+                                            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+                                            <circle cx="12" cy="10" r="3" />
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <h6>Geocoding</h6>
+                                        <p>Search locations by name or coordinates</p>
+                                    </div>
                                 </div>
                             </div>
-                        </form>
+
+                            <a href="/gisportal" class="btn-sdr-primary reveal" style="margin-top: 32px;">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round">
+                                    <circle cx="11" cy="11" r="8" />
+                                    <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                                </svg>
+                                Explore Platform
+                            </a>
+                        </div>
+
+                        <!-- Right: Image + YouTube Video -->
+                        <div class="sdr-about-visual reveal">
+                            <img src="./image/ind.png" alt="Assam GIS India Map">
+                            <iframe src="https://www.youtube.com/embed/sqxVhA-l3Qg?si=OSYfk5nTv9kX6J0M"
+                                title="Assam SDR Video" frameborder="0"
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </div>
-    </div>
-    <!-- Contact End -->
-    <%- include('../partials/homeFooter') %>
+            </section>
 
 
-    <script src="/js/script.js"></script>
-    <script src="/js/toogleAndHandleTheme.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
+
+            <!-- ============================================================
+         SERVICES SECTION
+         ============================================================ -->
+            <section class="sdr-section" id="service">
+                <div class="sdr-container">
+                    <div style="text-align: center; margin-bottom: 48px;">
+                        <div class="section-label reveal" style="margin: 0 auto 16px;">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <rect x="2" y="7" width="20" height="14" rx="2" ry="2" />
+                                <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" />
+                            </svg>
+                            Our Capabilities
+                        </div>
+                        <h2 class="section-title reveal">Powerful <span class="gradient-text">GIS Services</span></h2>
+                        <p class="section-subtitle reveal">Comprehensive geospatial tools for analysis, visualization,
+                            and data management.</p>
+                    </div>
+
+                    <div class="sdr-services-grid" style="margin-bottom: 32px;">
+                        <div class="sdr-service-card reveal reveal-delay-1">
+                            <div class="sdr-service-icon"><span class="material-symbols-outlined">database</span></div>
+                            <h6>Spatial Data Repository</h6>
+                            <p>Access layer files from the catalog with secure download via admin approval.</p>
+                        </div>
+                        <div class="sdr-service-card reveal reveal-delay-2">
+                            <div class="sdr-service-icon"><span class="material-symbols-outlined">blur_circular</span>
+                            </div>
+                            <h6>Buffer Analysis</h6>
+                            <p>Draw shapes and generate buffer zones with custom distances.</p>
+                        </div>
+                        <div class="sdr-service-card reveal reveal-delay-3">
+                            <div class="sdr-service-icon"><i class="bi bi-eye"></i></div>
+                            <h6>Layer Visualization</h6>
+                            <p>Explore and filter geospatial layers to extract meaningful insights.</p>
+                        </div>
+                        <div class="sdr-service-card reveal reveal-delay-4">
+                            <div class="sdr-service-icon"><i class="bi bi-rulers"></i></div>
+                            <h6>Measurement & Analysis</h6>
+                            <p>Measure distances and areas for planning and spatial analysis.</p>
+                        </div>
+                        <div class="sdr-service-card reveal reveal-delay-5">
+                            <div class="sdr-service-icon"><span class="material-symbols-outlined">thread_unread</span>
+                            </div>
+                            <h6>Draw & Export</h6>
+                            <p>Create shapes and export them as GeoJSON files for sharing.</p>
+                        </div>
+                    </div>
+
+                    <div class="sdr-services-grid">
+                        <div class="sdr-service-card reveal reveal-delay-1">
+                            <div class="sdr-service-icon"><span class="material-symbols-outlined">upload_file</span>
+                            </div>
+                            <h6>Upload & Visualize</h6>
+                            <p>Upload and view GeoJSON, CSV, or shapefiles on the map easily.</p>
+                        </div>
+                        <div class="sdr-service-card reveal reveal-delay-2">
+                            <div class="sdr-service-icon"><span class="material-symbols-outlined">pin_drop</span></div>
+                            <h6>Search Location</h6>
+                            <p>Search and mark locations using geocoding or lat/lon inputs.</p>
+                        </div>
+                        <div class="sdr-service-card reveal reveal-delay-3">
+                            <div class="sdr-service-icon"><i class="bi bi-search"></i></div>
+                            <h6>Search by Lat/Lon</h6>
+                            <p>Pinpoint any location by entering latitude and longitude values.</p>
+                        </div>
+                        <div class="sdr-service-card reveal reveal-delay-4">
+                            <div class="sdr-service-icon"><i class="bi bi-stack"></i></div>
+                            <h6>Layer Management</h6>
+                            <p>Toggle base maps and crop layers for better clarity and focus.</p>
+                        </div>
+                        <div class="sdr-service-card reveal reveal-delay-5">
+                            <div class="sdr-service-icon"><span class="material-symbols-outlined">map</span></div>
+                            <h6>Interactive Map Tools</h6>
+                            <p>Use measurement, drawing, and layer tools on the interactive map.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+
+            <!-- ============================================================
+         CATALOG / REPOSITORY SECTION — simplified actions
+         ============================================================ -->
+            <section class="sdr-section alt-bg" id="catalog">
+                <div class="sdr-container">
+                    <div class="sdr-catalog-grid">
+                        <!-- Left: Content -->
+                        <div>
+                            <div class="section-label reveal">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round">
+                                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                                    <polyline points="14 2 14 8 20 8" />
+                                </svg>
+                                Data Catalog
+                            </div>
+                            <h2 class="section-title reveal">Spatial Data <span class="gradient-text">Repository</span>
+                            </h2>
+                            <p class="reveal" style="margin-bottom: 12px;">
+                                Browse through a rich collection of geospatial data covering various themes and regions.
+                                Whether you're a researcher, planner, or developer, our catalogue offers diverse
+                                datasets to support your projects.
+                            </p>
+                            <p class="reveal" style="margin-bottom: 32px;">
+                                Each dataset is carefully curated and organized — including village data, school data,
+                                administrative boundaries, and much more.
+                            </p>
+
+                            <!-- Simple action list with icons -->
+                            <div class="sdr-catalog-actions reveal">
+                                <a href="/catalog" class="sdr-catalog-action-item">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+                                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                        stroke-linejoin="round">
+                                        <circle cx="11" cy="11" r="8" />
+                                        <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                                    </svg>
+                                    <span><span class="action-title">Explore Datasets</span> — Browse the full
+                                        catalog</span>
+                                </a>
+                                <a href="/catalog" class="sdr-catalog-action-item">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+                                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                        stroke-linejoin="round">
+                                        <polyline points="22 12 16 12 14 15 10 15 8 12 2 12" />
+                                        <path
+                                            d="M5.45 5.11L2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z" />
+                                    </svg>
+                                    <span><span class="action-title">Request Data</span> — Submit data requests</span>
+                                </a>
+                                <a href="/catalog" class="sdr-catalog-action-item">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+                                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                        stroke-linejoin="round">
+                                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                                        <polyline points="7 10 12 15 17 10" />
+                                        <line x1="12" y1="15" x2="12" y2="3" />
+                                    </svg>
+                                    <span><span class="action-title">Download</span> — Get shapefiles</span>
+                                </a>
+                            </div>
+
+                            <a href="/catalog" class="btn-sdr-primary reveal" style="margin-top: 8px;">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round">
+                                    <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />
+                                    <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
+                                </svg>
+                                View Full Catalog
+                            </a>
+                        </div>
+
+                        <!-- Right: Static image (no animation) -->
+                        <div class="sdr-catalog-visual reveal">
+                            <img src="./image/repoimg2.png" alt="Spatial Data Repository Visualization">
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+
+            <!-- ============================================================
+         CONTACT SECTION
+         ============================================================ -->
+            <section class="sdr-section" id="contact">
+                <div class="sdr-container">
+                    <div class="sdr-contact-grid">
+                        <div>
+                            <div style="text-align: center; margin-bottom: 48px;">
+                                <div class="section-label reveal" style="margin: 0 auto 16px;">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
+                                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                        stroke-linejoin="round">
+                                        <path
+                                            d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
+                                        <polyline points="22,6 12,13 2,6" />
+                                    </svg>
+                                    Get in Touch
+                                </div>
+                                <h2 class="section-title reveal">We're Here to <span class="gradient-text">Help
+                                        You</span></h2>
+                                <p class="section-subtitle reveal">Have questions or need assistance with a mapping
+                                    project?
+                                    Reach out and let's bring your geospatial ideas to life.</p>
+                            </div>
+                            <div class="sdr-contact-card reveal reveal-delay-1">
+                                <div class="sdr-contact-icon">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24"
+                                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                        stroke-linejoin="round">
+                                        <path
+                                            d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" />
+                                    </svg>
+                                </div>
+                                <div>
+                                    <p class="contact-label">Call Us</p>
+                                    <p class="contact-value">069138 48401</p>
+                                </div>
+                            </div>
+                            <div class="sdr-contact-card reveal reveal-delay-2">
+
+                                <div class="sdr-contact-icon">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24"
+                                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                        stroke-linejoin="round">
+                                        <path
+                                            d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
+                                        <polyline points="22,6 12,13 2,6" />
+                                    </svg>
+                                </div>
+                                <div>
+                                    <p class="contact-label">Email Us</p>
+                                    <p class="contact-value">dirassac2021@gmail.com</p>
+                                </div>
+                            </div>
+                            <div class="sdr-contact-card reveal reveal-delay-3">
+                                <div class="sdr-contact-icon">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24"
+                                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                        stroke-linejoin="round">
+                                        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+                                        <circle cx="12" cy="10" r="3" />
+                                    </svg>
+                                </div>
+                                <div>
+                                    <p class="contact-label">Visit Us</p>
+                                    <p class="contact-value" style="font-size: 0.88rem;">Bigyan Bhawan, G.S. Road,
+                                        Guwahati-781005, Assam</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="sdr-contact-form reveal">
+                            <h4 style="margin-bottom: 24px; font-size: 1.2rem;">Send us a Message</h4>
+                            <form id="queryForm" action="/query" method="POST" enctype="multipart/form-data">
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <input type="text" class="sdr-input" placeholder="Your Name" name="full_name"
+                                            id="contact-name" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <input type="email" class="sdr-input" placeholder="Your Email" name="email"
+                                            id="contact-email" required>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <input type="text" class="sdr-input" placeholder="Your Mobile" name="mobile"
+                                            id="contact-mobile">
+                                    </div>
+                                    <div class="form-group">
+                                        <select class="sdr-select" name="occupation" id="contact-occupation">
+                                            <option selected disabled>Choose Occupation</option>
+                                            <option value="Researcher">Researcher</option>
+                                            <option value="Student">Student</option>
+                                            <option value="Goverment Employee">Government Employee</option>
+                                            <option value="Private Employee">Private Employee</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <input type="text" class="sdr-input" placeholder="Reason for Contact" name="reason"
+                                        id="contact-reason" maxlength="210">
+                                </div>
+                                <div class="form-group">
+                                    <textarea class="sdr-input textarea" rows="4" placeholder="Describe your message..."
+                                        name="message" id="contact-message" maxlength="300"></textarea>
+                                </div>
+                                <button class="sdr-submit-btn" type="submit" value="send" id="contact-submit-btn">Send
+                                    Message</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+
+            <%- include("../partials/homeFooter") %>
+
+                <script src="/js/script.js"></script>
+                <script src="/js/toogleAndHandleTheme.js"></script>
+                <script src="/js/home-animations.js"></script>
+                <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </body>
 
 </html>

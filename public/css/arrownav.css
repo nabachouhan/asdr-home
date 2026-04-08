@@ -1,0 +1,74 @@
+/* ============================================================
+   ARROW NAV (Sub-pages: login, register, etc.)
+   ============================================================ */
+.sdr-arrow-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 24px;
+    background: rgba(11, 29, 46, 0.92);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--sdr-surface-border);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.sdr-arrow-nav .arrow-nav-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.sdr-arrow-nav .arrow-nav-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border: 1px solid var(--sdr-surface-border);
+    border-radius: 10px;
+    background: var(--sdr-surface);
+    color: var(--sdr-text-muted);
+    cursor: pointer;
+    transition: var(--sdr-transition);
+    text-decoration: none;
+}
+
+.sdr-arrow-nav .arrow-nav-btn:hover {
+    border-color: var(--sdr-accent);
+    color: var(--sdr-accent);
+    background: rgba(0, 188, 212, 0.08);
+}
+
+.sdr-arrow-nav .arrow-nav-brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+}
+
+.sdr-arrow-nav .arrow-nav-brand img {
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+}
+
+.sdr-arrow-nav .arrow-nav-brand span {
+    font-family: var(--sdr-font-heading);
+    font-weight: 700;
+    font-size: 0.95rem;
+    color: var(--sdr-text-bright);
+    letter-spacing: 0.08em;
+}
+
+body[data-bs-theme="light"] .sdr-arrow-nav {
+    background: rgba(237, 242, 247, 0.92);
+}
+
+@media (max-width: 576px) {
+    .sdr-arrow-nav .arrow-nav-brand span {
+        font-size: .5rem;
+    }
+}

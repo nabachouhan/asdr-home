@@ -1,43 +1,45 @@
-<%- include('../partials/adminhead') %>
+<%- include("../partials/userHeader") %>
 
-    <%- include('../partials/loader') %>
+    <body class="">
+        <%- include("../partials/loader") %>
+            <%- include("../partials/arrownav") %>
 
-        <body class="">
-            <%- include('../partials/arrownav') %>
+                <div class="sdr-auth-wrapper">
+                    <div class="sdr-admin-card">
+                        <h3><span class="gradient-text">Admin</span> Login</h3>
 
-                <div class="container d-flex justify-content-center align-items-center vh-100">
-                    <div class="card shadow-sm p-4 themed-box" style="max-width: 500px; width: 100%; ">
-                        <h3 class="text-center mb-4 text-primary fw-bold">Admin Login</h3>
-                        <form id="adminLoginForm" action="/admin" method="post">
-                            <div class="mb-3">
-                                <label for="email" class="form-label">Username</label>
-                                <input type="text" class="form-control" id="email" name="email"
+                        <form id="adminLoginForm" action="/admin" method="post" class="sdr-auth-body" style="padding: 0;">
+                            <div class="form-group-auth">
+                                <label for="email">Username <span class="text-danger">*</span></label>
+                                <input type="text" class="sdr-auth-input" id="email" name="email"
                                     placeholder="Enter username" required>
                             </div>
-                            <div class="mb-3">
-                                <label for="password" class="form-label">Password</label>
-                                <input type="password" class="form-control" id="password" name="password"
+
+                            <div class="form-group-auth">
+                                <label for="password">Password <span class="text-danger">*</span></label>
+                                <input type="password" class="sdr-auth-input" id="password" name="password"
                                     placeholder="Enter password" required>
                             </div>
-                            <div class="mb-3">
-                                <label for="otp" class="form-label">OTP</label>
-                                <input type="text" class="form-control" id="otp" name="otp" placeholder="Enter otp">
-                                <input type="submit" name="submit" value="GetOTP" class="btn px-4 btn-primary mt-4">
+
+                            <div class="form-row-auth">
+                                <div class="form-group-auth">
+                                    <label for="otp">OTP</label>
+                                    <input type="text" class="sdr-auth-input" id="otp" name="otp" placeholder="Enter OTP">
+                                </div>
+                                <div class="form-group-auth" style="display: flex; align-items: flex-end;">
+                                    <input type="submit" name="submit" value="GetOTP"
+                                        class="sdr-auth-btn sdr-auth-btn-sm" style="margin-bottom: 0;">
+                                </div>
                             </div>
 
-
-                            <input type="submit" name="submit" value="login" class="btn px-5 btn-primary mt-2">
-                        </form>
-
-                        <!-- reCAPTCHA JS -->
-
+                            <input type="submit" name="submit" value="Login" class="sdr-auth-btn"
+                                style="margin-top: 12px; width: 100%; justify-content: center;">
                         </form>
                     </div>
                 </div>
+
                 <script src="/js/script.js"></script>
-                <%- include('../partials/homeFooter') %>
+                <%- include("../partials/homeFooter") %>
                     <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
-
                     <script src="/js/backNhome.js"></script>
-
-                    <%- include('../partials/footer') %>
+                    <%- include("../partials/footer") %>

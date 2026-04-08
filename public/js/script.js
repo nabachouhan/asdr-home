@@ -112,13 +112,13 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
-  const userLogout = document.getElementById("userLogout");
-  if (userLogout) {
-    userLogout.addEventListener("click", function (e) {
+  const userLogouts = document.querySelectorAll("#userLogout, #userLogoutMobile");
+  userLogouts.forEach(btn => {
+    btn.addEventListener("click", function (e) {
       console.log("HII");
       handleUserogout(e, "/logout");
     });
-  }
+  });
 
   loaderHideFunc();
 });

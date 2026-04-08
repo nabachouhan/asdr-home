@@ -1,89 +1,54 @@
-<%- include('../partials/userHeader') %>
+<%- include("../partials/userHeader") %>
 
     <body>
-        <%- include('../partials/loader') %>
-            <%- include('../partials/arrownav') %>
-                <div class="main-wrapper  container-fluid bg-adminbg" style="min-height: 70vh;">
-                    <div class="contents order-3 order-md-2">
-                        <div class="container ">
-                            <div class="row mt-3 align-items-center justify-content-center">
-                                <div class="col-md-9  bg-cardbg p-4 pt-2 mt-4 rounded  mb-5 themed-box">
+        <%- include("../partials/loader") %>
+        <%- include("../partials/arrownav") %>
 
-                                    <div class="row mt bg-adminbg rounded d-flex justify-content-center">
-                                        <a href="/user"
-                                            class=" px-5 py-2 m-0 col-md-4 d-flex justify-content-center nav-item nav-link">
-                                            REGISTER
-                                        </a>
-                                        <a href="/user/Login"
-                                            class=" px-5 py-2 m-0 col-md-4 d-flex justify-content-center bg-cardbg nav-item nav-link active">
-                                            LOGIN
-                                        </a>
-                                        <a href="/user/Forgot"
-                                            class=" px-5 py-2 m-0 col-md-4 d-flex justify-content-center nav-item nav-link">
-                                            UPDATE
-                                        </a>
-                                    </div>
-
-                                    <form id="loginForm" action="/user/login/" method="POST"
-                                        enctype="multipart/form-data" class="mt-2">
-
-                                        <div class="row">
-                                            <div class="col-md-4">
-                                                <div class="form-group first">
-                                                    <label for="lname">E-mail address<span
-                                                            class="text-danger">*</span></label>
-                                                    <input type="text" class="form-control"
-                                                        placeholder="e.g. xyz@google.com" id="email" name="email">
-                                                </div>
-                                            </div>
-
-                                            <div class="col-md-6">
-                                                <div class="form-group first">
-                                                    <label for="fname" style="color: aliceblue;"> </label>
-                                                    <input type="submit" name="submit" value="GetOTP"
-                                                        class="btn px-4 btn-primary mt-4">
-                                                </div>
-                                            </div>
-
-
-
-                                        </div>
-
-                                        <div class="row">
-                                            <div class="col-md-6 mt-2">
-                                                <div class="form-group first">
-                                                    <label for="fname">password<span
-                                                            class="text-danger">*</span></label>
-                                                    <input type="password" class="form-control" placeholder="*****"
-                                                        id="password" name="password">
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-
-                                            <div class="col-md-6">
-                                                <div class="form-group first">
-                                                    <label for="lname">Enter OTP<span
-                                                            class="text-danger">*</span></label>
-                                                    <input type="text" class="form-control" placeholder="OTP" id="otp"
-                                                        name="otp">
-                                                </div>
-                                            </div>
-
-                                        </div>
-
-                                        <input type="submit" name="submit" value="login"
-                                            class="btn px-5 btn-primary mt-2">
-                                        <a href="/forgot">Forgot Password</a>
-
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-
+        <div class="sdr-auth-wrapper">
+            <div class="sdr-auth-card">
+                <!-- Tabs -->
+                <div class="sdr-auth-tabs">
+                    <a href="/user" class="sdr-auth-tab">Register</a>
+                    <a href="/user/Login" class="sdr-auth-tab active">Login</a>
+                    <a href="/user/Forgot" class="sdr-auth-tab">Update</a>
                 </div>
 
-                <%- include('../partials/homeFooter') %>
-                    <%- include('../partials/userFooter') %>
+                <!-- Form Body -->
+                <div class="sdr-auth-body">
+                    <form id="loginForm" action="/user/login/" method="POST" enctype="multipart/form-data">
+
+                        <!-- Email + Get OTP -->
+                        <div class="form-row-auth">
+                            <div class="form-group-auth">
+                                <label for="email">E-mail Address <span class="text-danger">*</span></label>
+                                <input type="text" class="sdr-auth-input" placeholder="e.g. xyz@google.com" id="email" name="email">
+                            </div>
+                            <div class="form-group-auth" style="display: flex; align-items: flex-end;">
+                                <input type="submit" name="submit" value="GetOTP" class="sdr-auth-btn sdr-auth-btn-sm" style="margin-bottom: 0;">
+                            </div>
+                        </div>
+
+                        <!-- Password -->
+                        <div class="form-group-auth">
+                            <label for="password">Password <span class="text-danger">*</span></label>
+                            <input type="password" class="sdr-auth-input" placeholder="*****" id="password" name="password">
+                        </div>
+
+                        <!-- OTP -->
+                        <div class="form-group-auth">
+                            <label for="otp">Enter OTP <span class="text-danger">*</span></label>
+                            <input type="text" class="sdr-auth-input" placeholder="OTP" id="otp" name="otp">
+                        </div>
+
+                        <div style="display: flex; align-items: center; gap: 16px; margin-top: 8px;">
+                            <input type="submit" name="submit" value="Login" class="sdr-auth-btn">
+                            <a href="/forgot" class="sdr-auth-link">Forgot Password?</a>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <%- include("../partials/homeFooter") %>
+        <%- include("../partials/userFooter") %>
