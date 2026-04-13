@@ -46,7 +46,9 @@ const cspOptions = {
       "https://s.ytimg.com",
       "https://code.jquery.com",
       "https://stackpath.bootstrapcdn.com",
-      "https://maxcdn.bootstrapcdn.com"
+      "https://maxcdn.bootstrapcdn.com",
+      "https://player.vimeo.com",
+      "https://ik.imagekit.io"
     ],
 
     styleSrc: [
@@ -54,14 +56,16 @@ const cspOptions = {
       "'unsafe-inline'",
       "https://fonts.googleapis.com",
       "https://cdn.jsdelivr.net",
-      "https://cdnjs.cloudflare.com"
+      "https://cdnjs.cloudflare.com",
+      "https://ik.imagekit.io"
     ],
 
     fontSrc: [
       "'self'",
       "https://fonts.gstatic.com",
       "https://cdn.jsdelivr.net",
-      "https://cdnjs.cloudflare.com"
+      "https://cdnjs.cloudflare.com",
+      "https://ik.imagekit.io"
     ],
 
     imgSrc: [
@@ -70,7 +74,12 @@ const cspOptions = {
       "https://i.ytimg.com",
       "https://s.ytimg.com",
       "https://www.google.com",
-      "https:"
+      "https://ik.imagekit.io"
+    ],
+
+    mediaSrc: [
+      "'self'",
+      "https://ik.imagekit.io"
     ],
 
     frameSrc: [
@@ -78,14 +87,18 @@ const cspOptions = {
       "https://www.youtube.com",
       "https://www.youtube-nocookie.com",
       "https://challenges.cloudflare.com",
-      "https://www.google.com"
+      "https://www.google.com",
+      "https://player.vimeo.com",
+      "https://ik.imagekit.io"
     ],
 
     connectSrc: [
       "'self'",
       "https://cdn.jsdelivr.net",
       "https://cdnjs.cloudflare.com",
-      "https://www.youtube.com"
+      "https://www.youtube.com",
+      "https://player.vimeo.com",
+      "https://ik.imagekit.io"
     ],
 
     objectSrc: ["'none'"],

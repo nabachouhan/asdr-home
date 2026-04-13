@@ -16,7 +16,7 @@ import passwordValidator from 'password-validator';
 
 import { poolUser } from "../db/connection.js";
 import userAuthMiddleware from '../middleware/userAuth.js';
-import rateLimit,{ ipKeyGenerator } from "express-rate-limit";
+import rateLimit, { ipKeyGenerator } from "express-rate-limit";
 import sharp from "sharp";
 import crypto from 'crypto';
 
@@ -51,12 +51,12 @@ function runMiddleware(req, res, fn) {
 }
 
 
- // ✅ Secure OTP Generator (using crypto for strong randomness)
+// ✅ Secure OTP Generator (using crypto for strong randomness)
 function generateSecureOTP(length) {
   const charset = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
   let otp = '';
   const randomBytes = crypto.randomBytes(length);
-  
+
   for (let i = 0; i < length; i++) {
     otp += charset[randomBytes[i] % charset.length];
   }
@@ -73,12 +73,12 @@ const customLimiter = rateLimit({
     return res.status(429).json({
       status: 429,
       error: "Too many requests. Try again in 5 minutes.",
-      message:"Too many requests. Try again in 5 minutes.",
-      icon:"warning"
+      message: "Too many requests. Try again in 5 minutes.",
+      icon: "warning"
     });
   },
   keyGenerator: ipKeyGenerator,  // ✅ Safe for IPv4 + IPv6
-//   skip: () => true, // skip by default so it doesn’t auto-run
+  //   skip: () => true, // skip by default so it doesn’t auto-run
 });
 
 // ✅ GET Routes
@@ -90,36 +90,36 @@ router.get('/', async (req, res) => {
 
 // ✅ GET Routes
 router.get('/login', (req, res) => {
-    // Your OpenLayers logic here
-    res.render("userLogin",{
-        pageTitle:"Login"
-    });
-    
+  // Your OpenLayers logic here
+  res.render("userLogin", {
+    pageTitle: "Login"
+  });
+
 });
 
 // ✅ GET Routes
 router.get('/forgot', (req, res) => {
-    // Your OpenLayers logic here
-    res.render("userForgot",{
-        pageTitle:"Update Password"
-    });
+  // Your OpenLayers logic here
+  res.render("userForgot", {
+    pageTitle: "Update Password"
+  });
 
 });
 
 // ✅ Multer setup for handling file uploads (e.g., ID proof)
 const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-        cb(null, 'uploads/')
-    },
-    filename: function (req, file, cb) {
-        const uniqueName = crypto.randomUUID();
-        cb(null, uniqueName + path.extname(file.originalname)) // Appending extension
-    }
+  destination: function (req, file, cb) {
+    cb(null, 'uploads/')
+  },
+  filename: function (req, file, cb) {
+    const uniqueName = crypto.randomUUID();
+    cb(null, uniqueName + path.extname(file.originalname)) // Appending extension
+  }
 });
 
-const upload = multer({ 
-    storage: storage,
-    limits: {
+const upload = multer({
+  storage: storage,
+  limits: {
     fileSize: 5 * 1024 * 1024 //  Max 5 MB per file
   }
 });
@@ -313,7 +313,7 @@ router.post('/', upload.single('id_proof'), async (req, res) => {
 
     // Basic field checks
     if (!first_name || !last_name || !mobile || !organization || !department ||
-        !designation || !email || !user_type || !about || !password) {
+      !designation || !email || !user_type || !about || !password) {
       return sendJson(400, { message: 'All fields are required', title: "Warning", icon: "warning" }, true);
     }
 
@@ -399,7 +399,7 @@ router.post('/', upload.single('id_proof'), async (req, res) => {
 
   // ----- Route dispatch -----
   console.log(action);
-  
+
   try {
     if (action === 'GetOTP') {
       return await handleSendOTP();
@@ -412,6 +412,8 @@ router.post('/', upload.single('id_proof'), async (req, res) => {
     if (action === 'Register') {
       return await handleRegister();
     }
+
+
 
     // Unknown action
     return sendJson(400, { message: 'Unknown action', title: "Error", icon: "danger" });
@@ -654,26 +656,26 @@ router.post('/login', upload.none(), async (req, res) => {
 
 
 router.post('/logout', userAuthMiddleware, (req, res) => {
-    try {
-        // Clear the cookie containing the token
-        res.clearCookie('token', { httpOnly: true, secure: process.env.NODE_ENV === 'production' });
+  try {
+    // Clear the cookie containing the token
+    res.clearCookie('token', { httpOnly: true, secure: process.env.NODE_ENV === 'production' });
 
-        // Send a success response
-        const data = { message: 'Logout successful', title: "Logged Out", icon: "success", redirect: '\\' };
-        console.log(data)
-        return res.json(data);
-    } catch (error) {
-        console.error(error);
-        const data = { message: 'Logout failed', title: "Error", icon: "error" };
+    // Send a success response
+    const data = { message: 'Logout successful', title: "Logged Out", icon: "success", redirect: '\\' };
+    console.log(data)
+    return res.json(data);
+  } catch (error) {
+    console.error(error);
+    const data = { message: 'Logout failed', title: "Error", icon: "error" };
 
-        return res.status(500).json(data);
-    }
+    return res.status(500).json(data);
+  }
 
 });
 
 router.post('/secret', userAuthMiddleware, (req, res) => {
 
-    res.render("catalogView")
+  res.render("catalogView")
 
 });
 
@@ -913,6 +915,8 @@ router.post('/forgot', upload.single('id_proof'), async (req, res) => {
       return await handleUpdatePassword();
     }
 
+    console.log("action", action);
+
     return sendJson(400, { message: 'Unknown action', title: "Error", icon: "danger" });
   } catch (err) {
     console.error('Unhandled forgot route error:', err);
@@ -924,7 +928,7 @@ router.post('/forgot', upload.single('id_proof'), async (req, res) => {
 
 
 router.get('*', (req, res) => {
-    res.render("404")
+  res.render("404")
 
 });
 

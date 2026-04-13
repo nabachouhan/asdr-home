@@ -36,7 +36,7 @@ const whitelistTheme = config.whitelistTheme;
 // 🔒 Validate Theme name (filename)
 function isValidTheme(theme) {
   // returns true or false
-  return whitelistTheme.includes(theme); 
+  return whitelistTheme.includes(theme);
 }
 
 // 🔒 Validate File name (filename)
@@ -65,19 +65,19 @@ async function isValidFile(theme, fileName) {
 router.get("/fields/:theme/:fileName", async (req, res) => {
   const { theme, fileName } = req.params;
   try {
-          // 🔐 Validate theme
-    if (!isValidTheme(theme)) {  
+    // 🔐 Validate theme
+    if (!isValidTheme(theme)) {
       return res.status(400).json({ error: "Invalid theme" });
     }
-              // 🔐 Validate file
+    // 🔐 Validate file
 
-        if (!(await isValidFile(theme, fileName))) {   
+    if (!(await isValidFile(theme, fileName))) {
       return res.status(400).json({ error: "Invalid or unpublished file" });
     }
-//  create new connection
+    //  create new connection
     const pool = getPoolByTheme(theme);
     // establish  connection
-      const client = await pool.connect();
+    const client = await pool.connect();
 
     const result = await client.query(
       `SELECT column_name FROM information_schema.columns WHERE table_name = $1`,
@@ -123,10 +123,10 @@ router.get("/values/:theme/:fileName/:field", async (req, res) => {
   const { theme, fileName, field } = req.params;
   try {
 
-    if (!isValidTheme(theme)) {  
+    if (!isValidTheme(theme)) {
       return res.status(400).json({ error: "Invalid theme" });
     }
-    if (!(await isValidFile(theme, fileName))) {   
+    if (!(await isValidFile(theme, fileName))) {
       return res.status(400).json({ error: "Invalid or unpublished file" });
     }
 
@@ -179,29 +179,30 @@ router.post("/:id/filerequest", userAuthMiddleware, async (req, res) => {
   const { type, theme, fileName, conditions, operator } = req.body;
 
   const email = req.user.email;
-    const role = req.user.role;
+  const role = req.user.role;
 
-    const client1 = await poolUser.connect();
-    const result = await client1.query(
+  const client1 = await poolUser.connect();
+  const result = await client1.query(
     `SELECT role  FROM registered WHERE email = $1`,
     [email]
   );
   client1.release();
-   const userRole = result.rows[0].role;
-   if(userRole ==='blocked'){
-     console.log(userRole);
-     return res.status(401).json({
+  const userRole = result.rows[0].role;
+  if (userRole === 'blocked') {
+    console.log(userRole);
+    return res.status(401).json({
       message: "Your account has been blocked",
       title: "Oops",
-      icon: "warning"});
+      icon: "warning"
+    });
 
-   }
+  }
 
   console.log(req.user);
-  
+
   let request_status = "pending";
-  if(role==='admin' || role==='root' || role==='datareader'){
-     request_status = "approved"
+  if (role === 'admin' || role === 'root' || role === 'datareader') {
+    request_status = "approved"
   }
   try {
     const client = await poolUser.connect();
@@ -243,34 +244,34 @@ router.post("/:id/filerequest", userAuthMiddleware, async (req, res) => {
     ];
     const insertResult = await client.query(insertQuery, insertValues);
 
-const findOrganizationquery = `SELECT first_name, last_name, organization FROM registered WHERE email=$1`
-const findOrganization = await client.query(findOrganizationquery, [email])
+    const findOrganizationquery = `SELECT first_name, last_name, organization FROM registered WHERE email=$1`
+    const findOrganization = await client.query(findOrganizationquery, [email])
     const organization = findOrganization.rows[0].organization;
 
-    const full_name =`${findOrganization.rows[0].first_name} ${findOrganization.rows[0].last_name}`;
-    const action_type="request"
+    const full_name = `${findOrganization.rows[0].first_name} ${findOrganization.rows[0].last_name}`;
+    const action_type = "request"
     const insertedSn = insertResult.rows[0].id;
     let logsquery;
     let actiononfo;
-    if(role==='admin' || role==='root'){
-        logsquery = `INSERT INTO adminlogs ( full_name, email, organization, action_type, target, details)
+    if (role === 'admin' || role === 'root') {
+      logsquery = `INSERT INTO adminlogs ( full_name, email, organization, action_type, target, details)
         VALUES ($1, $2, $3, $4, $5, $6) `;
-        actiononfo = `request no: ${insertedSn} Auto approved`
+      actiononfo = `request no: ${insertedSn} Auto approved`
 
-    }else if(role==='datareader'){
-        logsquery = `INSERT INTO datareaderlogs ( full_name, email, organization, action_type, target, details)
+    } else if (role === 'datareader') {
+      logsquery = `INSERT INTO datareaderlogs ( full_name, email, organization, action_type, target, details)
         VALUES ($1, $2, $3, $4, $5, $6) `;
 
-        actiononfo = `request no: ${insertedSn} Auto approved`
+      actiononfo = `request no: ${insertedSn} Auto approved`
 
-    }else if(role==='viewer'){
-        logsquery = `INSERT INTO viewerlogs ( full_name, email, organization, action_type, target, details)
+    } else if (role === 'viewer') {
+      logsquery = `INSERT INTO viewerlogs ( full_name, email, organization, action_type, target, details)
         VALUES ($1, $2, $3, $4, $5, $6) `;
-        actiononfo = `request no: ${insertedSn} created`
+      actiononfo = `request no: ${insertedSn} created`
 
-    }        
-        const logsparams = [full_name, email, organization,  action_type, fileName, actiononfo];
-   await client.query(logsquery, logsparams);
+    }
+    const logsparams = [full_name, email, organization, action_type, fileName, actiononfo];
+    await client.query(logsquery, logsparams);
 
     client.release();
 
@@ -342,8 +343,8 @@ router.post("/", async (req, res) => {
       order = "desc",
       page = 1,
       limit = 9,
-      district = "all",  
-      department = "all",  
+      district = "all",
+      department = "all",
 
     } = req.body;
 
@@ -385,21 +386,21 @@ router.post("/", async (req, res) => {
 
     // Dist filter
     if (district !== "all") {
-  query += ` AND district = $${paramIndex++}`;
-  params.push(district);
-}
+      query += ` AND district = $${paramIndex++}`;
+      params.push(district);
+    }
 
-// department filter
-if (department !== "all") {
-  query += ` AND department = $${paramIndex++}`;
-  params.push(department);
-}
+    // department filter
+    if (department !== "all") {
+      query += ` AND department = $${paramIndex++}`;
+      params.push(department);
+    }
 
     // Tag filter (assuming tags are comma-separated)
     if (tag !== "all") {
       // Check if tags column exists
       query += ` AND tag = $${paramIndex++}`;
-  params.push(tag);
+      params.push(tag);
     }
 
     // Search by title
@@ -489,24 +490,24 @@ router.get("/wms", async (req, res) => {
 router.get("/getthumbnail/:theme/:layer", async (req, res) => {
   try {
     const layer = req.params.layer
-        const theme = req.params.theme
+    const theme = req.params.theme
 
-            if (!isValidTheme(theme)) {  
+    if (!isValidTheme(theme)) {
       return res.status(400).json({ error: "Invalid theme" });
     }
-     if (!(await isValidFile(theme, layer))) {   
+    if (!(await isValidFile(theme, layer))) {
       return res.status(400).json({ error: "Invalid or unpublished file" });
-    }    
+    }
 
 
-    if ( !layer) {
+    if (!layer) {
       return res.status(400).json({ error: "workspace and layer are required" });
     }
 
     // Set default format
-const imgFormat = "image/png"; // or "image/svg+xml"
+    const imgFormat = "image/png"; // or "image/svg+xml"
 
-        const pool = createPool(theme);
+    const pool = createPool(theme);
 
 
     // 🔐 Validate layer as safe identifier
@@ -518,7 +519,7 @@ const imgFormat = "image/png"; // or "image/svg+xml"
       SELECT ST_Extent(geom) AS bbox
       FROM "${layer}"
     `;
-    const result = await pool.query(bboxQuery);    
+    const result = await pool.query(bboxQuery);
 
     if (!result.rows[0].bbox) {
       return res.status(404).json({ error: "No geometry found" });
@@ -532,9 +533,9 @@ const imgFormat = "image/png"; // or "image/svg+xml"
       return res.status(500).json({ error: "Invalid bbox format" });
     }
 
-const [, minx, miny, maxx, maxy] = match;
+    const [, minx, miny, maxx, maxy] = match;
 
-console.log(match);
+    console.log(match);
 
 
     // --- Step 2: Build GetMap URL ---

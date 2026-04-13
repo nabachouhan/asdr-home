@@ -2,122 +2,142 @@
 
     <body>
         <%- include("../partials/loader") %>
-        <%- include("../partials/arrownav") %>
+            <%- include("../partials/arrownav") %>
 
-        <div class="sdr-auth-wrapper" style="align-items: flex-start; padding-top: 24px;">
-            <div class="sdr-auth-card wide">
-                <!-- Tabs -->
-                <div class="sdr-auth-tabs">
-                    <a href="/user" class="sdr-auth-tab active">Register</a>
-                    <a href="/user/Login" class="sdr-auth-tab">Login</a>
-                    <a href="/user/Forgot" class="sdr-auth-tab">Update</a>
+                <div class="sdr-auth-wrapper" style="align-items: flex-start; padding-top: 24px;">
+                    <div class="sdr-auth-card wide">
+                        <!-- Tabs -->
+                        <div class="sdr-auth-tabs">
+                            <a href="/user" class="sdr-auth-tab active">Register</a>
+                            <a href="/user/Login" class="sdr-auth-tab">Login</a>
+                            <a href="/user/Forgot" class="sdr-auth-tab">Update</a>
+                        </div>
+
+                        <!-- Form Body -->
+                        <div class="sdr-auth-body">
+                            <form id="registerForm" action="/user/" method="POST" enctype="multipart/form-data">
+
+                                <!-- Name -->
+                                <div class="form-row-auth">
+                                    <div class="form-group-auth">
+                                        <label for="fname">First Name <span class="text-danger">*</span></label>
+                                        <input type="text" class="sdr-auth-input" placeholder="First Name" id="fname"
+                                            name="first_name">
+                                    </div>
+                                    <div class="form-group-auth">
+                                        <label for="lname">Last Name <span class="text-danger">*</span></label>
+                                        <input type="text" class="sdr-auth-input" placeholder="Last Name" id="lname"
+                                            name="last_name">
+                                    </div>
+                                </div>
+
+                                <!-- Mobile + Organization -->
+                                <div class="form-row-auth">
+                                    <div class="form-group-auth">
+                                        <label for="phone">Mobile No <span class="text-danger">*</span></label>
+                                        <input type="text" class="sdr-auth-input" placeholder="8486xxx644" id="phone"
+                                            name="mobile">
+                                    </div>
+                                    <div class="form-group-auth">
+                                        <label for="organization">Organization Name <span
+                                                class="text-danger">*</span></label>
+                                        <input type="text" class="sdr-auth-input" placeholder="Your Organization"
+                                            id="organization" name="organization">
+                                    </div>
+                                </div>
+
+                                <!-- Department + Designation -->
+                                <div class="form-row-auth">
+                                    <div class="form-group-auth">
+                                        <label for="department">Department <span class="text-danger">*</span></label>
+                                        <input type="text" class="sdr-auth-input" placeholder="Your department"
+                                            id="department" name="department">
+                                    </div>
+                                    <div class="form-group-auth">
+                                        <label for="designation">Designation <span class="text-danger">*</span></label>
+                                        <input type="text" class="sdr-auth-input" placeholder="Your designation"
+                                            id="designation" name="designation">
+                                    </div>
+                                </div>
+
+                                <!-- ID Proof + User Type -->
+                                <div class="form-row-auth">
+                                    <div class="form-group-auth">
+                                        <label for="id-proof">Upload Your ID Proof <span class="text-danger">* [.png,
+                                                .jpg, .jpeg] only</span></label>
+                                        <input type="file" class="sdr-auth-input" id="id-proof" name="id_proof"
+                                            accept="image/*">
+                                    </div>
+                                    <div class="form-group-auth">
+                                        <label for="user-type">User Type <span class="text-danger">*</span></label>
+                                        <select class="sdr-auth-input" id="user-type" name="user_type">
+                                            <option value="">Select User Type</option>
+                                            <option value="researcher">Researcher</option>
+                                            <option value="govt-employee">Government Employee</option>
+                                            <option value="private-employee">Private Employee</option>
+                                            <option value="college-institute">College/Institute</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <!-- About You -->
+                                <div class="form-group-auth">
+                                    <label for="about">About You <span class="text-danger">*</span></label>
+                                    <textarea class="sdr-auth-input" placeholder="About You..." id="about" name="about"
+                                        style="min-height: 80px;"></textarea>
+                                </div>
+
+                                <!-- Password Requirements -->
+                                <div class="sdr-password-notice">
+                                    Minimum length 8 • Must have uppercase letters • Must have lowercase letters • Must
+                                    have at least 2 digits • Should not have spaces • Must have at least one special
+                                    character
+                                </div>
+
+                                <!-- Password + Re-type -->
+                                <div class="form-row-auth">
+                                    <div class="form-group-auth">
+                                        <label for="password">Password <span class="text-danger">*</span></label>
+                                        <input type="password" class="sdr-auth-input" placeholder="Your Password"
+                                            id="password" name="password">
+                                    </div>
+                                    <div class="form-group-auth">
+                                        <label for="re_password">Re-type Password <span
+                                                class="text-danger">*</span></label>
+                                        <input type="password" class="sdr-auth-input" placeholder="re-Password"
+                                            id="re_password" name="re_password">
+                                    </div>
+                                </div>
+
+                                <!-- Email + OTP -->
+                                <div class="form-row-auth" style="grid-template-columns: 2fr 1fr 1.5fr 1fr;">
+                                    <div class="form-group-auth">
+                                        <label for="email">E-mail Address <span class="text-danger">*</span></label>
+                                        <input type="text" class="sdr-auth-input" placeholder="example@xyz.com"
+                                            id="email" name="email">
+                                    </div>
+                                    <div class="form-group-auth" style="display: flex; align-items: flex-end;">
+                                        <input type="submit" name="submit" value="GetOTP"
+                                            class="sdr-auth-btn sdr-auth-btn-sm" style="margin-bottom: 0;">
+                                    </div>
+                                    <div class="form-group-auth">
+                                        <label for="otp">Enter OTP <span class="text-danger">*</span></label>
+                                        <input type="text" class="sdr-auth-input" placeholder="Enter otp" id="otp"
+                                            name="otp">
+                                    </div>
+                                    <div class="form-group-auth" style="display: flex; align-items: flex-end;">
+                                        <input type="submit" name="submit" value="validate"
+                                            class="sdr-auth-btn sdr-auth-btn-sm" style="margin-bottom: 0;">
+                                    </div>
+                                </div>
+
+                                <input type="submit" id="submit" name="submit" value="register" class="sdr-auth-btn"
+                                    style="margin-top: 8px;">
+
+                            </form>
+                        </div>
+                    </div>
                 </div>
 
-                <!-- Form Body -->
-                <div class="sdr-auth-body">
-                    <form id="registerForm" action="/user/" method="POST" enctype="multipart/form-data">
-
-                        <!-- Name -->
-                        <div class="form-row-auth">
-                            <div class="form-group-auth">
-                                <label for="fname">First Name <span class="text-danger">*</span></label>
-                                <input type="text" class="sdr-auth-input" placeholder="First Name" id="fname" name="first_name">
-                            </div>
-                            <div class="form-group-auth">
-                                <label for="lname">Last Name <span class="text-danger">*</span></label>
-                                <input type="text" class="sdr-auth-input" placeholder="Last Name" id="lname" name="last_name">
-                            </div>
-                        </div>
-
-                        <!-- Mobile + Organization -->
-                        <div class="form-row-auth">
-                            <div class="form-group-auth">
-                                <label for="phone">Mobile No <span class="text-danger">*</span></label>
-                                <input type="text" class="sdr-auth-input" placeholder="8486xxx644" id="phone" name="mobile">
-                            </div>
-                            <div class="form-group-auth">
-                                <label for="organization">Organization Name <span class="text-danger">*</span></label>
-                                <input type="text" class="sdr-auth-input" placeholder="Your Organization" id="organization" name="organization">
-                            </div>
-                        </div>
-
-                        <!-- Department + Designation -->
-                        <div class="form-row-auth">
-                            <div class="form-group-auth">
-                                <label for="department">Department <span class="text-danger">*</span></label>
-                                <input type="text" class="sdr-auth-input" placeholder="Your department" id="department" name="department">
-                            </div>
-                            <div class="form-group-auth">
-                                <label for="designation">Designation <span class="text-danger">*</span></label>
-                                <input type="text" class="sdr-auth-input" placeholder="Your designation" id="designation" name="designation">
-                            </div>
-                        </div>
-
-                        <!-- ID Proof + User Type -->
-                        <div class="form-row-auth">
-                            <div class="form-group-auth">
-                                <label for="id-proof">Upload Your ID Proof <span class="text-danger">* [.png, .jpg, .jpeg] only</span></label>
-                                <input type="file" class="sdr-auth-input" id="id-proof" name="id_proof" accept="image/*">
-                            </div>
-                            <div class="form-group-auth">
-                                <label for="user-type">User Type <span class="text-danger">*</span></label>
-                                <select class="sdr-auth-input" id="user-type" name="user_type">
-                                    <option value="">Select User Type</option>
-                                    <option value="researcher">Researcher</option>
-                                    <option value="govt-employee">Government Employee</option>
-                                    <option value="private-employee">Private Employee</option>
-                                    <option value="college-institute">College/Institute</option>
-                                </select>
-                            </div>
-                        </div>
-
-                        <!-- About You -->
-                        <div class="form-group-auth">
-                            <label for="about">About You <span class="text-danger">*</span></label>
-                            <textarea class="sdr-auth-input" placeholder="About You..." id="about" name="about" style="min-height: 80px;"></textarea>
-                        </div>
-
-                        <!-- Password Requirements -->
-                        <div class="sdr-password-notice">
-                            Minimum length 8 • Must have uppercase letters • Must have lowercase letters • Must have at least 2 digits • Should not have spaces • Must have at least one special character
-                        </div>
-
-                        <!-- Password + Re-type -->
-                        <div class="form-row-auth">
-                            <div class="form-group-auth">
-                                <label for="password">Password <span class="text-danger">*</span></label>
-                                <input type="password" class="sdr-auth-input" placeholder="Your Password" id="password" name="password">
-                            </div>
-                            <div class="form-group-auth">
-                                <label for="re_password">Re-type Password <span class="text-danger">*</span></label>
-                                <input type="password" class="sdr-auth-input" placeholder="re-Password" id="re_password" name="re_password">
-                            </div>
-                        </div>
-
-                        <!-- Email + OTP -->
-                        <div class="form-row-auth" style="grid-template-columns: 2fr 1fr 1.5fr 1fr;">
-                            <div class="form-group-auth">
-                                <label for="email">E-mail Address <span class="text-danger">*</span></label>
-                                <input type="text" class="sdr-auth-input" placeholder="example@xyz.com" id="email" name="email">
-                            </div>
-                            <div class="form-group-auth" style="display: flex; align-items: flex-end;">
-                                <input type="submit" name="submit" value="GetOTP" class="sdr-auth-btn sdr-auth-btn-sm" style="margin-bottom: 0;">
-                            </div>
-                            <div class="form-group-auth">
-                                <label for="otp">Enter OTP <span class="text-danger">*</span></label>
-                                <input type="text" class="sdr-auth-input" placeholder="Enter otp" id="otp" name="otp">
-                            </div>
-                            <div class="form-group-auth" style="display: flex; align-items: flex-end;">
-                                <input type="submit" name="submit" value="validate" class="sdr-auth-btn sdr-auth-btn-sm" style="margin-bottom: 0;">
-                            </div>
-                        </div>
-
-                        <input type="submit" id="submit" name="submit" value="Register" class="sdr-auth-btn" style="margin-top: 8px;">
-
-                    </form>
-                </div>
-            </div>
-        </div>
-
-        <%- include("../partials/userFooter") %>
-        <%- include("../partials/homeFooter") %>
+                <%- include("../partials/userFooter") %>
+                    <%- include("../partials/homeFooter") %>

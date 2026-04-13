@@ -2,53 +2,56 @@
 
     <body>
         <%- include("../partials/loader") %>
-        <%- include("../partials/arrownav") %>
+            <%- include("../partials/arrownav") %>
 
-        <div class="sdr-auth-wrapper">
-            <div class="sdr-auth-card">
-                <!-- Tabs -->
-                <div class="sdr-auth-tabs">
-                    <a href="/user" class="sdr-auth-tab">Register</a>
-                    <a href="/user/Login" class="sdr-auth-tab active">Login</a>
-                    <a href="/user/Forgot" class="sdr-auth-tab">Update</a>
+                <div class="sdr-auth-wrapper">
+                    <div class="sdr-auth-card">
+                        <!-- Tabs -->
+                        <div class="sdr-auth-tabs">
+                            <a href="/user" class="sdr-auth-tab">Register</a>
+                            <a href="/user/Login" class="sdr-auth-tab active">Login</a>
+                            <a href="/user/Forgot" class="sdr-auth-tab">Update</a>
+                        </div>
+
+                        <!-- Form Body -->
+                        <div class="sdr-auth-body">
+                            <form id="loginForm" action="/user/login/" method="POST" enctype="multipart/form-data">
+
+                                <!-- Email + Get OTP -->
+                                <div class="form-row-auth">
+                                    <div class="form-group-auth">
+                                        <label for="email">E-mail Address <span class="text-danger">*</span></label>
+                                        <input type="text" class="sdr-auth-input" placeholder="e.g. xyz@google.com"
+                                            id="email" name="email">
+                                    </div>
+                                    <div class="form-group-auth" style="display: flex; align-items: flex-end;">
+                                        <input type="submit" name="submit" value="GetOTP"
+                                            class="sdr-auth-btn sdr-auth-btn-sm" style="margin-bottom: 0;">
+                                    </div>
+                                </div>
+
+                                <!-- Password -->
+                                <div class="form-group-auth">
+                                    <label for="password">Password <span class="text-danger">*</span></label>
+                                    <input type="password" class="sdr-auth-input" placeholder="*****" id="password"
+                                        name="password">
+                                </div>
+
+                                <!-- OTP -->
+                                <div class="form-group-auth">
+                                    <label for="otp">Enter OTP <span class="text-danger">*</span></label>
+                                    <input type="text" class="sdr-auth-input" placeholder="OTP" id="otp" name="otp">
+                                </div>
+
+                                <div style="display: flex; align-items: center; gap: 16px; margin-top: 8px;">
+                                    <input type="submit" name="submit" value="login" class="sdr-auth-btn">
+                                    <a href="/forgot" class="sdr-auth-link">Forgot Password?</a>
+                                </div>
+
+                            </form>
+                        </div>
+                    </div>
                 </div>
 
-                <!-- Form Body -->
-                <div class="sdr-auth-body">
-                    <form id="loginForm" action="/user/login/" method="POST" enctype="multipart/form-data">
-
-                        <!-- Email + Get OTP -->
-                        <div class="form-row-auth">
-                            <div class="form-group-auth">
-                                <label for="email">E-mail Address <span class="text-danger">*</span></label>
-                                <input type="text" class="sdr-auth-input" placeholder="e.g. xyz@google.com" id="email" name="email">
-                            </div>
-                            <div class="form-group-auth" style="display: flex; align-items: flex-end;">
-                                <input type="submit" name="submit" value="GetOTP" class="sdr-auth-btn sdr-auth-btn-sm" style="margin-bottom: 0;">
-                            </div>
-                        </div>
-
-                        <!-- Password -->
-                        <div class="form-group-auth">
-                            <label for="password">Password <span class="text-danger">*</span></label>
-                            <input type="password" class="sdr-auth-input" placeholder="*****" id="password" name="password">
-                        </div>
-
-                        <!-- OTP -->
-                        <div class="form-group-auth">
-                            <label for="otp">Enter OTP <span class="text-danger">*</span></label>
-                            <input type="text" class="sdr-auth-input" placeholder="OTP" id="otp" name="otp">
-                        </div>
-
-                        <div style="display: flex; align-items: center; gap: 16px; margin-top: 8px;">
-                            <input type="submit" name="submit" value="Login" class="sdr-auth-btn">
-                            <a href="/forgot" class="sdr-auth-link">Forgot Password?</a>
-                        </div>
-
-                    </form>
-                </div>
-            </div>
-        </div>
-
-        <%- include("../partials/homeFooter") %>
-        <%- include("../partials/userFooter") %>
+                <%- include("../partials/homeFooter") %>
+                    <%- include("../partials/userFooter") %>
