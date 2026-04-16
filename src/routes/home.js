@@ -34,7 +34,7 @@ router.use(bodyParser.urlencoded({ extended: true }));
 const upload = multer({
   storage: multer.memoryStorage(),
   limits: {
-    fieldSize: .1* 1024 * 1024, // .1 MB per field
+    fieldSize: .1 * 1024 * 1024, // .1 MB per field
     fields: 12,                 // max number of text fields
   }
 });
@@ -79,7 +79,7 @@ router.get("/requests", userAuthMiddleware, async (req, res) => {
   const client = await poolUser.connect();
 
   try {
-        // Extract query params for filtering/sorting/pagination
+    // Extract query params for filtering/sorting/pagination
     const {
       search = "",
       sort = "id",
@@ -116,21 +116,21 @@ router.get("/requests", userAuthMiddleware, async (req, res) => {
     const sortBy = allowedSort.includes(sort) ? sort : "id";
     const sortOrder = order.toLowerCase() === "asc" ? "ASC" : "DESC";
 
-        // Apply sorting and pagination
+    // Apply sorting and pagination
     query += ` ORDER BY ${sortBy} ${sortOrder} LIMIT $${paramIndex++} OFFSET $${paramIndex++}`;
     params.push(limit, offset);
 
     const result = await client.query(query, params);
     const userItems = result.rows;
 
-        // Format timestamps
+    // Format timestamps
     userItems.forEach((item) => {
       if (item.rtime) {
         item.rtime = new Date(item.rtime).toLocaleString("en-IN");
       }
     });
 
-//✅  Render EJS template with request data
+    //✅  Render EJS template with request data
     res.render("userRequests", {
       userItems,
       search,
@@ -177,7 +177,7 @@ router.get("/profile", userAuthMiddleware, async (req, res) => {
   res.render("profile", { userItems });
 });
 
- // ✅ User Query Submit Form
+// ✅ User Query Submit Form
 
 router.post("/query", upload.none(), async (req, res) => {
 
@@ -292,22 +292,23 @@ router.post("/logout", userAuthMiddleware, (req, res) => {
 //✅ File Download (Generate and send shapefile)
 router.get("/download/:id", userAuthMiddleware, async (req, res) => {
   const { email } = req.user;
-    const client1 = await poolUser.connect();
-    const result = await client1.query(
+  const client1 = await poolUser.connect();
+  const result = await client1.query(
     `SELECT role  FROM registered WHERE email = $1`,
     [email]
   );
   client1.release();
-   const userRole = result.rows[0].role;
-   if(userRole ==='blocked'){
-     console.log(userRole);
-     return res.status(401).json({
+  const userRole = result.rows[0].role;
+  if (userRole === 'blocked') {
+    console.log(userRole);
+    return res.status(401).json({
       message: "Your account has been blocked",
       title: "Oops",
-      icon: "danger"});
+      icon: "danger"
+    });
 
-   }
-   
+  }
+
 
   let districtfile = process.env.districtfile
   let districtfilefield = process.env.districtfilefield
@@ -354,7 +355,7 @@ router.get("/download/:id", userAuthMiddleware, async (req, res) => {
         .join(', ');
 
       // Step 1: Query the column names from information_schema
-       const pool = getPoolByTheme(theme);
+      const pool = getPoolByTheme(theme);
       const gcolumn = await pool.connect();
       try {
         columnRes = await gcolumn.query(`
@@ -373,7 +374,7 @@ router.get("/download/:id", userAuthMiddleware, async (req, res) => {
 
 
       //  Use correct SRID, e.g., 32645 if assam.geom is in UTM zone
-const districtQuery = `
+      const districtQuery = `
   WITH district_union AS (
     SELECT ST_Union(ST_Transform(geom, ST_SRID((SELECT geom FROM ${file_name} LIMIT 1)))) AS geom
     FROM ${districtfile}
@@ -388,6 +389,68 @@ const districtQuery = `
 `;
 
       rawQuery = `${districtQuery.replace(/\s+/g, ' ').trim()}`;
+      query = rawQuery.replace(/"/g, '\\"');
+    } else if (type === 'aoi') {
+      const geojsonData = JSON.parse(
+        fs.readFileSync('./datarequests/aoi.geojson', 'utf-8')
+      );
+
+      let geometry;
+
+      if (geojsonData.type === 'FeatureCollection') {
+        geometry = {
+          type: 'GeometryCollection',
+          geometries: geojsonData.features.map(f => f.geometry)
+        };
+      } else if (geojsonData.type === 'Feature') {
+        geometry = geojsonData.geometry;
+      } else {
+        geometry = geojsonData;
+      }
+
+
+      const geojsonString = JSON.stringify(geometry);
+
+      // Step 1: Query the column names from information_schema
+      const pool = getPoolByTheme(theme);
+      const gcolumn = await pool.connect();
+      try {
+        columnRes = await gcolumn.query(`
+    SELECT column_name
+    FROM information_schema.columns
+    WHERE table_name = $1
+      AND column_name != 'geom'
+      AND table_schema = 'public'
+  `, [file_name]);
+      } finally {
+        gcolumn.release(); // Always release the connection
+      }
+
+      // Step 2: Extract column names
+      const columns = columnRes.rows.map(row => `f.${row.column_name}`);
+
+
+      //  Use correct SRID, e.g., 32645 if assam.geom is in UTM zone
+      const filterQuery = `
+  WITH aoi AS (
+    SELECT 
+      ST_Transform(
+        ST_SetSRID(
+          ST_GeomFromGeoJSON('${geojsonString}'),
+          4326
+        ),
+        ST_SRID((SELECT geom FROM ${file_name} LIMIT 1))
+      ) AS geom
+  )
+  SELECT 
+    ${columns.join(', ')},
+    ST_Intersection(f.geom, aoi.geom) AS geom
+  FROM ${file_name} f
+  JOIN aoi
+    ON ST_Intersects(f.geom, aoi.geom);
+`;
+
+      rawQuery = `${filterQuery.replace(/\s+/g, ' ').trim()}`;
       query = rawQuery.replace(/"/g, '\\"');
     } else {
       throw new Error("Invalid request type");
@@ -440,9 +503,10 @@ const districtQuery = `
 
     if (result.rows.length === 0) {
       return res.status(403).json({
-      message: "Invalid Request",
-      title: "Oops",
-      icon: "danger"});
+        message: "Invalid Request",
+        title: "Oops",
+        icon: "danger"
+      });
     }
 
     const request = result.rows[0];
@@ -456,9 +520,10 @@ const districtQuery = `
         if (err) {
           console.error("Error sending file:", err);
           res.status(500).json({
-      message: "File download failed",
-      title: "Oops",
-      icon: "danger"});
+            message: "File download failed",
+            title: "Oops",
+            icon: "danger"
+          });
         } else {
           try {
             rimraf.sync(requestDir); // Clean temp folder
@@ -471,16 +536,18 @@ const districtQuery = `
     } catch (err) {
       console.error("Error generating shapefile:", err);
       res.status(500).json({
-      message: "Error generating shapefile",
-      title: "Oops",
-      icon: "danger"});
+        message: "Error generating shapefile",
+        title: "Oops",
+        icon: "danger"
+      });
     }
   } catch (err) {
     console.error("Error fetching request:", err);
     res.status(500).json({
       message: "something went wrong",
       title: "Oops",
-      icon: "danger"});;
+      icon: "danger"
+    });;
   } finally {
     client.release();
   }

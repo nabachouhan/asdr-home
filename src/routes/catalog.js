@@ -9,6 +9,9 @@ import config from '../../config.js';
 import { poolUser, getPoolByTheme } from "../db/connection.js";
 import pg from 'pg';
 import { isValidIdentifier } from "../utils/sanitize.js";
+import multer from "multer";
+import crypto from "crypto";
+import path from "path";
 
 
 // ✅ Create Express router
@@ -19,6 +22,36 @@ router.use(cookieParser());
 router.use(bodyParser.json());
 router.use(bodyParser.urlencoded({ extended: true }));
 dotenv.config();
+
+
+// ------------------------------------------------------------
+// ✅ Multer setup for Shapefile uploads
+//    Stores shapefile ZIP uploads in the "shpuploads/" directory.
+const storage = multer.diskStorage({
+  destination: "datarequests/",
+  filename: (req, file, cb) => {
+    const ext = path.extname(file.originalname); // keep extension
+    cb(null, crypto.randomUUID() + ext);
+  },
+});
+
+// ✅ Multer setup for shape file uploads
+
+const datarequestupload = multer({
+  storage,
+  fileFilter: (req, file, cb) => {
+    console.log("MIME:", file.mimetype);
+
+    if (
+      file.mimetype === "application/geo+json" ||
+      file.mimetype === "application/json"
+    ) {
+      cb(null, true);
+    } else {
+      cb(new Error("Invalid file type. Only GeoJSON files are allowed."));
+    }
+  },
+});
 
 // ✅ Create New database Connection
 function createPool(database) {
@@ -175,8 +208,13 @@ router.get("/:id/view", async (req, res) => {
 });
 
 // ✅ Route:POST api to handle user data request
-router.post("/:id/filerequest", userAuthMiddleware, async (req, res) => {
+router.post("/:id/filerequest", datarequestupload.single("aoi-input"), userAuthMiddleware, async (req, res) => {
   const { type, theme, fileName, conditions, operator } = req.body;
+  console.log("---------");
+
+  console.log(req.body);
+  console.log("---------");
+
 
   const email = req.user.email;
   const role = req.user.role;

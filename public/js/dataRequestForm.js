@@ -62,10 +62,12 @@ document.addEventListener("DOMContentLoaded", function () {
 const allSection = document.getElementById("all-section");
 const querySection = document.getElementById("query-section");
 const districtwiseSection = document.getElementById("districtwise-section");
+const aoiSection = document.getElementById("aoi-section");
 document.querySelectorAll('input[name="queryType"]').forEach((radio) => {
   radio.addEventListener("change", () => {
     allSection.classList.toggle("active", radio.value === "all");
     querySection.classList.toggle("active", radio.value === "query");
+    aoiSection.classList.toggle("active", radio.value === "aoi");
     districtwiseSection.classList.toggle(
       "active",
       radio.value === "districtwise"
@@ -137,11 +139,9 @@ document.querySelectorAll(".field-select").forEach((select, i) => {
           const div = document.createElement("div");
           div.className = "form-check";
           div.innerHTML = `
-            <input class="form-check-input" type="checkbox" name="values-${
-              i + 1
+            <input class="form-check-input" type="checkbox" name="values-${i + 1
             }" value="${value}" id="value-${i + 1}-${value}">
-            <label class="form-check-label" for="value-${
-              i + 1
+            <label class="form-check-label" for="value-${i + 1
             }-${value}">${value}</label>
           `;
           checkboxContainer.appendChild(div);
@@ -297,66 +297,127 @@ document.getElementById("request-query").addEventListener("click", async () => {
 });
 
 // Request Districtwise
-document
-  .getElementById("request-districtwise")
-  .addEventListener("click", async () => {
-    const queryData = {
-      type: "district",
-      conditions: JSON.stringify(
-        Array.from(
-          document.querySelectorAll('input[name="district-values"]:checked')
-        ).map((cb) => cb.value)
-      ),
-      theme,
-      fileName,
-    };
-    console.log(queryData);
-    console.log(queryData.conditions.length);
-    console.log(queryData.conditions);
+document.getElementById("request-districtwise").addEventListener("click", async () => {
+  const queryData = {
+    type: "district",
+    conditions: JSON.stringify(
+      Array.from(
+        document.querySelectorAll('input[name="district-values"]:checked')
+      ).map((cb) => cb.value)
+    ),
+    theme,
+    fileName,
+  };
+  console.log(queryData);
+  console.log(queryData.conditions.length);
+  console.log(queryData.conditions);
 
-    const errorDiv = document.getElementById("district-error");
+  const errorDiv = document.getElementById("district-error");
 
-    if (queryData.conditions.length < 3) {
-      errorDiv.textContent = "Select at least one district";
-      errorDiv.style.display = "block";
-      Swal.fire({ text: "Select at least one district", icon: "warning" });
-      return;
-    }
+  if (queryData.conditions.length < 3) {
+    errorDiv.textContent = "Select at least one district";
+    errorDiv.style.display = "block";
+    Swal.fire({ text: "Select at least one district", icon: "warning" });
+    return;
+  }
 
-    try {
-      const confirm = await Swal.fire({
-        icon: "question",
-        title: "Confirm",
-        text: "Send district-wise request?",
-        showCancelButton: true,
-        confirmButtonText: "Yes",
-        cancelButtonText: "No",
-      });
-      if (!confirm.isConfirmed) return;
+  try {
+    const confirm = await Swal.fire({
+      icon: "question",
+      title: "Confirm",
+      text: "Send district-wise request?",
+      showCancelButton: true,
+      confirmButtonText: "Yes",
+      cancelButtonText: "No",
+    });
+    if (!confirm.isConfirmed) return;
 
-      const response = await fetch(`/catalog/${fileName}/filerequest`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(queryData),
-      });
-      const data = await response.json();
+    const response = await fetch(`/catalog/${fileName}/filerequest`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(queryData),
+    });
+    const data = await response.json();
 
-      Swal.fire({
-        title: data.title || "Error",
-        text: data.message || "Unexpected response",
-        icon: data.icon || "error",
-        confirmButtonText: "OK",
-      }).then((result) => {
-        if (result.isConfirmed && data.redirect)
-          window.location.href = data.redirect;
-      });
-    } catch (error) {
-      Swal.fire({
-        title: "Error",
-        text: `Error: ${error.message}`,
-        icon: "error",
-      });
-    }
+    Swal.fire({
+      title: data.title || "Error",
+      text: data.message || "Unexpected response",
+      icon: data.icon || "error",
+      confirmButtonText: "OK",
+    }).then((result) => {
+      if (result.isConfirmed && data.redirect)
+        window.location.href = data.redirect;
+    });
+  } catch (error) {
+    Swal.fire({
+      title: "Error",
+      text: `Error: ${error.message}`,
+      icon: "error",
+    });
+  }
+});
+
+// Request AOI
+document.getElementById("request-aoi").addEventListener("click", async () => {
+  const fileInput = document.getElementById("aoi-input");
+
+  if (!fileInput.files.length) {
+    Swal.fire({ text: "Select an AOI file", icon: "warning" });
+    return;
+  }
+
+  const originalFile = fileInput.files[0];
+
+  //  Force MIME type (critical for WAF)
+  const fixedFile = new File([originalFile], originalFile.name, {
+    type: "application/geo+json",
   });
+
+  const formData = new FormData();
+  formData.append("type", "aoi");
+  formData.append("theme", theme);
+  formData.append("fileName", fileName);
+  formData.append("aoi-input", fixedFile);
+
+  console.log("Original MIME:", originalFile.type);
+  console.log("Forced MIME:", fixedFile.type);
+
+  try {
+    const confirm = await Swal.fire({
+      icon: "question",
+      title: "Confirm",
+      text: "Send AOI request?",
+      showCancelButton: true,
+      confirmButtonText: "Yes",
+      cancelButtonText: "No",
+    });
+
+    if (!confirm.isConfirmed) return;
+
+    const response = await fetch(`/catalog/${fileName}/filerequest`, {
+      method: "POST",
+      body: formData,
+    });
+
+    const data = await response.json();
+
+    Swal.fire({
+      title: data.title || "Error",
+      text: data.message || "Unexpected response",
+      icon: data.icon || "error",
+      confirmButtonText: "OK",
+    }).then((result) => {
+      if (result.isConfirmed && data.redirect)
+        window.location.href = data.redirect;
+    });
+
+  } catch (error) {
+    Swal.fire({
+      title: "Error",
+      text: `Error: ${error.message}`,
+      icon: "error",
+    });
+  }
+});
 
 // *********wms viewer and request form handle at catalog ends******************
