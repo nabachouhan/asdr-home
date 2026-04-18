@@ -12,7 +12,7 @@ import { isValidIdentifier } from "../utils/sanitize.js";
 import multer from "multer";
 import crypto from "crypto";
 import path from "path";
-
+import fs from "fs";
 
 // ✅ Create Express router
 const router = express.Router();
@@ -28,10 +28,24 @@ dotenv.config();
 // ✅ Multer setup for Shapefile uploads
 //    Stores shapefile ZIP uploads in the "shpuploads/" directory.
 const storage = multer.diskStorage({
-  destination: "datarequests/",
+  destination: (req, file, cb) => {
+    let folder = "";
+
+    if (file.fieldname === "aoi-input") {
+      folder = "datarequests/aoi/";
+    } else if (file.fieldname === "pdf-file") {
+      folder = "datarequests/pdf/";
+    } else {
+      folder = "datarequests/other/";
+    }
+
+    fs.mkdirSync(folder, { recursive: true }); // ✅ fixed
+    cb(null, folder);
+  },
+
   filename: (req, file, cb) => {
-    const ext = path.extname(file.originalname); // keep extension
-    cb(null, crypto.randomUUID() + ext);
+    const ext = path.extname(file.originalname); // ✅ fixed
+    cb(null, crypto.randomUUID() + ext);         // ✅ fixed
   },
 });
 
@@ -40,16 +54,30 @@ const storage = multer.diskStorage({
 const datarequestupload = multer({
   storage,
   fileFilter: (req, file, cb) => {
-    console.log("MIME:", file.mimetype);
+    console.log(file.fieldname, file.mimetype);
 
-    if (
-      file.mimetype === "application/geo+json" ||
-      file.mimetype === "application/json"
-    ) {
-      cb(null, true);
-    } else {
-      cb(new Error("Invalid file type. Only GeoJSON files are allowed."));
+    if (file.fieldname === "aoi-input") {
+      // ✅ GeoJSON only
+      if (
+        file.mimetype === "application/geo+json" ||
+        file.mimetype === "application/json"
+      ) {
+        return cb(null, true);
+      } else {
+        return cb(new Error("AOI must be a GeoJSON file"));
+      }
     }
+
+    if (file.fieldname === "pdf-file") {
+      // ✅ PDF only
+      if (file.mimetype === "application/pdf") {
+        return cb(null, true);
+      } else {
+        return cb(new Error("Only PDF allowed"));
+      }
+    }
+
+    cb(new Error("Unexpected field"));
   },
 });
 
@@ -208,12 +236,23 @@ router.get("/:id/view", async (req, res) => {
 });
 
 // ✅ Route:POST api to handle user data request
-router.post("/:id/filerequest", datarequestupload.single("aoi-input"), userAuthMiddleware, async (req, res) => {
+router.post("/:id/filerequest", datarequestupload.fields([
+  { name: "aoi-input", maxCount: 1 },
+  { name: "pdf-file", maxCount: 1 },
+]), userAuthMiddleware, async (req, res) => {
   const { type, theme, fileName, conditions, operator } = req.body;
   console.log("---------");
 
   console.log(req.body);
   console.log("---------");
+
+  const aoiFilename = req.files && req.files["aoi-input"] ? req.files["aoi-input"][0].filename : null;
+  const pdfFilename = req.files && req.files["pdf-file"] ? req.files["pdf-file"][0].filename : null;
+  const savedFilename = [aoiFilename, pdfFilename].filter(Boolean).join(",");
+  console.log("Saved Filenames:", savedFilename);
+
+  console.log("---------");
+
 
 
   const email = req.user.email;
@@ -265,8 +304,8 @@ router.post("/:id/filerequest", datarequestupload.single("aoi-input"), userAuthM
     // Store request info in requests table
 
     const insertQuery = `
-      INSERT INTO requests (email, file_name, theme, type, fields, values, condition, query_condition, request_status)
-      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+      INSERT INTO requests (email, file_name, theme, type, fields, values, condition, query_condition, request_status, aoi_filename, pdf_filename)
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
       RETURNING id
     `;
     const insertValues = [
@@ -279,6 +318,8 @@ router.post("/:id/filerequest", datarequestupload.single("aoi-input"), userAuthM
       conditions,
       queryCondition,
       request_status,
+      aoiFilename,
+      pdfFilename
     ];
     const insertResult = await client.query(insertQuery, insertValues);
 

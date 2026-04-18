@@ -192,6 +192,19 @@ async function fetchDistrictValues() {
 // Request All
 document.getElementById("request-all").addEventListener("click", async () => {
   const url = `/catalog/${fileName}/filerequest`;
+  const fileInput = document.getElementById("pdf-file-all");
+
+  if (!fileInput.files.length) {
+    Swal.fire({ text: "Select a supporting document (PDF)", icon: "warning" });
+    return;
+  }
+
+  const formData = new FormData();
+  formData.append("type", "all");
+  formData.append("theme", theme);
+  formData.append("fileName", fileName);
+  formData.append("pdf-file", fileInput.files[0]);
+
   try {
     const confirm = await Swal.fire({
       icon: "question",
@@ -205,8 +218,7 @@ document.getElementById("request-all").addEventListener("click", async () => {
 
     const response = await fetch(url, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ type: "all", theme, fileName }),
+      body: formData,
     });
     const data = await response.json();
 
@@ -230,6 +242,13 @@ document.getElementById("request-all").addEventListener("click", async () => {
 
 // Request Query
 document.getElementById("request-query").addEventListener("click", async () => {
+  const fileInput = document.getElementById("pdf-file-query");
+
+  if (!fileInput.files.length) {
+    Swal.fire({ text: "Select a supporting document (PDF)", icon: "warning" });
+    return;
+  }
+
   const queryData = {
     type: "query",
     theme,
@@ -271,10 +290,17 @@ document.getElementById("request-query").addEventListener("click", async () => {
     });
     if (!confirm.isConfirmed) return;
 
+    const formData = new FormData();
+    formData.append("type", queryData.type);
+    formData.append("theme", queryData.theme);
+    formData.append("fileName", queryData.fileName);
+    formData.append("conditions", JSON.stringify(queryData.conditions));
+    formData.append("operator", queryData.operator);
+    formData.append("pdf-file", fileInput.files[0]);
+
     const response = await fetch(`/catalog/${fileName}/filerequest`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(queryData),
+      body: formData,
     });
     const data = await response.json();
 
@@ -298,13 +324,22 @@ document.getElementById("request-query").addEventListener("click", async () => {
 
 // Request Districtwise
 document.getElementById("request-districtwise").addEventListener("click", async () => {
-  const queryData = {
-    type: "district",
-    conditions: JSON.stringify(
+  const fileInput = document.getElementById("pdf-file-district");
+
+  if (!fileInput.files.length) {
+    Swal.fire({ text: "Select a supporting document (PDF)", icon: "warning" });
+    return;
+  }
+
+  const conditions = JSON.stringify(
       Array.from(
         document.querySelectorAll('input[name="district-values"]:checked')
       ).map((cb) => cb.value)
-    ),
+    );
+    
+  const queryData = {
+    type: "district",
+    conditions: conditions,
     theme,
     fileName,
   };
@@ -314,12 +349,19 @@ document.getElementById("request-districtwise").addEventListener("click", async 
 
   const errorDiv = document.getElementById("district-error");
 
-  if (queryData.conditions.length < 3) {
+  if (JSON.parse(queryData.conditions).length < 3) {
     errorDiv.textContent = "Select at least one district";
     errorDiv.style.display = "block";
     Swal.fire({ text: "Select at least one district", icon: "warning" });
     return;
   }
+
+  const formData = new FormData();
+  formData.append("type", queryData.type);
+  formData.append("theme", queryData.theme);
+  formData.append("fileName", queryData.fileName);
+  formData.append("conditions", queryData.conditions);
+  formData.append("pdf-file", fileInput.files[0]);
 
   try {
     const confirm = await Swal.fire({
@@ -334,8 +376,7 @@ document.getElementById("request-districtwise").addEventListener("click", async 
 
     const response = await fetch(`/catalog/${fileName}/filerequest`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(queryData),
+      body: formData,
     });
     const data = await response.json();
 
@@ -360,9 +401,15 @@ document.getElementById("request-districtwise").addEventListener("click", async 
 // Request AOI
 document.getElementById("request-aoi").addEventListener("click", async () => {
   const fileInput = document.getElementById("aoi-input");
+  const pdfInput = document.getElementById("pdf-file-aoi");
 
   if (!fileInput.files.length) {
     Swal.fire({ text: "Select an AOI file", icon: "warning" });
+    return;
+  }
+
+  if (!pdfInput.files.length) {
+    Swal.fire({ text: "Select a supporting document (PDF)", icon: "warning" });
     return;
   }
 
@@ -378,6 +425,7 @@ document.getElementById("request-aoi").addEventListener("click", async () => {
   formData.append("theme", theme);
   formData.append("fileName", fileName);
   formData.append("aoi-input", fixedFile);
+  formData.append("pdf-file", pdfInput.files[0]);
 
   console.log("Original MIME:", originalFile.type);
   console.log("Forced MIME:", fixedFile.type);

@@ -9,16 +9,16 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ol@v9.2.4/ol.css">
 
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
+
   <link rel="stylesheet" href="/css/bootstrap.css">
   <link rel="stylesheet" href="/css/hero.css">
   <link rel="stylesheet" href="/css/catalogView.css">
+  <link rel="stylesheet" href="/css/arrownav.css">
 
   <!-- icon -->
   <link rel="stylesheet"
     href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0">
-
-
-
 
 </head>
 
@@ -57,32 +57,32 @@
             <div class="col-lg-4">
               <div class="card shadow-sm h-100 ">
                 <div class="card-body themed-box">
-                  <h2 class="card-title h5 mb-4">Query Options</h2>
+                  <h2 class="card-title h5 mb-4 text-center">Data Request Form</h2>
 
                   <!-- Query Type Toggle -->
-                  <div class="mb-3">
-                    <div class="form-check form-check-inline">
-                      <input class="form-check-input" type="radio" name="queryType" id="allRadio" value="all" checked>
-                      <label class="form-check-label" for="allRadio">All</label>
-                    </div>
-                    <div class="form-check form-check-inline">
-                      <input class="form-check-input" type="radio" name="queryType" id="queryRadio" value="query">
-                      <label class="form-check-label" for="queryRadio">Query</label>
-                    </div>
-                    <div class="form-check form-check-inline">
-                      <input class="form-check-input" type="radio" name="queryType" id="districtwiseRadio"
-                        value="districtwise">
-                      <label class="form-check-label" for="districtwiseRadio">Select By District</label>
-                    </div>
-                    <div class="form-check form-check-inline">
-                      <input class="form-check-input" type="radio" name="queryType" id="aoiRadio" value="aoi">
-                      <label class="form-check-label" for="aoiRadio">Select By AOI</label>
-                    </div>
+                  <div class="mb-4 d-flex flex-wrap gap-2" role="group" aria-label="Query type toggle">
+                    <input type="radio" class="btn-check" name="queryType" id="allRadio" value="all" checked
+                      autocomplete="off">
+                    <label class="btn btn-outline-primary btn-sm flex-grow-1" for="allRadio">All Data</label>
+
+                    <input type="radio" class="btn-check" name="queryType" id="queryRadio" value="query"
+                      autocomplete="off">
+                    <label class="btn btn-outline-primary btn-sm flex-grow-1" for="queryRadio">Query</label>
+
+                    <input type="radio" class="btn-check" name="queryType" id="districtwiseRadio" value="districtwise"
+                      autocomplete="off">
+                    <label class="btn btn-outline-primary btn-sm flex-grow-1" for="districtwiseRadio">District</label>
+
+                    <input type="radio" class="btn-check" name="queryType" id="aoiRadio" value="aoi" autocomplete="off">
+                    <label class="btn btn-outline-primary btn-sm flex-grow-1" for="aoiRadio">AOI</label>
                   </div>
 
                   <!-- All Section -->
                   <div id="all-section" class="query-section active mb-4">
-                    <button id="request-all" class="btn btn-primary w-100">Request
+                    <label class="form-label" for="pdf-file-all">Supporting Document* <small>(<a
+                          href="/forms/ASDR_Safe_Custody_Certificate.pdf" download>Download Format</a>)</small></label>
+                    <input type="file" class="form-control" name="pdf-file" id="pdf-file-all" accept=".pdf">
+                    <button id="request-all" class="btn btn-primary w-100 mt-2">Request
                       All</button>
                   </div>
 
@@ -116,6 +116,10 @@
                       <div class="error-message text-danger small" id="field-error-2"></div>
                       <div class="value-checkboxes mb-2" id="value-checkboxes-2"></div>
                       <div class="error-message text-danger small" id="value-error-2"></div>
+                      <label class="form-label" for="pdf-file-query">Supporting Document* <small>(<a
+                            href="/forms/ASDR_Safe_Custody_Certificate.pdf" download>Download
+                            Format</a>)</small></label>
+                      <input type="file" class="form-control" name="pdf-file" id="pdf-file-query" accept=".pdf">
                     </div>
 
                     <!-- Submit Button -->
@@ -129,14 +133,22 @@
                       <label class="form-label">District</label>
                       <div class="value-checkboxes mb-2" id="district-checkboxes"></div>
                       <div class="error-message" id="district-error"></div>
+                      <label class="form-label" for="pdf-file-district">Supporting Document* <small>(<a
+                            href="/forms/ASDR_Safe_Custody_Certificate.pdf" download>Download
+                            Format</a>)</small></label>
+                      <input type="file" class="form-control" name="pdf-file" id="pdf-file-district" accept=".pdf">
                     </div>
                     <button id="request-districtwise" class="btn btn-primary w-100">Request</button>
                   </div>
                   <!-- AOI Section -->
                   <div id="aoi-section" class="aoi-section">
                     <div class="mb-3 aoi-row">
-                      <label class="form-label" for="aoi-input">Area of Interest</label>
+                      <label class="form-label" for="aoi-input">Area of Interest*</label>
                       <input type="file" class="form-control" name="aoi-input" id="aoi-input" accept=".geojson">
+                      <label class="form-label" for="pdf-file-aoi">Supporting Document* <small>(<a
+                            href="/forms/ASDR_Safe_Custody_Certificate.pdf" download>Download
+                            Format</a>)</small></label>
+                      <input type="file" class="form-control" name="pdf-file" id="pdf-file-aoi" accept=".pdf">
                     </div>
                     <button id="request-aoi" class="btn btn-primary w-100">Request</button>
                   </div>

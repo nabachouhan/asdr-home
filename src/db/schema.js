@@ -84,7 +84,9 @@ async function createTables() {
        condition TEXT,
        query_condition TEXT, 
        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        request_status varchar(20)
+        request_status varchar(20),
+        aoi_filename TEXT,
+        pdf_filename TEXT
       ); 
 
       CREATE TABLE IF NOT EXISTS emailotp (
