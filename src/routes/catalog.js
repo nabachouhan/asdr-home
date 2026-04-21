@@ -192,6 +192,24 @@ router.get("/values/:theme/:fileName/:field", userAuthMiddleware, async (req, re
       return res.status(400).json({ error: "Invalid or unpublished file" });
     }
 
+    const restrictedFields = [
+      'geom',
+      'geometry',
+      'the_geom',
+      'fid',
+      'lat',
+      'latitude',
+      'lon',
+      'lng',
+      'longitude'
+    ];
+
+    if (restrictedFields.includes(field.toLowerCase())) {
+      throw new Error("Access to this field is restricted");
+    }
+
+
+
     // 🔐 Validate field name against actual columns in the table
     const pool = getPoolByTheme(theme);
     const client = await pool.connect();
