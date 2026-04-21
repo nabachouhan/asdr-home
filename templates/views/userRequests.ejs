@@ -3,180 +3,234 @@
 
 <head>
   <%- include('../partials/head') %>
-  <style>
-    .table th,
-    .table td {
-      white-space: nowrap;
-      text-align: left;
-    }
-  </style>
+    <style>
+      .table th,
+      .table td {
+        white-space: nowrap;
+        text-align: left;
+      }
+    </style>
 </head>
 
-<body onload="loaderFunc()">
+<body>
   <%- include('../partials/loader') %>
-  <%- include('../partials/arrownav') %>
-  <main class="content px-0 py-0 bg-adminbg" style="min-height: 70vh;">
-    <div class="container-fluid p-4">
+    <%- include('../partials/arrownav') %>
+      <main class="content px-0 py-0 bg-adminbg" style="min-height: 70vh;">
+        <div class="container-fluid p-4">
 
-      <div class="container-fluid p-4">
-        <div class="d-flex justify-content-between flex-wrap mb-3">
+          <div class="container-fluid p-4">
+            <div class="d-flex justify-content-between flex-wrap mb-3">
 
-          <!-- Status Filter -->
-          <div class="d-flex align-items-center">
-            <div class="me-3">
-              <label class="form-label d-block">Status</label>
-              <div class="btn-group" role="group">
-                <% const statuses = ['all', 'pending', 'approved', 'rejected', 'isolated']; %>
-                <% statuses.forEach(s => { %>
-                <input type="radio" class="btn-check" name="status" id="<%= s %>" value="<%= s %>" <%= status === s ? 'checked' : '' %>>
-                <label class="btn btn-outline-secondary" for="<%= s %>">
-                  <%= s.charAt(0).toUpperCase() + s.slice(1) %>
-                </label>
-                <% }); %>
+              <!-- Status Filter -->
+              <div class="d-flex align-items-center">
+                <div class="me-3">
+                  <label class="form-label d-block">Status</label>
+                  <div class="btn-group" role="group">
+                    <% const statuses=['all', 'pending' , 'approved' , 'rejected' , 'isolated' ]; %>
+                      <% statuses.forEach(s=> { %>
+                        <input type="radio" class="btn-check" name="status" id="<%= s %>" value="<%= s %>" <%=status===s
+                          ? 'checked' : '' %>>
+                        <label class="btn btn-outline-secondary" for="<%= s %>">
+                          <%= s.charAt(0).toUpperCase() + s.slice(1) %>
+                        </label>
+                        <% }); %>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Search and Sorting Controls -->
+              <div class="d-flex align-items-end flex-wrap gap-3">
+
+                <!-- Search -->
+                <div class="flex-grow-1" style="min-width: 100px;">
+                  <label for="searchInput" class="form-label">Search</label>
+                  <input type="text" class="form-control" id="searchInput" placeholder="Search by file name..."
+                    value="<%= search %>">
+                </div>
+                <button id="applyFilters" class="btn btn-primary">Search</button>
+
+                <!-- Sort By -->
+                <div style="min-width: 100px;">
+                  <label for="sortSelect" class="form-label">Sort by</label>
+                  <select class="form-select" id="sortSelect">
+                    <option value="id" <%=sort==='id' ? 'selected' : '' %>>ID</option>
+                    <option value="file_name" <%=sort==='file_name' ? 'selected' : '' %>>File Name</option>
+                    <option value="created_at" <%=sort==='created_at' ? 'selected' : '' %>>Time</option>
+                  </select>
+                </div>
+
+                <!-- Order -->
+                <div style="min-width: 100px;">
+                  <label for="orderSelect" class="form-label">Order</label>
+                  <select class="form-select" id="orderSelect">
+                    <option value="desc" <%=order==='desc' ? 'selected' : '' %>>Descending</option>
+                    <option value="asc" <%=order==='asc' ? 'selected' : '' %>>Ascending</option>
+                  </select>
+                </div>
+                <button id="resetBtn" class="btn btn-danger">Reset</button>
+
+              </div>
+            </div>
+
+
+            <div class="card border-0 rounded themed-box">
+              <div class="card-header">
+                <h6 class="card-subtitle text-muted p-2 text-center">Data
+                  Request History</h6>
+              </div>
+              <div class="card-body">
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th>Id</th>
+                      <th>File Name</th>
+                      <th>Details</th>
+                      <th>Time</th>
+                      <th>Status</th>
+                      <th>Download</th>
+                      <th>Metadata</th>
+
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <% userItems.forEach(function(item, index) { %>
+                      <tr>
+                        <td>
+                          <%= item.id %>
+                        </td>
+                        <td>
+                          <%= item.file_name %>
+                        </td>
+                        <td>
+                          <button type="button" class="btn btn-sm btn-info view-condition-btn" data-toggle="modal"
+                            data-target="#detailsModal-<%= index %>" data-bs-target="#detailsModal-<%= index %>">
+                            View
+                          </button>
+                        </td>
+                        <td>
+                          <%= item.created_at.toISOString().slice(0,10) %>
+                        </td>
+                        <td>
+                          <%= item.request_status %>
+                        </td>
+                        <td>
+                          <% if(item.request_status==='approved' ) { %>
+                            <input type="button" class="btn btn-success file-dwnld-btn" value="Download"
+                              request-id="<%= item.id %>">
+                            <% } else if(item.request_status==='rejected' ) { %>
+                              <input type="button" class="btn btn-danger" value="Not Available">
+                              <% } else { %>
+                                <input type="button" class="btn btn-warning" value="Not Available">
+                                <% } %>
+                        </td>
+                        <td class="d-flex justify-content-center">
+                          <input type="button" class="btn btn-primary view-button" value="View"
+                            data-file-name="<%= item.file_name %>" data-request-id="<%= item.id %>">
+
+                        </td>
+                      </tr>
+
+                      <!-- Condition Details Modal -->
+                      <div class="modal fade" id="detailsModal-<%= index %>" tabindex="-1" role="dialog"
+                        aria-labelledby="conditionModalLabel" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <h5 class="modal-title" id="conditionModalLabel">Details</h5>
+                              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                              </button>
+                            </div>
+                            <div class="modal-body text-left text-wrap" id="conditionModalBody"
+                              style="white-space: normal;">
+                              <!-- Condition content will be injected here -->
+
+                              <div class="modal-body">
+                                <p><strong>Request Type:</strong>
+                                  <%= item.type %>
+                                </p>
+                                <% if(item.type==='query' ) { %>
+                                  <p><strong>Fields:</strong>
+                                    <%= item.fields %>
+                                  </p>
+                                  <p><strong>Values:</strong>
+                                    <%= item.values %>
+                                  </p>
+                                  <p><strong>Query:</strong>
+                                    <%= item.query_condition %>
+                                  </p>
+                                  <% } else if(item.type==='all' ) { %>
+                                    <p><strong>AOI:</strong>
+                                      Whole File
+                                    </p>
+                                    <% } else if(item.type==='district' ) { %>
+                                      <p><strong>District:</strong>
+                                        <%= item.condition%>
+                                      </p>
+                                      <% } else if(item.type==='aoi' ) { %>
+                                        <p><strong>Area of Interest:</strong></p>
+
+                                        <% } %>
+                              </div>
+                            </div>
+                            <div class="modal-footer">
+                              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <% }) %>
+                  </tbody>
+                </table>
+
+                <% if (totalPages> 1) { %>
+                  <% if (totalPages> 1) { %>
+                    <nav class="d-flex justify-content-center">
+                      <ul class="pagination">
+                        <% const pageLinks=[]; %>
+
+                          <% for (let i=1; i <=totalPages; i++) { if ( i===1 || i===totalPages || i===currentPage ||
+                            i===currentPage - 1 || i===currentPage + 1 ) { if (!pageLinks.includes(i))
+                            pageLinks.push(i); } } const finalLinks=[]; for (let i=0; i < pageLinks.length; i++) {
+                            finalLinks.push(pageLinks[i]); if (i < pageLinks.length - 1 && pageLinks[i + 1]>
+                            pageLinks[i] + 1) {
+                            finalLinks.push('...');
+                            }
+                            }
+                            %>
+
+                            <% finalLinks.forEach(p=> { %>
+                              <% if (p==='...' ) { %>
+                                <li class="page-item disabled"><span class="page-link">...</span></li>
+                                <% } else { %>
+                                  <li class="page-item <%= p === currentPage ? 'active' : '' %>">
+                                    <a class="page-link"
+                                      href="?page=<%= p %>&search=<%= search %>&sort=<%= sort %>&order=<%= order %>&status=<%= status %>">
+                                      <%= p %>
+                                    </a>
+                                  </li>
+                                  <% } %>
+                                    <% }); %>
+                      </ul>
+                    </nav>
+                    <% } %>
+
+                      <% } %>
+
               </div>
             </div>
           </div>
 
-          <!-- Search and Sorting Controls -->
-          <div class="d-flex align-items-end flex-wrap gap-3">
-
-            <!-- Search -->
-            <div class="flex-grow-1" style="min-width: 100px;">
-              <label for="searchInput" class="form-label">Search</label>
-              <input type="text" class="form-control" id="searchInput" placeholder="Search by file name..." value="<%= search %>">
-            </div>
-            <button id="applyFilters" class="btn btn-primary">Search</button>
-
-            <!-- Sort By -->
-            <div style="min-width: 100px;">
-              <label for="sortSelect" class="form-label">Sort by</label>
-              <select class="form-select" id="sortSelect">
-                <option value="id" <%= sort === 'id' ? 'selected' : '' %>>ID</option>
-                <option value="file_name" <%= sort === 'file_name' ? 'selected' : '' %>>File Name</option>
-                <option value="created_at" <%= sort === 'created_at' ? 'selected' : '' %>>Time</option>
-              </select>
-            </div>
-
-            <!-- Order -->
-            <div style="min-width: 100px;">
-              <label for="orderSelect" class="form-label">Order</label>
-              <select class="form-select" id="orderSelect">
-                <option value="desc" <%= order === 'desc' ? 'selected' : '' %>>Descending</option>
-                <option value="asc" <%= order === 'asc' ? 'selected' : '' %>>Ascending</option>
-              </select>
-            </div>
-            <button id="resetBtn" class="btn btn-danger">Reset</button>
-
-          </div>
         </div>
 
+      </main>
+      <%- include('../partials/homeFooter') %>
+        <script src="/js/toogleAndHandleTheme.js"></script>
 
-        <div class="card border-0 rounded themed-box">
-          <div class="card-header">
-            <h6 class="card-subtitle text-muted p-2 text-center">Data
-              Request History</h6>
-          </div>
-          <div class="card-body">
-            <table class="table">
-              <thead>
-                <tr>
-                  <th>Id</th>
-                  <th>File Name</th>
-                  <th>Details</th>
-                  <th>Time</th>
-                  <th>Status</th>
-                  <th>Download</th>
-                  <th>Metadata</th>
-
-                </tr>
-              </thead>
-              <tbody>
-                <% userItems.forEach(item => { %>
-                <tr>
-                  <td><%= item.id %></td>
-                  <td><%= item.file_name %></td>
-                  <td><%= item.condition ? item.condition.replace(/[{}"\\]/g,'' ) : 'All' %></td>
-                  <td><%= item.created_at.toISOString().slice(0,10) %></td>
-                  <td><%= item.request_status %></td>
-                  <td><% if(item.request_status ==='approved') { %>
-                    <input type="button" class="btn btn-success file-dwnld-btn" value="Download" request-id="<%= item.id %>">
-                    <% } else if(item.request_status ===
-                                            'rejected') { %>
-                    <input type="button" class="btn btn-danger" value="Not Available">
-                    <% } else { %>
-                    <input type="button" class="btn btn-warning" value="Not Available">
-                    <% } %>
-                  </td>
-                  <td class="d-flex justify-content-center">
-                    <input type="button"
-                    class="btn btn-primary view-button"
-                    value="View"
-                    data-file-name="<%= item.file_name %>"
-                    data-request-id="<%= item.id %>">
-
-                  </td>
-                </tr>
-                <% }) %>
-              </tbody>
-            </table>
-
-            <% if (totalPages > 1) { %>
-            <% if (totalPages > 1) { %>
-            <nav class="d-flex justify-content-center">
-              <ul class="pagination">
-                <% const pageLinks = []; %>
-
-                <% for (let i = 1; i <= totalPages; i++) { 
-                      if (
-                        i === 1 || 
-                        i === totalPages || 
-                        i === currentPage || 
-                        i === currentPage - 1 || 
-                        i === currentPage + 1
-                      ) {
-                        if (!pageLinks.includes(i)) pageLinks.push(i);
-                      }
-                    } 
-
-                    // Insert '...' where gaps exist
-                    const finalLinks = [];
-                    for (let i = 0; i < pageLinks.length; i++) {
-                      finalLinks.push(pageLinks[i]);
-                      if (i < pageLinks.length - 1 && pageLinks[i + 1] > pageLinks[i] + 1) {
-                        finalLinks.push('...');
-                      }
-                    }
-                  %>
-
-                <% finalLinks.forEach(p => { %>
-                <% if (p === '...') { %>
-                <li class="page-item disabled"><span class="page-link">...</span></li>
-                <% } else { %>
-                <li class="page-item <%= p === currentPage ? 'active' : '' %>">
-                  <a class="page-link" href="?page=<%= p %>&search=<%= search %>&sort=<%= sort %>&order=<%= order %>&status=<%= status %>"><%= p %></a>
-                </li>
-                <% } %>
-                <% }); %>
-              </ul>
-            </nav>
-            <% } %>
-
-            <% } %>
-
-          </div>
-        </div>
-      </div>
-
-    </div>
-  </main>
-  <%- include('../partials/homeFooter') %>
-    <script src="/js/toogleAndHandleTheme.js"></script>
-
-   <%- include('../partials/footer') %>
-  <script src="/js/script.js"></script>
-      <script src="/js/backNhome.js"></script>
-  <script src="/js/dataRequestsHandle.js"></script>
-
+        <%- include('../partials/footer') %>
+          <script src="/js/script.js"></script>
+          <script src="/js/backNhome.js"></script>
+          <script src="/js/dataRequestsHandle.js"></script>
 
 </body>
 

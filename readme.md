@@ -4,3 +4,4 @@ make sure some folder available at the time of deployement
 3.uploads  //to store id during registration
 4.src/routes/downloads  //to store extracted shapefiles temorarily for download
 5.datarequests //to store geojson files
+6 add datarequests/aoi,  add datarequests/pdf

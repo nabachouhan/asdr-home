@@ -1,213 +1,310 @@
 <%- include('../partials/adminhead') %>
 
-<body>
-  <%- include('../partials/loader') %>
-  <div class="admin-sidebar" id="admin-sidebar">
-    <h4 class="text-white mb-4">ASSAM-SDR</h4>
-    <div class="mb-4">
-      <i class="bi bi-person-circle me-2"></i><%= full_name %>
-    </div>
-    <a href="/admin/home"><i class="bi bi-grid"></i> Home</a>
-    <a href="/admin/requests" class="active"><i class="bi bi-ui-checks"></i> Requests</a>
+  <body>
+    <%- include('../partials/loader') %>
+      <div class="admin-sidebar" id="admin-sidebar">
+        <h4 class="text-white mb-4">ASSAM-SDR</h4>
+        <div class="mb-4">
+          <i class="bi bi-person-circle me-2"></i>
+          <%= full_name %>
+        </div>
+        <a href="/admin/home"><i class="bi bi-grid"></i> Home</a>
+        <a href="/admin/requests" class="active"><i class="bi bi-ui-checks"></i> Requests</a>
         <a href="/admin/roles"><i class="bi bi-table"></i> Manage Roles</a>
-    <a href="/admin/logs"><i class="bi bi-person"></i> Logs</a>
-    <a href="/admin/upload"><i class="bi bi-gem"></i> Upload</a>
-    <a href="/admin/publish"><i class="bi bi-gem"></i> Publish</a>
-    <a href="/admin/manage"><i class="bi bi-person"></i> Manage</a>
-    <a href="/admin/Queries"><i class="bi bi-journal-text"></i> Queries</a>
-    <a href=""  id="adminLogout"><i class="bi bi-journal-text"></i> Logout</a>
-  </div>
-
-  <div class="content" id="mainContent">
-    <div class="themed-box topbar d-flex flex-wrap justify-content-between align-items-center gap-2 themed-box sticky-top">
-      <div class="d-flex align-items-center gap-3">
-        <i class="bi bi-list fs-3 cursor-pointer"  id="toggleSidebarBtn" style="cursor: pointer;"></i>
-        <h4 class="mb-0">Dashboard</h4>
+        <a href="/admin/logs"><i class="bi bi-person"></i> Logs</a>
+        <a href="/admin/upload"><i class="bi bi-gem"></i> Upload</a>
+        <a href="/admin/publish"><i class="bi bi-gem"></i> Publish</a>
+        <a href="/admin/manage"><i class="bi bi-person"></i> Manage</a>
+        <a href="/admin/Queries"><i class="bi bi-journal-text"></i> Queries</a>
+        <a href="" id="adminLogout"><i class="bi bi-journal-text"></i> Logout</a>
       </div>
-      <div class="d-flex align-items-center gap-2 flex-wrap">
-        <div class="d-flex align-items-center">
-          <select class="form-select form-select-sm" id="searchField" style="max-width: 150px;">
-            <option value="id" <%= searchField === 'id' ? 'selected' : '' %>>Request ID</option>
-            <option value="first_name" <%= searchField === 'first_name' ? 'selected' : '' %>>Name</option>
-            <option value="email" <%= searchField === 'email' ? 'selected' : '' %>>Email</option>
-            <option value="organization" <%= searchField === 'organization' ? 'selected' : '' %>>Organization</option>
-            <option value="designation" <%= searchField === 'designation' ? 'selected' : '' %>>Designation</option>
-            <option value="file_name" <%= searchField === 'file_name' ? 'selected' : '' %>>File Title</option>
-            <option value="fields" <%= searchField === 'fields' ? 'selected' : '' %>>Fields</option>
-            <option value="values" <%= searchField === 'values' ? 'selected' : '' %>>Values</option>
-            <option value="operators" <%= searchField === 'operators' ? 'selected' : '' %>>Operators</option>
-          </select>
-          <input type="text" class="form-control form-control-sm" id="searchValue" placeholder="Search..." style="max-width: 200px;" value="<%= searchValue %>">
-        <button class="btn btn-sm btn-primary" id="applySearchBtn">Apply</button>
-        </div>
 
-        <i class="bi bi-bell me-2"></i>
-        <i class="bi bi-gear"></i>
-      </div>
-    </div>
-
-    <main class="main">
-      <div class="container-fluid p-4">
-        <div class="col-lg-4 col-md-6 d-flex align-items-center mb-3">
-         <label class="form-label d-block me-2">Status</label>
-         <div class="btn-group" role="group" aria-label="Status selection">
-           <input type="radio" class="btn-check" name="status" id="all" value="all" <%= status === 'all' || !status ? 'checked' : '' %>>
-           <label class="btn btn-outline-secondary" for="all">All</label>
-           <input type="radio" class="btn-check" name="status" id="pending" value="pending" <%= status === 'pending' ? 'checked' : '' %>>
-           <label class="btn btn-outline-secondary" for="pending">Pending</label>
-           <input type="radio" class="btn-check" name="status" id="approved" value="approved" <%= status === 'approved' ? 'checked' : '' %>>
-           <label class="btn btn-outline-secondary" for="approved">Approved</label>
-           <input type="radio" class="btn-check" name="status" id="rejected" value="rejected" <%= status === 'rejected' ? 'checked' : '' %>>
-           <label class="btn btn-outline-secondary" for="rejected">Rejected</label>
-           <input type="radio" class="btn-check" name="status" id="isolated" value="isolated" <%= status === 'isolated' ? 'checked' : '' %>>
-           <label class="btn btn-outline-secondary" for="isolated">Isolated</label>
-         </div>
-       </div>
-      <div class="card border-0 rounded themed-box ">
-        <div class="card-header">
-          <h6 class="card-subtitle text-muted p-3 text-center">File Requests</h6>
-        </div>
-        <div class="card-body">
-          <div class="table-responsive">
-            <table class="table table-hover">
-              <thead>
-                <tr>
-                  <th scope="col"><a href="#" class="sort-link" data-field="id">ID <%= sortField === 'id' ? (sortOrder === 'ASC' ? '↑' : '↓') : '' %></a></th>
-                  <th scope="col"><a href="#" class="sort-link" data-field="first_name">Name <%= sortField === 'first_name' ? (sortOrder === 'ASC' ? '↑' : '↓') : '' %></a></th>
-                  <th scope="col"><a href="#" class="sort-link" data-field="email">Email <%= sortField === 'email' ? (sortOrder === 'ASC' ? '↑' : '↓') : '' %></a></th>
-                  <th scope="col"><a href="#" class="sort-link" data-field="organization">Organization <%= sortField === 'organization' ? (sortOrder === 'ASC' ? '↑' : '↓') : '' %></a></th>
-                  <th scope="col"><a href="#" class="sort-link" data-field="designation">Designation <%= sortField === 'designation' ? (sortOrder === 'ASC' ? '↑' : '↓') : '' %></a></th>
-                  <th scope="col"><a href="#" class="sort-link" data-field="file_name">File Title <%= sortField === 'file_name' ? (sortOrder === 'ASC' ? '↑' : '↓') : '' %></a></th>
-                  <th scope="col"><a href="#" class="sort-link" data-field="created_at">Date <%= sortField === 'created_at' ? (sortOrder === 'ASC' ? '↑' : '↓') : '' %></a></th>
-                  <th scope="col">Card</th>
-                  <th scope="col">Details</th>
-                  <th scope="col">Actions</th>
-                  <th scope="col">Profile</th>
-                </tr>
-              </thead>
-              <tbody>
-                <% if (combinedData.length > 0) { %>
-                  <% combinedData.forEach(function(item, index) { %>
-                    <tr>
-                      <th scope="row"><%= item.id %></th>
-                      <td><%= item.first_name %> <%= item.last_name %></td>
-                      <td><%= item.email %></td>
-                      <td><%= item.organization %></td>
-                      <td><%= item.designation %></td>
-                      <td><%= item.file_name %></td>
-                      <td><%= item.created_at %></td>
-                      <td>
-                        <% if (item.id_proof) { %>
-                          <a href="#" data-bs-toggle="modal" data-bs-target="#imageModal-<%= index %>">
-                            <img src="data:image/png;base64,<%= item.id_proof %>" alt="ID Proof" style="width: 50px; height: auto;" class="img-thumbnail">
-                          </a>
-                          <div class="modal fade" id="imageModal-<%= index %>" tabindex="-1" aria-labelledby="imageModalLabel-<%= index %>" aria-hidden="true">
-                            <div class="modal-dialog modal-lg">
-                              <div class="modal-content">
-                                <div class="modal-header">
-                                  <h5 class="modal-title" id="imageModalLabel-<%= index %>">ID Proof</h5>
-                                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                </div>
-                                <div class="modal-body">
-                                  <img src="data:image/png;base64,<%= item.id_proof %>" alt="ID Proof" style="width: 100%;">
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        <% } else { %>
-                          <span>No ID Proof</span>
-                        <% } %>
-                      </td>
-                      <td>
-                        <button class="btn btn-sm btn-info" data-bs-toggle="modal" data-bs-target="#detailsModal-<%= index %>">View Details</button>
-                        <div class="modal fade" id="detailsModal-<%= index %>" tabindex="-1" aria-labelledby="detailsModalLabel-<%= index %>" aria-hidden="true">
-                          <div class="modal-dialog">
-                            <div class="modal-content">
-                              <div class="modal-header">
-                                <h5 class="modal-title" id="detailsModalLabel-<%= index %>">Request Details</h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                              </div>
-                              <div class="modal-body">
-                                <p><strong>Fields:</strong> <%= item.fields %></p>
-                                <p><strong>Values:</strong> <%= item.values %></p>
-                                <p><strong>Query:</strong> <%= item.query_condition %></p>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </td>
-                      <td>
-                        <div class="btn-group" role="group">
-                          <button class="btn btn-sm btn-success btn-handlerequest" full-name="<%= item.first_name %> <%= item.last_name %>" data-action="approved" data-email="<%= item.email %>" data-file="<%= item.file_name %>" data-requestid="<%= item.id %>" data-organization="<%= item.organization %>">Approved</button>
-                          <button class="btn btn-sm btn-danger btn-handlerequest" full-name="<%= item.first_name %> <%= item.last_name %>" data-action="rejected" data-email="<%= item.email %>" data-file="<%= item.file_name %>" data-requestid="<%= item.id %>" data-organization="<%= item.organization %>">Rejected</button>
-                          <button class="btn btn-sm btn-warning btn-handlerequest" full-name="<%= item.first_name %> <%= item.last_name %>" data-action="isolated" data-email="<%= item.email %>" data-file="<%= item.file_name %>" data-requestid="<%= item.id %>" data-organization="<%= item.organization %>">Isolated</button>
-                        </div>
-                      </td>
-                      <td>
-                        <button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#profileModal-<%= index %>">Profile</button>
-                        <div class="modal fade" id="profileModal-<%= index %>" tabindex="-1" aria-labelledby="profileModalLabel-<%= index %>" aria-hidden="true">
-                          <div class="modal-dialog">
-                            <div class="modal-content">
-                              <div class="modal-header">
-                                <h5 class="modal-title" id="profileModalLabel-<%= index %>">User Profile</h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                              </div>
-                              <div class="modal-body">
-                                <p><strong>Name:</strong> <%= item.first_name %> <%= item.last_name %></p>
-                                <p><strong>Email:</strong> <%= item.email %></p>
-                                <p><strong>Organization:</strong> <%= item.organization %></p>
-                                <p><strong>Designation:</strong> <%= item.designation %></p>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </td>
-                    </tr>
-                  <% }); %>
-                <% } else { %>
-                  <tr>
-                    <td colspan="11" class="text-center">No requests found</td>
-                  </tr>
-                <% } %>
-              </tbody>
-            </table>
+      <div class="content" id="mainContent">
+        <div
+          class="themed-box topbar d-flex flex-wrap justify-content-between align-items-center gap-2 themed-box sticky-top">
+          <div class="d-flex align-items-center gap-3">
+            <i class="bi bi-list fs-3 cursor-pointer" id="toggleSidebarBtn" style="cursor: pointer;"></i>
+            <h4 class="mb-0">Dashboard</h4>
           </div>
-          <nav aria-label="Page navigation example" class="mt-4">
-            <ul class="pagination justify-content-center">
-              <% if (currentPage > 1) { %>
-                <li class="page-item">
-                  <a class="page-link" href="/admin/requests?page=<%= currentPage - 1 %>&sortField=<%= encodeURIComponent(sortField) %>&sortOrder=<%= encodeURIComponent(sortOrder) %>&searchField=<%= encodeURIComponent(searchField) %>&searchValue=<%= encodeURIComponent(searchValue) %>&status=<%= encodeURIComponent(status) %>">Previous</a>
-                </li>
-              <% } else { %>
-                <li class="page-item disabled">
-                  <a class="page-link" href="#">Previous</a>
-                </li>
-              <% } %>
-              <% for (let i = 1; i <= totalPages; i++) { %>
-                <li class="page-item <%= currentPage === i ? 'active' : '' %>">
-                  <a class="page-link" href="/admin/requests?page=<%= i %>&sortField=<%= encodeURIComponent(sortField) %>&sortOrder=<%= encodeURIComponent(sortOrder) %>&searchField=<%= encodeURIComponent(searchField) %>&searchValue=<%= encodeURIComponent(searchValue) %>&status=<%= encodeURIComponent(status) %>"><%= i %></a>
-                </li>
-              <% } %>
-              <% if (currentPage < totalPages) { %>
-                <li class="page-item">
-                  <a class="page-link" href="/admin/requests?page=<%= currentPage + 1 %>&sortField=<%= encodeURIComponent(sortField) %>&sortOrder=<%= encodeURIComponent(sortOrder) %>&searchField=<%= encodeURIComponent(searchField) %>&searchValue=<%= encodeURIComponent(searchValue) %>&status=<%= encodeURIComponent(status) %>">Next</a>
-                </li>
-              <% } else { %>
-                <li class="page-item disabled">
-                  <a class="page-link" href="#">Next</a>
-                </li>
-              <% } %>
-            </ul>
-          </nav>
-        </div>
-      </div>
-      </div>
-    </main>
-  </div>
-  <div id="searchData"
-     data-sort-field="<%= sortField %>"
-     data-sort-order="<%= sortOrder %>"></div>
+          <div class="d-flex align-items-center gap-2 flex-wrap">
+            <div class="d-flex align-items-center">
+              <select class="form-select form-select-sm" id="searchField" style="max-width: 150px;">
+                <option value="id" <%=searchField==='id' ? 'selected' : '' %>>Request ID</option>
+                <option value="first_name" <%=searchField==='first_name' ? 'selected' : '' %>>Name</option>
+                <option value="email" <%=searchField==='email' ? 'selected' : '' %>>Email</option>
+                <option value="organization" <%=searchField==='organization' ? 'selected' : '' %>>Organization</option>
+                <option value="designation" <%=searchField==='designation' ? 'selected' : '' %>>Designation</option>
+                <option value="file_name" <%=searchField==='file_name' ? 'selected' : '' %>>File Title</option>
+                <option value="fields" <%=searchField==='fields' ? 'selected' : '' %>>Fields</option>
+                <option value="values" <%=searchField==='values' ? 'selected' : '' %>>Values</option>
+                <option value="operators" <%=searchField==='operators' ? 'selected' : '' %>>Operators</option>
+              </select>
+              <input type="text" class="form-control form-control-sm" id="searchValue" placeholder="Search..."
+                style="max-width: 200px;" value="<%= searchValue %>">
+              <button class="btn btn-sm btn-primary" id="applySearchBtn">Apply</button>
+            </div>
 
-  <script src="/admin-assets/js/handlesubmits.js"></script>
-  <script src="/admin-assets/js/datarequesthandle.js"></script>
-  <%- include('../partials/footer') %>
+            <i class="bi bi-bell me-2"></i>
+            <i class="bi bi-gear"></i>
+          </div>
+        </div>
+
+        <main class="main">
+          <div class="container-fluid p-4">
+            <div class="col-lg-4 col-md-6 d-flex align-items-center mb-3">
+              <label class="form-label d-block me-2">Status</label>
+              <div class="btn-group" role="group" aria-label="Status selection">
+                <input type="radio" class="btn-check" name="status" id="all" value="all" <%=status==='all' || !status
+                  ? 'checked' : '' %>>
+                <label class="btn btn-outline-secondary" for="all">All</label>
+                <input type="radio" class="btn-check" name="status" id="pending" value="pending" <%=status==='pending'
+                  ? 'checked' : '' %>>
+                <label class="btn btn-outline-secondary" for="pending">Pending</label>
+                <input type="radio" class="btn-check" name="status" id="approved" value="approved"
+                  <%=status==='approved' ? 'checked' : '' %>>
+                <label class="btn btn-outline-secondary" for="approved">Approved</label>
+                <input type="radio" class="btn-check" name="status" id="rejected" value="rejected"
+                  <%=status==='rejected' ? 'checked' : '' %>>
+                <label class="btn btn-outline-secondary" for="rejected">Rejected</label>
+                <input type="radio" class="btn-check" name="status" id="isolated" value="isolated"
+                  <%=status==='isolated' ? 'checked' : '' %>>
+                <label class="btn btn-outline-secondary" for="isolated">Isolated</label>
+              </div>
+            </div>
+            <div class="card border-0 rounded themed-box ">
+              <div class="card-header">
+                <h6 class="card-subtitle text-muted p-3 text-center">File Requests</h6>
+              </div>
+              <div class="card-body">
+                <div class="table-responsive">
+                  <table class="table table-hover">
+                    <thead>
+                      <tr>
+                        <th scope="col"><a href="#" class="sort-link" data-field="id">ID <%= sortField==='id' ?
+                              (sortOrder==='ASC' ? '↑' : '↓' ) : '' %></a></th>
+                        <th scope="col"><a href="#" class="sort-link" data-field="first_name">Name <%=
+                              sortField==='first_name' ? (sortOrder==='ASC' ? '↑' : '↓' ) : '' %></a></th>
+                        <th scope="col"><a href="#" class="sort-link" data-field="email">Email <%= sortField==='email' ?
+                              (sortOrder==='ASC' ? '↑' : '↓' ) : '' %></a></th>
+                        <th scope="col"><a href="#" class="sort-link" data-field="organization">Organization <%=
+                              sortField==='organization' ? (sortOrder==='ASC' ? '↑' : '↓' ) : '' %></a></th>
+                        <!-- <th scope="col"><a href="#" class="sort-link" data-field="designation">Designation <%= sortField === 'designation' ? (sortOrder === 'ASC' ? '↑' : '↓') : '' %></a></th> -->
+                        <th scope="col"><a href="#" class="sort-link" data-field="file_name">File Title <%=
+                              sortField==='file_name' ? (sortOrder==='ASC' ? '↑' : '↓' ) : '' %></a></th>
+                        <th scope="col"><a href="#" class="sort-link" data-field="created_at">Date <%=
+                              sortField==='created_at' ? (sortOrder==='ASC' ? '↑' : '↓' ) : '' %></a></th>
+                        <!-- <th scope="col">Card</th> -->
+                        <th scope="col">Details</th>
+                        <th scope="col">Actions</th>
+                        <th scope="col">Profile</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <% if (combinedData.length> 0) { %>
+                        <% combinedData.forEach(function(item, index) { %>
+                          <tr>
+                            <th scope="row">
+                              <%= item.id %>
+                            </th>
+                            <td>
+                              <%= item.first_name %>
+                                <%= item.last_name %>
+                            </td>
+                            <td>
+                              <%= item.email %>
+                            </td>
+                            <td>
+                              <%= item.organization %>
+                            </td>
+                            <td>
+                              <%= item.file_name %>
+                            </td>
+                            <td>
+                              <%= item.created_at %>
+                            </td>
+
+                            <td>
+                              <button class="btn btn-sm btn-info" data-bs-toggle="modal"
+                                data-bs-target="#detailsModal-<%= index %>">View Details</button>
+                              <div class="modal fade" id="detailsModal-<%= index %>" tabindex="-1"
+                                aria-labelledby="detailsModalLabel-<%= index %>" aria-hidden="true">
+                                <div class="modal-dialog">
+                                  <div class="modal-content">
+                                    <div class="modal-header">
+                                      <h5 class="modal-title" id="detailsModalLabel-<%= index %>">Request Details</h5>
+                                      <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                        aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                      <p><strong>Request Type:</strong>
+                                        <%= item.type %>
+                                      </p>
+                                      <% if(item.type==='query' ) { %>
+                                        <p><strong>Fields:</strong>
+                                          <%= item.fields %>
+                                        </p>
+                                        <p><strong>Values:</strong>
+                                          <%= item.values %>
+                                        </p>
+                                        <p><strong>Query:</strong>
+                                          <%= item.query_condition %>
+                                        </p>
+                                        <% } else if(item.type==='all' ) { %>
+                                          <p><strong>AOI:</strong>
+                                            Whole File
+                                          </p>
+                                          <% } else if(item.type==='district' ) { %>
+                                            <p><strong>District:</strong>
+                                              <%= item.condition%>
+                                            </p>
+                                            <% } else if(item.type==='aoi' ) { %>
+                                              <p><strong>AOI Document Download:</strong> <a
+                                                  href="/datarequests/pdf/<%= item.pdf_filename %>" target="_blank">View
+                                                  PDF</a></p>
+                                              <p><strong>Area of Interest:</strong></p>
+                                              <div id="map-<%= index %>"
+                                                style="width: 100%; height: 300px; border: 1px solid #ccc; border-radius: 4px;">
+                                              </div>
+                                              <input type="hidden" class="aoi-map-data" data-index="<%= index %>"
+                                                data-file="<%= item.aoi_filename %>">
+                                              <% } %>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </td>
+                            <td>
+                              <div class="btn-group" role="group">
+                                <button class="btn btn-sm btn-success btn-handlerequest"
+                                  full-name="<%= item.first_name %> <%= item.last_name %>" data-action="approved"
+                                  data-email="<%= item.email %>" data-file="<%= item.file_name %>"
+                                  data-requestid="<%= item.id %>"
+                                  data-organization="<%= item.organization %>">Approved</button>
+                                <button class="btn btn-sm btn-danger btn-handlerequest"
+                                  full-name="<%= item.first_name %> <%= item.last_name %>" data-action="rejected"
+                                  data-email="<%= item.email %>" data-file="<%= item.file_name %>"
+                                  data-requestid="<%= item.id %>"
+                                  data-organization="<%= item.organization %>">Rejected</button>
+                                <button class="btn btn-sm btn-warning btn-handlerequest"
+                                  full-name="<%= item.first_name %> <%= item.last_name %>" data-action="isolated"
+                                  data-email="<%= item.email %>" data-file="<%= item.file_name %>"
+                                  data-requestid="<%= item.id %>"
+                                  data-organization="<%= item.organization %>">Isolated</button>
+                              </div>
+                            </td>
+                            <td>
+                              <button class="btn btn-sm btn-primary" data-bs-toggle="modal"
+                                data-bs-target="#profileModal-<%= index %>">Profile</button>
+                              <div class="modal fade" id="profileModal-<%= index %>" tabindex="-1"
+                                aria-labelledby="profileModalLabel-<%= index %>" aria-hidden="true">
+                                <div class="modal-dialog">
+                                  <div class="modal-content">
+                                    <div class="modal-header">
+                                      <h5 class="modal-title" id="profileModalLabel-<%= index %>">User Profile</h5>
+                                      <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                        aria-label="Close"></button>
+                                    </div>
+                                    <% if (item.id_proof) { %>
+                                      <a href="#" data-bs-toggle="modal" data-bs-target="#imageModal-<%= index %>">
+                                        <img src="data:image/png;base64,<%= item.id_proof %>" alt="ID Proof"
+                                          style="width: 100%; height: auto;" class="img-thumbnail">
+                                      </a>
+                                      <div class="modal fade" id="imageModal-<%= index %>" tabindex="-1"
+                                        aria-labelledby="imageModalLabel-<%= index %>" aria-hidden="true">
+                                        <div class="modal-dialog modal-lg">
+                                          <div class="modal-content">
+                                            <div class="modal-header">
+                                              <h5 class="modal-title" id="imageModalLabel-<%= index %>">ID Proof</h5>
+                                              <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                              <img src="data:image/png;base64,<%= item.id_proof %>" alt="ID Proof"
+                                                style="width: 100%;">
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </div>
+                                      <% } else { %>
+                                        <span>No ID Proof</span>
+                                        <% } %>
+                                          <div class="modal-body">
+                                            <p><strong>Name:</strong>
+                                              <%= item.first_name %>
+                                                <%= item.last_name %>
+                                            </p>
+                                            <p><strong>Email:</strong>
+                                              <%= item.email %>
+                                            </p>
+                                            <p><strong>Mobile:</strong>
+                                              <%= item.mobile %>
+                                            </p>
+                                            <p><strong>Organization:</strong>
+                                              <%= item.organization %>
+                                            </p>
+                                            <p><strong>Designation:</strong>
+                                              <%= item.designation %>
+                                            </p>
+                                          </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </td>
+                          </tr>
+                          <% }); %>
+                            <% } else { %>
+                              <tr>
+                                <td colspan="11" class="text-center">No requests found</td>
+                              </tr>
+                              <% } %>
+                    </tbody>
+                  </table>
+                </div>
+                <nav aria-label="Page navigation example" class="mt-4">
+                  <ul class="pagination justify-content-center">
+                    <% if (currentPage> 1) { %>
+                      <li class="page-item">
+                        <a class="page-link"
+                          href="/admin/requests?page=<%= currentPage - 1 %>&sortField=<%= encodeURIComponent(sortField) %>&sortOrder=<%= encodeURIComponent(sortOrder) %>&searchField=<%= encodeURIComponent(searchField) %>&searchValue=<%= encodeURIComponent(searchValue) %>&status=<%= encodeURIComponent(status) %>">Previous</a>
+                      </li>
+                      <% } else { %>
+                        <li class="page-item disabled">
+                          <a class="page-link" href="#">Previous</a>
+                        </li>
+                        <% } %>
+                          <% for (let i=1; i <=totalPages; i++) { %>
+                            <li class="page-item <%= currentPage === i ? 'active' : '' %>">
+                              <a class="page-link"
+                                href="/admin/requests?page=<%= i %>&sortField=<%= encodeURIComponent(sortField) %>&sortOrder=<%= encodeURIComponent(sortOrder) %>&searchField=<%= encodeURIComponent(searchField) %>&searchValue=<%= encodeURIComponent(searchValue) %>&status=<%= encodeURIComponent(status) %>">
+                                <%= i %>
+                              </a>
+                            </li>
+                            <% } %>
+                              <% if (currentPage < totalPages) { %>
+                                <li class="page-item">
+                                  <a class="page-link"
+                                    href="/admin/requests?page=<%= currentPage + 1 %>&sortField=<%= encodeURIComponent(sortField) %>&sortOrder=<%= encodeURIComponent(sortOrder) %>&searchField=<%= encodeURIComponent(searchField) %>&searchValue=<%= encodeURIComponent(searchValue) %>&status=<%= encodeURIComponent(status) %>">Next</a>
+                                </li>
+                                <% } else { %>
+                                  <li class="page-item disabled">
+                                    <a class="page-link" href="#">Next</a>
+                                  </li>
+                                  <% } %>
+                  </ul>
+                </nav>
+              </div>
+            </div>
+          </div>
+        </main>
+      </div>
+      <div id="searchData" data-sort-field="<%= sortField %>" data-sort-order="<%= sortOrder %>"></div>
+
+      <script src="/admin-assets/js/handlesubmits.js"></script>
+      <script src="/admin-assets/js/datarequesthandle.js"></script>
+
+      <!-- OpenLayers CSS and JS -->
+      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ol@v9.2.4/ol.css">
+      <script src="https://cdn.jsdelivr.net/npm/ol@v9.2.4/dist/ol.js"></script>
+      <script src="/admin-assets/js/aoiMapInit.js"></script>
+
+      <%- include('../partials/footer') %>

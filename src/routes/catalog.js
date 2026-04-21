@@ -13,6 +13,7 @@ import multer from "multer";
 import crypto from "crypto";
 import path from "path";
 import fs from "fs";
+import { log } from "console";
 
 // ✅ Create Express router
 const router = express.Router();
@@ -123,7 +124,7 @@ async function isValidFile(theme, fileName) {
 }
 
 // ✅ Route:GET  to get all info of a particular file
-router.get("/fields/:theme/:fileName", async (req, res) => {
+router.get("/fields/:theme/:fileName", userAuthMiddleware, async (req, res) => {
   const { theme, fileName } = req.params;
   try {
     // 🔐 Validate theme
@@ -147,7 +148,7 @@ router.get("/fields/:theme/:fileName", async (req, res) => {
 
     const fields = result.rows
       .map(r => r.column_name.toLowerCase())
-      .filter(name => !['geom', 'gid', 'globalid', 'longitude', 'latitude'].includes(name));
+      .filter(name => !['geom', 'gid', 'globalid', 'longitude', 'latitude', 'lon', 'lat'].includes(name));
 
     client.release();
     res.json(fields);
@@ -158,7 +159,7 @@ router.get("/fields/:theme/:fileName", async (req, res) => {
 });
 
 // ✅ Route:GET fecth all districts 
-router.get("/districts", async (req, res) => {
+router.get("/districts", userAuthMiddleware, async (req, res) => {
   try {
     const theme = 'commonshapefiles'
     const fileName = process.env.districtfile;
@@ -180,7 +181,7 @@ router.get("/districts", async (req, res) => {
 });
 
 // ✅ Route:GET endpoint to fetch values for a field
-router.get("/values/:theme/:fileName/:field", async (req, res) => {
+router.get("/values/:theme/:fileName/:field", userAuthMiddleware, async (req, res) => {
   const { theme, fileName, field } = req.params;
   try {
 
@@ -236,24 +237,68 @@ router.get("/:id/view", async (req, res) => {
 });
 
 // ✅ Route:POST api to handle user data request
-router.post("/:id/filerequest", datarequestupload.fields([
+router.post("/:id/filerequest", userAuthMiddleware, datarequestupload.fields([
   { name: "aoi-input", maxCount: 1 },
   { name: "pdf-file", maxCount: 1 },
 ]), userAuthMiddleware, async (req, res) => {
   const { type, theme, fileName, conditions, operator } = req.body;
-  console.log("---------");
+  // console.log("---------");
 
-  console.log(req.body);
-  console.log("---------");
+  // console.log(req.body);
+  // console.log("---------");
 
   const aoiFilename = req.files && req.files["aoi-input"] ? req.files["aoi-input"][0].filename : null;
   const pdfFilename = req.files && req.files["pdf-file"] ? req.files["pdf-file"][0].filename : null;
   const savedFilename = [aoiFilename, pdfFilename].filter(Boolean).join(",");
-  console.log("Saved Filenames:", savedFilename);
 
-  console.log("---------");
+  if (type == 'aoi') {
+    if (!req.files || !req.files["aoi-input"] || !req.files["pdf-file"]) {
+      return res.status(400).json({
+        message: "Please upload both AOI and PDF files",
+        title: "Oops",
+        icon: "warning"
+      });
+    }
+  }
+  else {
+    if (!req.files || !req.files["pdf-file"]) {
+      return res.status(400).json({
+        message: "Please upload both AOI and PDF files",
+        title: "Oops",
+        icon: "warning"
+      });
+    }
+  }
 
 
+  let parsedConditions = [];
+
+  if (conditions) {
+    try {
+      parsedConditions = typeof conditions === "string"
+        ? JSON.parse(conditions)
+        : conditions;
+    } catch (err) {
+      console.error("Invalid conditions JSON:", err);
+      parsedConditions = [];
+    }
+  }
+
+  if (type === "query" && parsedConditions.length < 1) {
+    return res.status(400).json({
+      message: "Invalid Query",
+      title: "Oops",
+      icon: "warning"
+    });
+  }
+
+  if (type === "district" && parsedConditions.length < 1) {
+    return res.status(400).json({
+      message: "Please provide at least one district",
+      title: "Oops",
+      icon: "warning"
+    });
+  }
 
   const email = req.user.email;
   const role = req.user.role;
@@ -284,13 +329,14 @@ router.post("/:id/filerequest", datarequestupload.fields([
   try {
     const client = await poolUser.connect();
     // await poolAdministrative.connect() :
+
     let queryCondition = null;
     let fields = [];
     let values = [];
 
-    if (type === "query" && conditions?.length) {
+    if (type === "query" && parsedConditions?.length) {
       // Construct query condition
-      const whereClauses = conditions.map((cond) => {
+      const whereClauses = parsedConditions.map((cond) => {
         fields.push(cond.field);
         values.push(cond.values);
         const escapedValues = cond.values

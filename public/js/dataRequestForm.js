@@ -332,24 +332,24 @@ document.getElementById("request-districtwise").addEventListener("click", async 
   }
 
   const conditions = JSON.stringify(
-      Array.from(
-        document.querySelectorAll('input[name="district-values"]:checked')
-      ).map((cb) => cb.value)
-    );
-    
+    Array.from(
+      document.querySelectorAll('input[name="district-values"]:checked')
+    ).map((cb) => cb.value)
+  );
+
   const queryData = {
     type: "district",
     conditions: conditions,
     theme,
     fileName,
   };
-  console.log(queryData);
-  console.log(queryData.conditions.length);
-  console.log(queryData.conditions);
+  // console.log(queryData);
+  // console.log(queryData.conditions.length);
+  // console.log(queryData.conditions);
 
   const errorDiv = document.getElementById("district-error");
 
-  if (JSON.parse(queryData.conditions).length < 3) {
+  if (JSON.parse(queryData.conditions).length < 0) {
     errorDiv.textContent = "Select at least one district";
     errorDiv.style.display = "block";
     Swal.fire({ text: "Select at least one district", icon: "warning" });

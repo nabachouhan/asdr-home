@@ -595,8 +595,8 @@ router.get("/requests", adminAuthMiddleware, async (req, res) => {
 
     // Base queries
     let query = `
-      SELECT r.id, r.email, r.file_name, r.fields, r.values, r.created_at, r.query_condition, r.request_status,
-             u.first_name, u.last_name, u.organization, u.designation, u.id_proof 
+      SELECT r.id, r.email, r.file_name, r.type, r.fields, r.values, r.created_at, r.query_condition, r.condition, r.request_status, r.pdf_filename, r.aoi_filename,
+             u.first_name, u.last_name, u.mobile, u.organization, u.designation, u.id_proof 
       FROM requests r 
       LEFT JOIN registered u ON r.email = u.email 
       WHERE 1=1
@@ -624,6 +624,7 @@ router.get("/requests", adminAuthMiddleware, async (req, res) => {
         "id",
         "first_name",
         "email",
+        "mobile",
         "organization",
         "designation",
         "file_name",
@@ -659,8 +660,8 @@ router.get("/requests", adminAuthMiddleware, async (req, res) => {
     queryParams.push(limit, offset);
     query += ` LIMIT $${queryParams.length - 1} OFFSET $${queryParams.length}`;
 
-    console.log("SQL Query:", query);
-    console.log("Query Params:", queryParams);
+    // console.log("SQL Query:", query);
+    // console.log("Query Params:", queryParams);
 
     // Execute
     const reqResult = await client.query(query, queryParams);
@@ -669,27 +670,32 @@ router.get("/requests", adminAuthMiddleware, async (req, res) => {
       first_name: item.first_name || "",
       last_name: item.last_name || "",
       email: item.email,
+      mobile: item.mobile || "",
       organization: item.organization || "",
       designation: item.designation || "",
       file_name: item.file_name,
+      type: item.type || "",
       fields: item.fields || "",
       values: item.values || "",
       query_condition: item.query_condition || "",
+      condition: item.condition || "",
       created_at: item.created_at.toLocaleString(),
       id_proof: item.id_proof ? item.id_proof.toString("base64") : null,
       request_status: item.request_status || "pending",
+      pdf_filename: item.pdf_filename || "",
+      aoi_filename: item.aoi_filename || "",
     }));
 
     const countResult = await client.query(countQuery, countParams);
     const totalItems = parseInt(countResult.rows[0].count);
     const totalPages = Math.ceil(totalItems / limit);
 
-    console.log(
-      "Fetched Rows:",
-      combinedData.length,
-      "Total Items:",
-      totalItems
-    );
+    // console.log(
+    //   "Fetched Rows:",
+    //   combinedData.length,
+    //   "Total Items:",
+    //   totalItems
+    // );
 
     client.release();
 
@@ -771,7 +777,7 @@ router.post("/handlerequests", adminAuthMiddleware, async (req, res) => {
       file_name,
       actiononfo,
     ];
-    console.log(logsparams);
+    // console.log(logsparams);
 
     await client.query(logsquery, logsparams);
     client.release();
@@ -1732,8 +1738,8 @@ router.get("/logs", adminAuthMiddleware, async (req, res) => {
     queryParams.push(limit, offset);
     query += ` LIMIT $${queryParams.length - 1} OFFSET $${queryParams.length}`;
 
-    console.log("Query:", query, "Params:", queryParams);
-    console.log("Count Query:", countQuery, "Count Params:", countParams);
+    // console.log("Query:", query, "Params:", queryParams);
+    // console.log("Count Query:", countQuery, "Count Params:", countParams);
 
     // Execute queries
     const result = await client.query(query, queryParams);
@@ -1846,7 +1852,7 @@ router.get("/logs/download", adminAuthMiddleware, async (req, res) => {
     // Add sorting
     query += ` ORDER BY ${safeSortField} ${safeSortOrder}`;
 
-    console.log("Download Query:", query, "Params:", queryParams);
+    // console.log("Download Query:", query, "Params:", queryParams);
 
     // Execute query
     const result = await client.query(query, queryParams);
@@ -1941,8 +1947,8 @@ router.get("/manage", adminAuthMiddleware, async (req, res) => {
     queryParams.push(limit, offset);
     query += ` LIMIT $${queryParams.length - 1} OFFSET $${queryParams.length}`;
 
-    console.log("Query:", query, "Params:", queryParams); // Debugging
-    console.log("Count Query:", countQuery, "Count Params:", countParams); // Debugging
+    // console.log("Query:", query, "Params:", queryParams); // Debugging
+    // console.log("Count Query:", countQuery, "Count Params:", countParams); // Debugging
 
     // Execute queries
     const result = await client.query(query, queryParams);
@@ -2041,14 +2047,14 @@ router.get("/roles", adminAuthMiddleware, async (req, res) => {
     const searchValue = req.query.searchValue || "";
     const role = req.query.role || "all";
 
-    console.log("Request Query:", {
-      page,
-      sortField,
-      sortOrder,
-      searchField,
-      searchValue,
-      role,
-    });
+    // console.log("Request Query:", {
+    //   page,
+    //   sortField,
+    //   sortOrder,
+    //   searchField,
+    //   searchValue,
+    //   role,
+    // });
 
     const validSortFields = [
       "user_id",
@@ -2113,8 +2119,8 @@ router.get("/roles", adminAuthMiddleware, async (req, res) => {
     queryParams.push(limit, offset);
     query += ` LIMIT $${queryParams.length - 1} OFFSET $${queryParams.length}`;
 
-    console.log("Query:", query, "Params:", queryParams);
-    console.log("Count Query:", countQuery, "Count Params:", countParams);
+    // console.log("Query:", query, "Params:", queryParams);
+    // console.log("Count Query:", countQuery, "Count Params:", countParams);
 
     const initresult = await client.query(query, queryParams);
     const result = initresult.rows.map((item) => ({
@@ -2136,7 +2142,7 @@ router.get("/roles", adminAuthMiddleware, async (req, res) => {
     const totalUsers = parseInt(countResult.rows[0].count);
     const totalPages = Math.ceil(totalUsers / limit);
 
-    console.log("Fetched Rows:", userItems.length, "Total Users:", totalUsers);
+    // console.log("Fetched Rows:", userItems.length, "Total Users:", totalUsers);
 
     client.release();
 
@@ -2161,9 +2167,9 @@ router.get("/roles", adminAuthMiddleware, async (req, res) => {
 // ✅ Route: POST /roles Toggle Role of Registered Users  (Dashboard, protected by adminAuth)
 router.post("/roles", adminAuthMiddleware, async (req, res) => {
   const { email, role } = req.body;
-  console.log(req.body);
+  // console.log(req.body);
 
-  console.log(req.user);
+  // console.log(req.user);
   const admin_fullname = req.user.full_name;
   const admin_email = req.user.email;
   const admin_organization = req.user.organization;
@@ -2406,8 +2412,8 @@ router.get("/queries", adminAuthMiddleware, async (req, res) => {
     queryParams.push(limit, offset);
     query += ` LIMIT $${queryParams.length - 1} OFFSET $${queryParams.length}`;
 
-    console.log("Query:", query, "Params:", queryParams);
-    console.log("Count Query:", countQuery, "Count Params:", countParams);
+    // console.log("Query:", query, "Params:", queryParams);
+    // console.log("Count Query:", countQuery, "Count Params:", countParams);
 
     // Execute queries
     const result = await client.query(query, queryParams);
@@ -2458,8 +2464,8 @@ router.post("/queries", adminAuthMiddleware, async (req, res) => {
                 `;
         params = [true, queryid];
 
-        console.log(query);
-        console.log(params);
+        // console.log(query);
+        // console.log(params);
 
         await client.query(query, params);
         const data = { message: "Ignored", title: "Alert", icon: "alert" };
@@ -2626,7 +2632,7 @@ router.post("/logout", adminAuthMiddleware, (req, res) => {
       icon: "success",
       redirect: "\\",
     };
-    console.log(data);
+    // console.log(data);
     return res.json(data);
   } catch (error) {
     console.error(error);

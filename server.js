@@ -30,6 +30,7 @@ app.use(cookieParser());
 
 // 🔐 Serve protected folder only if authenticated
 app.use('/admin-assets', adminAuthMiddleware, express.static(path.join(__dirname, 'admin-assets')));
+app.use('/datarequests', adminAuthMiddleware, express.static(path.join(__dirname, 'datarequests')));
 
 
 const cspOptions = {
@@ -74,7 +75,11 @@ const cspOptions = {
       "https://i.ytimg.com",
       "https://s.ytimg.com",
       "https://www.google.com",
-      "https://ik.imagekit.io"
+      "https://ik.imagekit.io",
+      "https://tile.openstreetmap.org",
+      "https://a.tile.openstreetmap.org",
+      "https://b.tile.openstreetmap.org",
+      "https://c.tile.openstreetmap.org"
     ],
 
     mediaSrc: [
