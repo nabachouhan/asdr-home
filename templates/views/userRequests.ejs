@@ -116,7 +116,7 @@
                         <td>
                           <% if(item.request_status==='approved' ) { %>
                             <input type="button" class="btn btn-success file-dwnld-btn" value="Download"
-                              request-id="<%= item.id %>">
+                              request-id="<%= item.id %>" file-name="<%= item.file_name %>"> 
                             <% } else if(item.request_status==='rejected' ) { %>
                               <input type="button" class="btn btn-danger" value="Not Available">
                               <% } else { %>

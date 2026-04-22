@@ -2,6 +2,7 @@ document.querySelectorAll(".file-dwnld-btn").forEach((btn) => {
   btn.addEventListener("click", async function (event) {
     event.preventDefault();
     const requestid = this.getAttribute("request-id");
+    const fileName = this.getAttribute("file-name");
 
     // First, show confirmation before submitting the data
     const confirmationResult = await Swal.fire({
@@ -42,7 +43,7 @@ document.querySelectorAll(".file-dwnld-btn").forEach((btn) => {
         const a = document.createElement("a");
         a.style.display = "none";
         a.href = url;
-        a.download = `download-${requestid}.zip`; // Set the default filename
+        a.download = `${fileName}.zip`; // Set the default filename
         document.body.appendChild(a);
         a.click(); // Trigger the download
         window.URL.revokeObjectURL(url); // Clean up
