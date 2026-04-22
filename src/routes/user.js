@@ -409,7 +409,7 @@ router.post('/', upload.single('id_proof'), async (req, res) => {
       return await handleVerifyOTP();
     }
 
-    if (action === 'Register') {
+    if (action === 'register') {
       return await handleRegister();
     }
 
