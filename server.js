@@ -40,6 +40,8 @@ const cspOptions = {
 
     scriptSrc: [
       "'self'",
+      "'unsafe-eval'",
+      "blob:",
       "https://cdn.jsdelivr.net",
       "https://cdnjs.cloudflare.com",
       "https://challenges.cloudflare.com",
@@ -72,6 +74,8 @@ const cspOptions = {
     imgSrc: [
       "'self'",
       "data:",
+      "blob:",
+      "https:",
       "https://i.ytimg.com",
       "https://s.ytimg.com",
       "https://www.google.com",
@@ -99,6 +103,9 @@ const cspOptions = {
 
     connectSrc: [
       "'self'",
+      "blob:",
+      "data:",
+      "https:",
       "https://cdn.jsdelivr.net",
       "https://cdnjs.cloudflare.com",
       "https://www.youtube.com",
