@@ -259,11 +259,7 @@ router.post("/:id/filerequest", userAuthMiddleware, datarequestupload.fields([
   { name: "aoi-input", maxCount: 1 },
   { name: "pdf-file", maxCount: 1 },
 ]), userAuthMiddleware, async (req, res) => {
-  const { type, theme, fileName, conditions, operator } = req.body;
-  // console.log("---------");
-
-  // console.log(req.body);
-  // console.log("---------");
+  const { type, theme, fileName, operator, conditions } = req.body;
 
   const aoiFilename = req.files && req.files["aoi-input"] ? req.files["aoi-input"][0].filename : null;
   const pdfFilename = req.files && req.files["pdf-file"] ? req.files["pdf-file"][0].filename : null;
@@ -379,7 +375,7 @@ router.post("/:id/filerequest", userAuthMiddleware, datarequestupload.fields([
       type,
       JSON.stringify(fields), // Store fields as JSON
       JSON.stringify(values), // Store values as JSON
-      conditions,
+      JSON.stringify(conditions),
       queryCondition,
       request_status,
       aoiFilename,

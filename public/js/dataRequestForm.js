@@ -331,11 +331,11 @@ document.getElementById("request-districtwise").addEventListener("click", async 
     return;
   }
 
-  const conditions = JSON.stringify(
-    Array.from(
-      document.querySelectorAll('input[name="district-values"]:checked')
-    ).map((cb) => cb.value)
-  );
+  const conditions = Array.from(
+    document.querySelectorAll('input[name="district-values"]:checked')
+  ).map((cb) => cb.value);
+
+
 
   const queryData = {
     type: "district",
@@ -343,24 +343,20 @@ document.getElementById("request-districtwise").addEventListener("click", async 
     theme,
     fileName,
   };
-  // console.log(queryData);
-  // console.log(queryData.conditions.length);
-  // console.log(queryData.conditions);
+
 
   const errorDiv = document.getElementById("district-error");
-
-  if (JSON.parse(queryData.conditions).length < 0) {
-    errorDiv.textContent = "Select at least one district";
-    errorDiv.style.display = "block";
-    Swal.fire({ text: "Select at least one district", icon: "warning" });
-    return;
-  }
 
   const formData = new FormData();
   formData.append("type", queryData.type);
   formData.append("theme", queryData.theme);
   formData.append("fileName", queryData.fileName);
-  formData.append("conditions", queryData.conditions);
+
+
+  queryData.conditions.forEach(val => {
+    formData.append("conditions[]", val);
+  });
+
   formData.append("pdf-file", fileInput.files[0]);
 
   try {
@@ -378,6 +374,7 @@ document.getElementById("request-districtwise").addEventListener("click", async 
       method: "POST",
       body: formData,
     });
+
     const data = await response.json();
 
     Swal.fire({

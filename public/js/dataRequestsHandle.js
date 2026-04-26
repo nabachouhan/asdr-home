@@ -93,24 +93,11 @@ document.getElementById("applyFilters").addEventListener("click", () => {
 document.addEventListener("click", function (event) {
   const target = event.target;
 
-  // Match only buttons with the class 'view-button'
   if (target.matches(".view-button")) {
     event.preventDefault();
 
     const fileName = target.dataset.fileName;
 
-    // Redirect to the metainfo URL
-    globalThis.location.href = `/catalog/${fileName}/metainfo`;
+    window.open(`/catalog/${fileName}/metainfo`, "_blank");
   }
-
-  // Match buttons with the class 'view-condition-btn'
-  // if (target.closest(".view-condition-btn") || target.matches(".view-condition-btn")) {
-  //   const btn = target.closest(".view-condition-btn") || target;
-  //   const condition = btn.dataset.condition;
-
-  //   const modalBody = document.getElementById("conditionModalBody");
-  //   if (modalBody) {
-  //     modalBody.textContent = condition;
-  //   }
-  // }
 });
