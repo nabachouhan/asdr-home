@@ -294,7 +294,7 @@ document.getElementById("request-query").addEventListener("click", async () => {
     formData.append("type", queryData.type);
     formData.append("theme", queryData.theme);
     formData.append("fileName", queryData.fileName);
-    formData.append("conditions", JSON.stringify(queryData.conditions));
+    formData.append("conditions", btoa(JSON.stringify(queryData.conditions)));
     formData.append("operator", queryData.operator);
     formData.append("pdf-file", fileInput.files[0]);
 
@@ -352,10 +352,7 @@ document.getElementById("request-districtwise").addEventListener("click", async 
   formData.append("theme", queryData.theme);
   formData.append("fileName", queryData.fileName);
 
-
-  queryData.conditions.forEach(val => {
-    formData.append("conditions[]", val);
-  });
+  formData.append("conditions", btoa(JSON.stringify(queryData.conditions)));
 
   formData.append("pdf-file", fileInput.files[0]);
 

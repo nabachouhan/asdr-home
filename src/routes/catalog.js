@@ -289,9 +289,20 @@ router.post("/:id/filerequest", userAuthMiddleware, datarequestupload.fields([
 
   if (conditions) {
     try {
-      parsedConditions = typeof conditions === "string"
-        ? JSON.parse(conditions)
-        : conditions;
+      if (typeof conditions === "string") {
+        try {
+          const decoded = Buffer.from(conditions, 'base64').toString('utf8');
+          parsedConditions = JSON.parse(decoded);
+        } catch (e) {
+          try {
+            parsedConditions = JSON.parse(conditions);
+          } catch (e2) {
+            parsedConditions = conditions;
+          }
+        }
+      } else {
+        parsedConditions = conditions;
+      }
     } catch (err) {
       console.error("Invalid conditions JSON:", err);
       parsedConditions = [];
@@ -375,7 +386,7 @@ router.post("/:id/filerequest", userAuthMiddleware, datarequestupload.fields([
       type,
       JSON.stringify(fields), // Store fields as JSON
       JSON.stringify(values), // Store values as JSON
-      JSON.stringify(conditions),
+      JSON.stringify(parsedConditions),
       queryCondition,
       request_status,
       aoiFilename,

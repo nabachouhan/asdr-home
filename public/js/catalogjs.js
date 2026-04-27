@@ -55,8 +55,7 @@ async function applyFilters(page = 1) {
 
     if (!response.ok) {
       throw new Error(
-        `HTTP error! Status: ${
-          response.status
+        `HTTP error! Status: ${response.status
         }, Message: ${await response.text()}`
       );
     }
@@ -87,30 +86,21 @@ function updateDatasetGrid(items) {
         (item) => `
                         <div class="col-md-3 col-sm-6 mb-4">
                             <div class="card h-100 themed-box shadow rounded">
-                                <div id="${
-                                  item.file_name
-                                }" class="card-map" style="height: 150px;"></div>
+                                <div id="${item.file_name
+          }" class="card-map" style="height: 150px;"></div>
                                 <div class="card-body themed-box rounded">
                                     <h6 class="card-title">${item.title}</h6>
-                                    <p class="mb-1">Theme: <i>${
-                                      item.theme
-                                    }</i></p>
-                                    <p class="mb-1">Scale: <i>${
-                                      item.scale
-                                    }</i></p>
+                                    <p class="mb-1">Theme: <i>${item.theme
+          }</i></p>
+                                    <p class="mb-1">Scale: <i>${item.scale
+          }</i></p>
                                     <p class="mb-1">Date: <i>${new Date(
-                                      item.source_date
-                                    ).toDateString()}</i></p>
-                                    <div class="d-flex justify-content-between">
-                                        <a href="#" class="btn btn-success btn-sm action-link" data-file="${
-                                          item.file_name
-                                        }" data-action="geoportal">View</a>
-                                        <a href="#" class="btn btn-outline-success btn-sm action-link" data-file="${
-                                          item.file_name
-                                        }" data-action="view">Request</a>
-                                        <a href="#" class="btn btn-primary btn-sm action-link" data-file="${
-                                          item.file_name
-                                        }" data-action="metainfo">Metadata</a>
+            item.source_date
+          ).toDateString()}</i></p>
+                                        <a href="#" class="btn btn-outline-success btn-sm action-link" data-file="${item.file_name
+          }" data-action="view">Request</a>
+                                        <a href="#" class="btn btn-primary btn-sm action-link" data-file="${item.file_name
+          }" data-action="metainfo">Metadata</a>
                                         </div>
                                 </div>
                             </div>
@@ -208,31 +198,25 @@ function updatePagination(total) {
   const totalPages = Math.ceil(total / itemsPerPage) || 1; // Ensure at least 1 page
   const pagination = document.getElementById("pagination");
   pagination.innerHTML = `
-                        <li class="page-item ${
-                          currentPage === 1 ? "disabled" : ""
-                        }">
-                            <a class="page-link pagination-link" href="#" data-page="${
-                              currentPage - 1
-                            }">Previous</a>
+                        <li class="page-item ${currentPage === 1 ? "disabled" : ""
+    }">
+                            <a class="page-link pagination-link" href="#" data-page="${currentPage - 1
+    }">Previous</a>
                         </li>
                         ${Array.from(
-                          { length: totalPages },
-                          (_, i) => `
-                            <li class="page-item ${
-                              currentPage === i + 1 ? "active" : ""
-                            }">
-                                <a class="page-link pagination-link" href="#" data-page="${
-                                  i + 1
-                                }">${i + 1}</a>
+      { length: totalPages },
+      (_, i) => `
+                            <li class="page-item ${currentPage === i + 1 ? "active" : ""
+        }">
+                                <a class="page-link pagination-link" href="#" data-page="${i + 1
+        }">${i + 1}</a>
                             </li>
                         `
-                        ).join("")}
-                        <li class="page-item ${
-                          currentPage === totalPages ? "disabled" : ""
-                        }">
-                            <a class="page-link pagination-link" href="#" data-page="${
-                              currentPage + 1
-                            }">Next</a>
+    ).join("")}
+                        <li class="page-item ${currentPage === totalPages ? "disabled" : ""
+    }">
+                            <a class="page-link pagination-link" href="#" data-page="${currentPage + 1
+    }">Next</a>
                         </li>
                     `;
 
