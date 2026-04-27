@@ -319,7 +319,8 @@ router.get("/download/:id", userAuthMiddleware, async (req, res) => {
       type,
       condition,
       query_condition,
-      theme
+      theme,
+      aoi_filename
     } = request;
 
     let rawQuery;
@@ -392,7 +393,7 @@ router.get("/download/:id", userAuthMiddleware, async (req, res) => {
       query = rawQuery.replace(/"/g, '\\"');
     } else if (type === 'aoi') {
       const geojsonData = JSON.parse(
-        fs.readFileSync('./datarequests/aoi.geojson', 'utf-8')
+        fs.readFileSync(`./datarequests/aoi/${aoi_filename}`, 'utf-8')
       );
 
       let geometry;
