@@ -77,7 +77,7 @@ const customLimiter = rateLimit({
 // ✅ Generate OTP (random 8-digit number, CHAR)
 function generateSecureOTP(length) {
   const charset =
-    "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz0123456789";
+    "0123456789";
   let otp = "";
   const randomBytes = crypto.randomBytes(length);
 
@@ -117,7 +117,9 @@ const storage = multer.diskStorage({
 
 const shpupload = multer({
   storage,
-  dest: "shpuploads/",
+  limits: {
+    fileSize: 1024 * 1024 * 1024 // 1 GB (adjust as needed)
+  },
   fileFilter: (req, file, cb) => {
     if (
       file.mimetype === "application/zip" ||
