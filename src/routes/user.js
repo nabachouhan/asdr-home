@@ -30,7 +30,7 @@ router.use(bodyParser.urlencoded({ extended: true }));
 
 // ✅ Email transporter configuration using Gmail SMTP
 const transporter = nodemailer.createTransport({
-  host: 'smtp.gmail.com',
+  host: process.env.email_host,
   port: 587,
   secure: false, // STARTTLS
   requireTLS: true, // Optional but recommended
