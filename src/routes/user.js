@@ -557,7 +557,7 @@ router.post('/login', upload.none(), async (req, res) => {
         return sendJson(200, { message: 'OTP sent successfully', title: "Sent", icon: "success" });
       } catch (err) {
         console.error('Error in sending OTP via email:', err);
-        if (client) client.release();
+        // if (client) client.release();
         return sendJson(400, { message: 'something went wrong, Try again!', title: "Error", icon: "danger" });
       }
     } catch (err) {
